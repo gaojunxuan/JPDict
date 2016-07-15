@@ -32,14 +32,10 @@ Requirement
 http://sqlite.org/2016/sqlite-uap-3100200.vsix
 
 
-Using TFS
+Using Git
 -------------
-请在有主要版本编译通过时将源代码签入到 TFS （https://skylark-wsp.visualstudio.com），在嵌入时，请详细填写迁入注释，格式如下：
-
-> 1/22/16 （日期）, Kevin（修改者名字）, Beijing（在哪里编译成功并签入的（地点）)
-> 1）Add some features
-> 2）。。。
-> （具体的新增内容列表，使用英语）
+请在有主要版本编译通过时将源代码提交到 GIT 仓库，提交前确保提交的版本已经编译通过，提交时要填写注释
+注释要说明这个版本新增或修改或删除了什么内容，如果有多项改动用分号分隔或者使用标号
 
 Work division
 -------------
@@ -49,4 +45,4 @@ Work division
  - Kevin Gao（gaojunxuanbox@live.com）：ViewModel 层和联网功能的开发
  - Hao Ling（lingmengc@outlook.com）：离线功能（离线查词）开发
  
- 还麻烦各位了解一下各个成员的分工，遇到 Bug 请发在 https://skylark-wsp.visualstudio.com/DefaultCollection/Skylark%20JPDict/_backlogs/board/Features 并使用电子邮件告知负责对应功能的成员（CC 我：gaojunxuanbox@live.com）
+ 还麻烦各位了解一下各个成员的分工，遇到 Bug 请发在 Github 上的 Issue 页面并使用电子邮件告知负责对应功能的成员（CC 我：gaojunxuanbox@live.com）
