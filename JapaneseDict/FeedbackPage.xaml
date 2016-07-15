@@ -1,0 +1,56 @@
+﻿<mvvm:MVVMPage 
+    x:Name="pageRoot"
+    x:Class="JapaneseDict.GUI.FeedbackPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:JapaneseDict.GUI"
+    xmlns:mvvm="using:MVVMSidekick.Views"     
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:JapaneseDict.GUI.ViewModels"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
+        <vm:FeedbackPage_Model x:Key="DesignVM"/>
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar Background="#FF00B294" Foreground="White" RequestedTheme="Dark">
+            <AppBarButton x:Name="sendFeedback_Btn" Icon="Send" Label="发送" Click="sendFeedback_Btn_Click" Foreground="White"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <Grid  DataContext="{StaticResource DesignVM}" Background="#FFEEEEEE">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
+        <Pivot Name="mainPivot" RequestedTheme="Dark" Margin="0,-1,0,0">
+            <PivotItem Margin="12,0,0,0">
+                <PivotItem.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                        <StackPanel Height="48">
+                            <TextBlock FontSize="24">反馈</TextBlock>
+                            <TextBlock FontSize="8">フィードバック</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </PivotItem.Header>
+                <ScrollViewer VerticalScrollBarVisibility="Hidden" RequestedTheme="Light">
+                    <StackPanel RequestedTheme="Light">
+                        <TextBlock Text="感谢您帮助我们完善词库，请您填写下列信息，谢谢！" TextWrapping="WrapWholeWords" Foreground="Gray" Margin="4,8,4,0" FontSize="21.333"></TextBlock>
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBox x:Name="jpchar_Tbx" Header="日语" Margin="4,8,8,0" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294" Background="White"></TextBox>
+                            <TextBox x:Name="kana_Tbx" Header="假名" Margin="4,8,8,0" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294" Background="White"/>
+                            <TextBox x:Name="explanation_Tbx" Header="正确释义（可选）" TextWrapping="Wrap" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294" Margin="4,8,8,0" Height="260" AcceptsReturn="True" Background="White"/>
+                            <TextBox x:Name="comments_Tbx" Header="备注" Margin="4,8,8,0" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294" Background="White"/>
+                            <TextBox x:Name="email_Tbx" Header="您的邮箱" Margin="4,8,8,0" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294" InputScope="EmailNameOrAddress" Background="White"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</mvvm:MVVMPage>

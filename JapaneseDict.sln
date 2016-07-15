@@ -1,0 +1,116 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseDict.GUI", "JapaneseDict\JapaneseDict.GUI.csproj", "{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseDict.QueryEngine", "JapaneseDict.QueryEngine\JapaneseDict.QueryEngine.csproj", "{0272506C-9FE7-4CCD-99A6-B7219294DBD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseDict.OnlineService", "JapaneseDict.OnlineService\JapaneseDict.OnlineService.csproj", "{F385BDF1-4053-41A3-B9B7-CF504577C533}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapaneseDict.Util", "JapaneseDict.Util\JapaneseDict.Util.csproj", "{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|ARM.Build.0 = Debug|ARM
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|ARM.Deploy.0 = Debug|ARM
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|x64.ActiveCfg = Debug|x64
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|x64.Build.0 = Debug|x64
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|x64.Deploy.0 = Debug|x64
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|x86.ActiveCfg = Debug|x86
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|x86.Build.0 = Debug|x86
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Debug|x86.Deploy.0 = Debug|x86
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|Any CPU.ActiveCfg = Release|x86
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|ARM.ActiveCfg = Release|ARM
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|ARM.Build.0 = Release|ARM
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|ARM.Deploy.0 = Release|ARM
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|x64.ActiveCfg = Release|x64
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|x64.Build.0 = Release|x64
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|x64.Deploy.0 = Release|x64
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|x86.ActiveCfg = Release|x86
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|x86.Build.0 = Release|x86
+		{70CBEFFA-BA6F-4A13-A092-BF03ECAFD0EC}.Release|x86.Deploy.0 = Release|x86
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|ARM.ActiveCfg = Debug|ARM
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|ARM.Build.0 = Debug|ARM
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|x64.ActiveCfg = Debug|x64
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|x64.Build.0 = Debug|x64
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|x86.ActiveCfg = Debug|x86
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Debug|x86.Build.0 = Debug|x86
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|ARM.ActiveCfg = Release|ARM
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|ARM.Build.0 = Release|ARM
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|x64.ActiveCfg = Release|x64
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|x64.Build.0 = Release|x64
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|x86.ActiveCfg = Release|x86
+		{0272506C-9FE7-4CCD-99A6-B7219294DBD2}.Release|x86.Build.0 = Release|x86
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|ARM.Build.0 = Debug|ARM
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|x64.ActiveCfg = Debug|x64
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|x64.Build.0 = Debug|x64
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|x86.ActiveCfg = Debug|x86
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Debug|x86.Build.0 = Debug|x86
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|ARM.ActiveCfg = Release|ARM
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|ARM.Build.0 = Release|ARM
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|x64.ActiveCfg = Release|x64
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|x64.Build.0 = Release|x64
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|x86.ActiveCfg = Release|x86
+		{F385BDF1-4053-41A3-B9B7-CF504577C533}.Release|x86.Build.0 = Release|x86
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|ARM.Build.0 = Debug|ARM
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|x64.ActiveCfg = Debug|x64
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|x64.Build.0 = Debug|x64
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|x86.ActiveCfg = Debug|x86
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Debug|x86.Build.0 = Debug|x86
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|ARM.ActiveCfg = Release|ARM
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|ARM.Build.0 = Release|ARM
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|x64.ActiveCfg = Release|x64
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|x64.Build.0 = Release|x64
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|x86.ActiveCfg = Release|x86
+		{304AD510-3ED5-4B70-93A3-5D86DF49CDB7}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://skylark-wsp.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = JapaneseDict.QueryEngine\\JapaneseDict.QueryEngine.csproj
+		SccProjectName1 = JapaneseDict.QueryEngine
+		SccLocalPath1 = JapaneseDict.QueryEngine
+		SccProjectUniqueName2 = JapaneseDict.OnlineService\\JapaneseDict.OnlineService.csproj
+		SccProjectName2 = JapaneseDict.OnlineService
+		SccLocalPath2 = JapaneseDict.OnlineService
+		SccProjectUniqueName3 = JapaneseDict\\JapaneseDict.GUI.csproj
+		SccProjectName3 = JapaneseDict
+		SccLocalPath3 = JapaneseDict
+		SccProjectUniqueName4 = JapaneseDict.Util\\JapaneseDict.Util.csproj
+		SccProjectName4 = JapaneseDict.Util
+		SccLocalPath4 = JapaneseDict.Util
+	EndGlobalSection
+EndGlobal
