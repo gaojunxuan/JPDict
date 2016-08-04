@@ -7,7 +7,7 @@ This document is about how to configure the enviornment in order to compile this
 ----------
 
 
-Requirement
+Requirements
 -------------
 #### MVVM Sidekick
 This project uses MVVM Sidekick as its MVVM framework. To install MVVM Sidekick, please follow the instructions below.
@@ -44,6 +44,6 @@ Please commit your changes to git repo. Attention, you should only commit your c
 Notes are required. You should clarify the changes you have made to the codes in the commit notes. If there're several changes, please seperate them using semi-colons or use numbers to label them.
 
 
-Work division
+Issue reports
 -------------
-If there is a bug. Be free to email me or post an issue here.
+If there is a bug/issue. Be free to email me or post an issue here.
