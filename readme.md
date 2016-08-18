@@ -1,48 +1,49 @@
-Introduction of Project 'Skylark JPDict'
+Introduction of Project "Skylark JPDict"
 ===================
 
 
-本文将介绍如何配置修改、编译、调试 Sklark JPDict 所需的环境
+This document is about how to configure the enviornment in order to compile this project.
 
 ----------
 
 
-Requirement
+Requirements
 -------------
 #### MVVM Sidekick
-本项目使用了由 Waynebaby 开发的 MVVM Sidekick 框架，若要打开并编译项目，请先根据下面的教程安装并配置 MVVM Sidekick 环境。
+This project uses MVVM Sidekick as its MVVM framework. To install MVVM Sidekick, please follow the instructions below.
 
- - 单击菜单栏上的 工具-扩展和更新
+ - Tools - Extensions & Updates
+  
 ![enter image description here](https://wt-prj.oss.aliyuncs.com/3646b5bf07b5481b97cf72b8476252f8/4771f5bf-5968-4fab-bd5f-fee0460bc4d2.png)
- - 选择联机，搜索关键词“MVVM Sidekick”。选择第一个搜索结果“MVVM-Sidekick VSIX 2015”下载并安装
+ - Select "Online". Search for keyword "MVVM Sidekick". Select the first result named "MVVM-Sidekick VSIX 2015" and install it.
+  
  ![enter image description here](https://wt-prj.oss.aliyuncs.com/3646b5bf07b5481b97cf72b8476252f8/87b075b8-a19c-4c1e-84c3-7394679d7a3c.png)
  
- - 使用 MVVM Sidekick 提供的模板，创建一个通用 Windows 的项目。
-等待其安装依赖项。如果这时系统报错，点击确定忽略。
+ - Create a blank Universal Windows project using the template given by MVVM-Sidekick
+Wait for the framework to install its dependencies. If there is an error, just simply ignore it.
+
 ![enter image description here](https://wt-prj.oss.aliyuncs.com/3646b5bf07b5481b97cf72b8476252f8/afaac7b0-c2ee-401d-8cdf-94d73e4cf60e.jpg)
- -（如果报错了，就继续看下去，如果没有，那就代表安装成功）
-右键项目列表中的“引用”-“管理 NuGet 程序包”- 搜索 MVVM-Sidekick 选择最新版安装
+
+ - The following content is only for those who get errors when creating the first MVVM-Sidekick project.
+ 
+Right click "Reference"-"Manage NuGet packages"- search for "MVVM-Sidekick" and install the latest version.
+
 ![enter image description here](https://wt-prj.oss.aliyuncs.com/3646b5bf07b5481b97cf72b8476252f8/1b4998ad-9d20-4c43-ae50-f0c8092f5186.png)
-安装完成后，右键点击项目，选择“生成”，系统可能会报错。
-不要管它，删除刚刚创建的项目，到“扩展和更新”处卸载 MVVM-Sidekick 扩展并重新安装即可。
+
+Right click the project and select "Build" after finishing the installation of MVVM-Sidekick's package. Ignore the error message. Just delete the project you created just now and reinstall the MVVM-Sidekick extension from the Extensions page.
 
 ####  SQLite
 
-点击链接下载并安装 SQLite 库的扩展。
+Click the link below to download and install SQLite extension.
 http://sqlite.org/2016/sqlite-uap-3100200.vsix
 
 
 Using Git
 -------------
-请在有主要版本编译通过时将源代码提交到 GIT 仓库，提交前确保提交的版本已经编译通过，提交时要填写注释
-注释要说明这个版本新增或修改或删除了什么内容，如果有多项改动用分号分隔或者使用标号
+Please commit your changes to git repo. Attention, you should only commit your changes if you affirm that your version can pass the compiling process.
+Notes are required. You should clarify the changes you have made to the codes in the commit notes. If there're several changes, please seperate them using semi-colons or use numbers to label them.
 
-Work division
+
+Issue reports
 -------------
-项目的分工如下：
-
- - Tianyu Huang（fjnhhty777@hotmail.com）：UI和UX优化
- - Kevin Gao（gaojunxuanbox@live.com）：ViewModel 层和联网功能的开发
- - Hao Ling（lingmengc@outlook.com）：离线功能（离线查词）开发
- 
- 还麻烦各位了解一下各个成员的分工，遇到 Bug 请发在 Github 上的 Issue 页面并使用电子邮件告知负责对应功能的成员（CC 我：gaojunxuanbox@live.com）
+If there is a bug/issue. Be free to email me or post an issue here.
