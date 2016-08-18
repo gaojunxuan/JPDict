@@ -109,7 +109,7 @@ namespace JapaneseDict.GUI
             else
             {
                 this.ViewModel = new ResultPage_Model(Convert.ToInt32(e.Parameter.ToString()));
-                this.mainPivot.Items.Remove(cn2jpResult_Pivot);
+                
             }
             
         }
@@ -144,7 +144,8 @@ namespace JapaneseDict.GUI
             Observable.FromEventPattern<AutoSuggestBoxTextChangedEventArgs>(this.QueryBox, "TextChanged").Throttle(TimeSpan.FromMilliseconds(900)).Subscribe(async x =>
                             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                             {
-                                this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(QueryBox.Text);
+                                this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(Util.StringHelper.ResolveReplicator(QueryBox.Text));
+                                //this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(QueryBox.Text);
                                 //await Task.Delay(500);
                             }));
         }

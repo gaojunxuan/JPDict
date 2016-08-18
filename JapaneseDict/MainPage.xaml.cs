@@ -1,39 +1,14 @@
 ﻿using MVVMSidekick.Views;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using JapaneseDict.GUI.ViewModels;
-using System.Xml;
-using Windows.Storage;
-using System.Diagnostics;
-using Windows.Storage.Pickers;
 using Windows.Phone.UI.Input;
 using JapaneseDict.Models;
-using Windows.ApplicationModel.DataTransfer;
-using JapaneseDict.Util;
 using Windows.UI.Popups;
 using System.Reactive.Linq;
-using System.Reactive;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Net.Http;
-using Windows.Storage.Streams;
-using Windows.Media.Playback;
-using Windows.Media.Core;
 using Windows.UI.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.System.Profile;
 
 
@@ -132,7 +107,7 @@ namespace JapaneseDict.GUI
             Observable.FromEventPattern<AutoSuggestBoxTextChangedEventArgs>(this.QueryBox, "TextChanged").Throttle(TimeSpan.FromMilliseconds(900)).Subscribe(async x =>
                             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                              {
-                                 this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(QueryBox.Text);
+                                 this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(Util.StringHelper.ResolveReplicator(QueryBox.Text));
                                  //await Task.Delay(500);
                              }));
 

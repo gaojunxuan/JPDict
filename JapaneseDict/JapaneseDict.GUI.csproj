@@ -131,6 +131,9 @@
     <Content Include="Segoe Translator Symbol.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HiraganaRecitePage.xaml.cs">
+      <DependentUpon>HiraganaRecitePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\GroupedNoteItem.cs" />
     <Compile Include="Extensions\ItemsControlExtension.cs" />
     <Compile Include="FeedbackPage.xaml.cs">
@@ -149,6 +152,7 @@
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Startups\FeedbackPage.cs" />
+    <Compile Include="Startups\HiraganaRecitePage.cs" />
     <Compile Include="Startups\NotebookPage.cs" />
     <Compile Include="Startups\ResultPage.cs" />
     <Compile Include="Startups\SettingsPage.cs" />
@@ -157,6 +161,7 @@
       <DependentUpon>TranslationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\FeedbackPage_Model.cs" />
+    <Compile Include="ViewModels\HiraganaRecitePage_Model.cs" />
     <Compile Include="ViewModels\MainPage_Model.cs" />
     <Compile Include="Startups\StartupFunctions.cs" />
     <Compile Include="App.xaml.cs">
@@ -193,6 +198,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="FeedbackPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HiraganaRecitePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

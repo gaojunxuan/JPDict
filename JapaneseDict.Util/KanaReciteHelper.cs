@@ -98,5 +98,9 @@ namespace JapaneseDict.Util
                 return GetRandomKatakana();
             }
         }
+        public static void ResetHiragana()
+        {
+            pickedhira.Clear();
+        }
     }
 }

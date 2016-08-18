@@ -12,21 +12,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
-using JapaneseDict.OnlineService;
-using Windows.UI.Xaml.Controls;
-using JapaneseDict.QueryEngine;
-using Windows.ApplicationModel;
-using Windows.UI.Xaml;
 
 namespace JapaneseDict.GUI.ViewModels
 {
 
     [DataContract]
-    public class SettingsPage_Model : ViewModelBase<SettingsPage_Model>
+    public class HiraganaRecitePage_Model : ViewModelBase<HiraganaRecitePage_Model>
     {
         // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property。
         // 如果您已经安装了 MVVMSidekick 代码片段，请用 propvm +tab +tab 输入属性
-        private readonly string[] scopes = new string[] { "onedrive.readwrite", "wl.offline_access", "wl.signin" };
+
         public String Title
         {
             get { return _TitleLocator(this).Value; }
@@ -39,82 +34,92 @@ namespace JapaneseDict.GUI.ViewModels
         #endregion
 
 
-        public CommandModel<ReactiveCommand, String> CommandSyncNotebook
+        public List<string> Hiraganas
         {
-            get { return _CommandSyncNotebookLocator(this).Value; }
-            set { _CommandSyncNotebookLocator(this).SetValueAndTryNotify(value); }
+            get { return _HiraganasLocator(this).Value; }
+            set { _HiraganasLocator(this).SetValueAndTryNotify(value); }
         }
-        #region Property CommandModel<ReactiveCommand, String> CommandSyncNotebook Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandSyncNotebook = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandSyncNotebookLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandSyncNotebookLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandSyncNotebook), model => model.Initialize(nameof(CommandSyncNotebook), ref model._CommandSyncNotebook, ref _CommandSyncNotebookLocator, _CommandSyncNotebookDefaultValueFactory));
-        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandSyncNotebookDefaultValueFactory =
-            model =>
-            {
-                var resource = nameof(CommandSyncNotebook);           // Command resource  
-                var commandId = nameof(CommandSyncNotebook);
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUIBusyTask(
-                        vm,
-                        async e =>
-                        {
-                            QueryEngine.QueryEngine.UserDefDictQueryEngine.SyncDb();
-                            await Task.Delay(500);
-                            //Todo: Add SyncNotebook logic here, or
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                            
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(resource);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
-
-        PackageVersion pv = Package.Current.Id.Version;
-        public string ApplicationVersion
-        {
-            get { return _ApplicationVersionLocator(this).Value; }
-            set { _ApplicationVersionLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property string ApplicationVersion Setup        
-        protected Property<string> _ApplicationVersion = new Property<string> { LocatorFunc = _ApplicationVersionLocator };
-        static Func<BindableBase, ValueContainer<string>> _ApplicationVersionLocator = RegisterContainerLocator<string>(nameof(ApplicationVersion), model => model.Initialize(nameof(ApplicationVersion), ref model._ApplicationVersion, ref _ApplicationVersionLocator, _ApplicationVersionDefaultValueFactory));
-        static Func<BindableBase, string> _ApplicationVersionDefaultValueFactory =
+        #region Property List<string> Hiraganas Setup        
+        protected Property<List<string>> _Hiraganas = new Property<List<string>> { LocatorFunc = _HiraganasLocator };
+        static Func<BindableBase, ValueContainer<List<string>>> _HiraganasLocator = RegisterContainerLocator<List<string>>(nameof(Hiraganas), model => model.Initialize(nameof(Hiraganas), ref model._Hiraganas, ref _HiraganasLocator, _HiraganasDefaultValueFactory));
+        static Func<BindableBase, List<string>> _HiraganasDefaultValueFactory =
             model =>
             {
                 var vm = CastToCurrentType(model);
                 //TODO: Add the logic that produce default value from vm current status.
-                //return default(string);
-                
-                return $"v{vm.pv.Major}.{vm.pv.Minor}.{vm.pv.Build}.{vm.pv.Revision}";
+                return default(List<string>);
             };
         #endregion
 
 
-        public CommandModel<ReactiveCommand, String> CommandNavToFeedbackPage
+        public int Current
         {
-            get { return _CommandNavToFeedbackPageLocator(this).Value; }
-            set { _CommandNavToFeedbackPageLocator(this).SetValueAndTryNotify(value); }
+            get { return _CurrentLocator(this).Value; }
+            set { _CurrentLocator(this).SetValueAndTryNotify(value); }
         }
-        #region Property CommandModel<ReactiveCommand, String> CommandNavToFeedbackPage Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandNavToFeedbackPage = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandNavToFeedbackPageLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandNavToFeedbackPageLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandNavToFeedbackPage), model => model.Initialize(nameof(CommandNavToFeedbackPage), ref model._CommandNavToFeedbackPage, ref _CommandNavToFeedbackPageLocator, _CommandNavToFeedbackPageDefaultValueFactory));
-        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandNavToFeedbackPageDefaultValueFactory =
+        #region Property int Current Setup        
+        protected Property<int> _Current = new Property<int> { LocatorFunc = _CurrentLocator };
+        static Func<BindableBase, ValueContainer<int>> _CurrentLocator = RegisterContainerLocator<int>(nameof(Current), model => model.Initialize(nameof(Current), ref model._Current, ref _CurrentLocator, _CurrentDefaultValueFactory));
+        static Func<BindableBase, int> _CurrentDefaultValueFactory =
             model =>
             {
-                var resource = nameof(CommandNavToFeedbackPage);           // Command resource  
-                var commandId = nameof(CommandNavToFeedbackPage);
+                var vm = CastToCurrentType(model);
+                //TODO: Add the logic that produce default value from vm current status.
+                return default(int);
+            };
+        #endregion
+
+
+        public List<string> Romajis
+        {
+            get { return _RomajisLocator(this).Value; }
+            set { _RomajisLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property List<string> Romajis Setup        
+        protected Property<List<string>> _Romajis = new Property<List<string>> { LocatorFunc = _RomajisLocator };
+        static Func<BindableBase, ValueContainer<List<string>>> _RomajisLocator = RegisterContainerLocator<List<string>>(nameof(Romajis), model => model.Initialize(nameof(Romajis), ref model._Romajis, ref _RomajisLocator, _RomajisDefaultValueFactory));
+        static Func<BindableBase, List<string>> _RomajisDefaultValueFactory =
+            model =>
+            {
+                var vm = CastToCurrentType(model);
+                //TODO: Add the logic that produce default value from vm current status.
+                return default(List<string>);
+            };
+        #endregion
+
+
+        public string CurrentHiragana
+        {
+            get { return _CurrentHiraganaLocator(this).Value; }
+            set { _CurrentHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property string CurrentHiragana Setup        
+        protected Property<string> _CurrentHiragana = new Property<string> { LocatorFunc = _CurrentHiraganaLocator };
+        static Func<BindableBase, ValueContainer<string>> _CurrentHiraganaLocator = RegisterContainerLocator<string>(nameof(CurrentHiragana), model => model.Initialize(nameof(CurrentHiragana), ref model._CurrentHiragana, ref _CurrentHiraganaLocator, _CurrentHiraganaDefaultValueFactory));
+        static Func<BindableBase, string> _CurrentHiraganaDefaultValueFactory =
+            model =>
+            {
+                var vm = CastToCurrentType(model);
+                //TODO: Add the logic that produce default value from vm current status.
+                return default(string);
+            };
+        #endregion
+
+
+        public CommandModel<ReactiveCommand, String> CommandNext
+        {
+            get { return _CommandNextLocator(this).Value; }
+            set { _CommandNextLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandNext Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandNext = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandNextLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandNextLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandNext), model => model.Initialize(nameof(CommandNext), ref model._CommandNext, ref _CommandNextLocator, _CommandNextDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandNextDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandNext);           // Command resource  
+                var commandId = nameof(CommandNext);
                 var vm = CastToCurrentType(model);
                 var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
 
@@ -122,8 +127,9 @@ namespace JapaneseDict.GUI.ViewModels
                         vm,
                         async e =>
                         {
-                            (Window.Current.Content as Frame).Navigate(typeof(HiraganaRecitePage));
-                            //Todo: Add NavToFeedbackPage logic here, or
+                            vm.Current += 1;
+                            vm.CurrentHiragana = vm.Hiraganas[vm.Current];
+                            //Todo: Add Next logic here, or
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
                         })
                     .DoNotifyDefaultEventRouter(vm, commandId)
@@ -151,6 +157,7 @@ namespace JapaneseDict.GUI.ViewModels
         ///// <returns>Task awaiter</returns>
         //protected override Task OnBindedToView(MVVMSidekick.Views.IView view, IViewModel oldValue)
         //{
+            
         //    return base.OnBindedToView(view, oldValue);
         //}
 
@@ -172,6 +179,7 @@ namespace JapaneseDict.GUI.ViewModels
         ///// <returns>Task awaiter</returns>
         //protected override Task OnBindedViewLoad(MVVMSidekick.Views.IView view)
         //{
+            
         //    return base.OnBindedViewLoad(view);
         //}
 
@@ -198,6 +206,7 @@ namespace JapaneseDict.GUI.ViewModels
         //}
 
         #endregion
+
 
 
 

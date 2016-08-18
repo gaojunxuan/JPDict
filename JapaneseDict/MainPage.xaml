@@ -107,7 +107,7 @@
                                                         <Image Source="{Binding IconPath}" Stretch="Uniform" Width="160" Height="80"></Image>
                                                     </Grid>
                                                     <StackPanel Orientation="Vertical" Margin="4,-4,8,0">
-                                                        <TextBlock Text="{Binding Title}" FontSize="22" Foreground="Black"></TextBlock>
+                                                        <TextBlock Text="{Binding Title}" Style="{ThemeResource TitleTextBlockStyle}" FontSize="22" Foreground="Black"></TextBlock>
                                                         <HyperlinkButton NavigateUri="{Binding Link}" Foreground="#00b294">
                                                             <StackPanel Orientation="Horizontal">
                                                                 <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2,2,0,0"></TextBlock>
