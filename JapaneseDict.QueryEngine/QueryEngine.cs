@@ -17,7 +17,7 @@ namespace JapaneseDict.QueryEngine
 {
     public class QueryEngine
     {
-        
+
         public static class MainDictQueryEngine
         {
             private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
@@ -28,10 +28,7 @@ namespace JapaneseDict.QueryEngine
             /// <returns></returns>
             public static IEnumerable<MainDict> Query(string key)
             {
-               
-                    return _conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar = ?", key);
-                
-
+                return _conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar = ?", key);
             }
             /// <summary>
             /// Fuzzy query MainDict database using the given keyword
@@ -40,9 +37,9 @@ namespace JapaneseDict.QueryEngine
             /// <returns></returns>
             public static IEnumerable<MainDict> FuzzyQuery(string key)
             {
-               
-                    return _conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar LIKE ?", key + "%");
-               
+
+                return _conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar LIKE ?", key + "%");
+
             }
             /// <summary>
             /// Query MainDict database using the given keyword and return the result in ObservableCollection type
@@ -82,17 +79,17 @@ namespace JapaneseDict.QueryEngine
                     {
                         //@"\[[^\]]+\]" Regex pat for removing [XXX]
                         //@"[\（][\s\S]*[\）]" Regex pat for removing （XXX）
-                        var queryres = _conn.Table<MainDict>().Select(s=> s).Where(w => 
-                        {
-                            string a = Regex.Replace(Regex.Replace(w.PreviewExplanation, @"\[[^\]]+\]", ""), @"[\（][\s\S]*[\）]", "");
-                            if(a.Contains(key + "；")||a.Contains(key + "，")|| w.PreviewExplanation.EndsWith("] " + key + " ..."))
-                            {
-                                return true;
-                            }
-                            return false;
-                        });
+                        var queryres = _conn.Table<MainDict>().Select(s => s).Where(w =>
+                         {
+                             string a = Regex.Replace(Regex.Replace(w.PreviewExplanation, @"\[[^\]]+\]", ""), @"[\（][\s\S]*[\）]", "");
+                             if (a.Contains(key + "；") || a.Contains(key + "，") || w.PreviewExplanation.EndsWith("] " + key + " ..."))
+                             {
+                                 return true;
+                             }
+                             return false;
+                         });
                         var result = new ObservableCollection<MainDict>(queryres);
-                        
+
                         if (result.Count != 0)
                         {
                             return result;
@@ -172,6 +169,107 @@ namespace JapaneseDict.QueryEngine
             {
                 _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
             }
+            /// <summary>
+            /// Insert an item into Maindict db
+            /// </summary>
+            /// <param name="jpchar"></param>
+            /// <param name="explanation"></param>
+            /// <param name="Kana"></param>
+            public static void Add(string jpchar, string explanation, string Kana,int id)
+            {
+                _conn.CreateTable<MainDict>();
+                var maxid = _conn.ExecuteScalar<int>("SELECT MAX( ID ) FROM MainDict ;");
+                _conn.Execute($"UPDATE SQLITE_SEQUENCE SET seq = {maxid}  WHERE name = 'MainDict'");
+                var entries=_conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", id);
+                if(entries.Count==0)
+                {
+                    _conn.Insert(new MainDict() { JpChar = jpchar, Explanation = explanation, Kana = Kana, ID = id });
+                    _conn.Commit();
+                }
+                
+            }
+        }
+        public static class KanjiDictQueryEngine
+        {
+            private static SQLiteConnection _kanjiconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "kanji.db"));
+            /// <summary>
+            /// Query the database with the specifed kanji
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public static IEnumerable<MainDict> Query(string key)
+            {
+                return _kanjiconn.Query<MainDict>("SELECT * FROM JoyoKanji WHERE Kanji = ?", key);
+            }
+            /// <summary>
+            /// Query kanji database using the given kanji and return the result in ObservableCollection type
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public static async Task<ObservableCollection<JoyoKanji>> QueryForUIAsync(string key)
+            {
+                return await Task.Run(() =>
+                {
+                    if (!(string.IsNullOrEmpty(key)))
+                    {
+                        var result = new ObservableCollection<JoyoKanji>(_kanjiconn.Query<JoyoKanji>("SELECT * FROM JoyoKanji WHERE Kanji = ?", key.Replace(" ", "").Replace("　", "")));
+                        if (result.Count != 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            var err = new ObservableCollection<JoyoKanji>();
+                            return err;
+                        }
+                    }
+                    else
+                    {
+                        return new ObservableCollection<JoyoKanji>();
+                    }
+                });
+
+            }
+            /// <summary>
+            /// Query kanjis database using the given kanji and return the result in ObservableCollection type
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public static async Task<ObservableCollection<JoyoKanji>> QueryForUIAsync(MatchCollection keywords)
+            {
+                return await Task.Run(() =>
+                {
+                    if (keywords.Count != 0)
+                    {
+                        ObservableCollection<JoyoKanji> result = new ObservableCollection<JoyoKanji>();
+                        foreach (var ks in keywords)
+                        {
+                            foreach (var k in ks.ToString())
+                            {
+
+                                foreach (var r in _kanjiconn.Query<JoyoKanji>("SELECT * FROM JoyoKanji WHERE Kanji = ?", k.ToString()))
+                                {
+                                    result.Add(r);
+                                }
+                            }
+                        }
+                        if (result != null && result.Count != 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            var err = new ObservableCollection<JoyoKanji>();
+                            return err;
+                        }
+                    }
+                    else
+                    {
+                        return new ObservableCollection<JoyoKanji>();
+                    }
+                });
+
+            }
         }
         public static class UserDefDictQueryEngine
         {
@@ -184,9 +282,9 @@ namespace JapaneseDict.QueryEngine
             /// <param name="jpchar"></param>
             /// <param name="explanation"></param>
             /// <param name="Kana"></param>
-            public static void Add(string jpchar,string explanation,string Kana)
+            public static void Add(string jpchar, string explanation, string Kana)
             {
-                
+
                 _noteconn.CreateTable<UserDefDict>();
                 _noteconn.Insert(new UserDefDict() { JpChar = jpchar, Explanation = explanation, Kana = Kana });
                 _noteconn.Commit();
@@ -206,11 +304,11 @@ namespace JapaneseDict.QueryEngine
                     _noteconn.Insert(new UserDefDict(item) { OriginID = id });
                     _noteconn.Commit();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex.ToString());
                 }
-               
+
             }
             /// <summary>
             /// Remove the item with given originId from UserDefDict db
@@ -218,7 +316,7 @@ namespace JapaneseDict.QueryEngine
             /// <param name="originId"></param>
             public static void Remove(int originId)
             {
-                
+
                 var item = _conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", originId).FirstOrDefault();
                 item.IsInUserDefDict = false;
                 _conn.Update(item);
@@ -231,7 +329,7 @@ namespace JapaneseDict.QueryEngine
             /// <returns></returns>
             public static ObservableCollection<UserDefDict> Get()
             {
-                 
+
                 _noteconn.CreateTable<UserDefDict>();
                 return new ObservableCollection<UserDefDict>(_noteconn.Table<UserDefDict>());
             }
@@ -241,13 +339,13 @@ namespace JapaneseDict.QueryEngine
             /// <returns></returns>
             public static async Task<ObservableCollection<UserDefDict>> GetAsync()
             {
-                
-                return await Task.Run(() => 
+
+                return await Task.Run(() =>
                 {
                     _noteconn.CreateTable<UserDefDict>();
                     return new ObservableCollection<UserDefDict>(_noteconn.Table<UserDefDict>());
                 });
-                
+
             }
             /// <summary>
             /// Merge database
@@ -255,9 +353,9 @@ namespace JapaneseDict.QueryEngine
             /// <param name="path"></param>
             public static void MergeDb(string path)
             {
-                SQLiteConnection _mergeConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path,path));
+                SQLiteConnection _mergeConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, path));
                 _mergeConn.CreateTable<UserDefDict>();
-                foreach(var i in _mergeConn.Table<UserDefDict>())
+                foreach (var i in _mergeConn.Table<UserDefDict>())
                 {
                     //put the data from given db into main db
                     _noteconn.Insert(i);
@@ -281,29 +379,10 @@ namespace JapaneseDict.QueryEngine
             }
             private static void Reconnect()
             {
-                _noteconn= new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
-            }
-        }
-        public static class OnlineQueryEngine
-        {
-            /// <summary>
-            /// Query online
-            /// </summary>
-            /// <param name="keyword"></param>
-            /// <returns></returns>
-            public static async Task<ObservableCollection<OnlineDict>> Query(string keyword)
-            {
-                var res = new ObservableCollection<OnlineDict>();
-                res.Add(new OnlineDict() { JpChar = keyword, Explanation = await OnlineService.JsonHelper.GetTranslateResult(keyword, "jp", "zh") });
-                return res;
-            }
-            public static async Task<ObservableCollection<OnlineDict>> Query(string keyword,string originLang,string targetLang)
-            {
-                var res = new ObservableCollection<OnlineDict>();
-                res.Add(new OnlineDict() { JpChar = keyword, Explanation = await OnlineService.JsonHelper.GetTranslateResult(keyword, originLang, targetLang) });
-                return res;
+                _noteconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
             }
         }
         
+
     }
 }

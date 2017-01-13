@@ -36,8 +36,8 @@
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Holding="noteItem_Holding" RightTapped="noteItem_RightTapped" Name="noteItem" Width="340" Margin="12" Background="White" Tag="{Binding OriginID}" BorderBrush="LightGray" BorderThickness="0.8" Tapped="noteItem_Tapped">
-                                <TextBlock Text="{Binding JpChar}" Foreground="#00b294" FontSize="26.667" Margin="8,20,4,4"></TextBlock>
-                                <TextBlock Text="{Binding Kana}" Foreground="Gray" FontSize="14" Margin="8,4,4,4"></TextBlock>
+                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding JpChar}" Foreground="#00b294" FontSize="26.667" Margin="8,20,4,4"></TextBlock>
+                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kana}" Foreground="Gray" FontSize="14" Margin="8,4,4,4"></TextBlock>
                                 <TextBlock Text="{Binding PreviewExplanation}" FontSize="20" Margin="8,4,4,20"></TextBlock>
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout>
@@ -51,7 +51,7 @@
                         <GroupStyle>
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Key}" Foreground="#00b294" FontSize="26.67" Height="30" Margin="0 0 0 20" />
+                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Key}" Foreground="#00b294" FontSize="26.67" Height="30" Margin="0 0 0 20" />
                                 </DataTemplate>
                             </GroupStyle.HeaderTemplate>
                         </GroupStyle>
@@ -64,7 +64,7 @@
                         <DataTemplate>
                             <StackPanel>
                                 <StackPanel Background="#00b294" Margin="12" Width="360">
-                                    <TextBlock Margin="8" Text="{Binding Key}" FontSize="32" Foreground="White"></TextBlock>
+                                    <TextBlock FontFamily="Yu Gothic UI" Margin="8" Text="{Binding Key}" FontSize="32" Foreground="White"></TextBlock>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

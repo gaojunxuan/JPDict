@@ -112,6 +112,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KanaFlashcardHelper.cs" />
     <Compile Include="KanaReciteHelper.cs" />
     <Compile Include="Md5Helper.cs" />
     <Compile Include="SharingHelper.cs" />

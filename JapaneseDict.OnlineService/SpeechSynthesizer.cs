@@ -78,8 +78,8 @@ namespace JapaneseDict.OnlineService
         private const int MAX_TEXT_LENGTH = 1000;
         private const int MAX_TEXT_LENGTH_FOR_AUTODETECTION = 100;
 
-        private DateTime tokenRequestTime;
-        private int tokenValiditySeconds;
+        //private DateTime tokenRequestTime;
+        //private int tokenValiditySeconds;
         private string headerValue;
 
         #region Properties
@@ -168,6 +168,8 @@ namespace JapaneseDict.OnlineService
         /// </remarks>
         /// <seealso cref="Language"/>
         public bool AutoDetectLanguage { get; set; }
+        public AzureAuthToken AuthToken { get; set; }
+
 
         #endregion
 
@@ -181,11 +183,10 @@ namespace JapaneseDict.OnlineService
         /// <remarks><para>You must register your application on <strong>Azure DataMarket</strong> at https://datamarket.azure.com/developer/applications to obtain the Client ID and Client Secret needed to use the service.</para>
         /// <para>You also need to go to https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb and subscribe the <strong>Microsoft Translator Service</strong>. There are many options, based on the amount of characters per month. The service is free up to 2 million characters per month.</para>
         /// </remarks>
-        /// <seealso cref="ClientID"/>
         /// <seealso cref="ClientSecret"/>        
         /// <seealso cref="Language"/>
-        public SpeechSynthesizer(string clientID, string clientSecret)
-            : this(clientID, clientSecret, CultureInfo.CurrentCulture.Name.ToLower())
+        public SpeechSynthesizer(string clientSecret)
+            : this(clientSecret, CultureInfo.CurrentCulture.Name.ToLower())
         { }
 
         /// <summary>
@@ -199,18 +200,21 @@ namespace JapaneseDict.OnlineService
         /// <remarks><para>You must register your application on <strong>Azure DataMarket</strong> at https://datamarket.azure.com/developer/applications to obtain the Client ID and Client Secret needed to use the service.</para>
         /// <para>You also need to go to https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb and subscribe the <strong>Microsoft Translator Service</strong>. There are many options, based on the amount of characters per month. The service is free up to 2 million characters per month.</para>
         /// </remarks>
-        /// <seealso cref="ClientID"/>
         /// <seealso cref="ClientSecret"/>        
         /// <seealso cref="Language"/>
-        public SpeechSynthesizer(string clientID, string clientSecret, string language)
+        public SpeechSynthesizer(string clientSecret, string language)
         {
-            ClientID = clientID;
+            //ClientID = clientID;
             ClientSecret = clientSecret;
             Language = language;
             AudioFormat = SpeakStreamFormat.Wave;
             AudioQuality = SpeakStreamQuality.MinSize;
             AutomaticTranslation = true;
             AutoDetectLanguage = true;
+            if (string.IsNullOrWhiteSpace(ClientSecret))
+                throw new ArgumentException("Invalid Token");
+
+            AuthToken = new AzureAuthToken(ClientSecret);
         }
 
         #region Get Languages
@@ -233,11 +237,9 @@ namespace JapaneseDict.OnlineService
         {
             // Check if it is necessary to obtain/update access token.
             await this.UpdateToken();
-
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(BASE_URL);
             client.DefaultRequestHeaders.Add(AUTHORIZATION_HEADER, headerValue);
-
             using (Stream stream = await client.GetStreamAsync(LANGUAGES_URI))
             {
                 DataContractSerializer dcs = new DataContractSerializer(typeof(string[]));
@@ -547,22 +549,10 @@ namespace JapaneseDict.OnlineService
 
         private async Task UpdateToken()
         {
-            if (string.IsNullOrWhiteSpace(ClientID))
-                throw new ArgumentException("Invalid Client ID. Go to Azure Marketplace and sign up for Microsoft Translator: https://datamarket.azure.com/developer/applications");
+            //if (string.IsNullOrWhiteSpace(ClientID))
+            //    throw new ArgumentException("Invalid Client ID. Go to Azure Marketplace and sign up for Microsoft Translator: https://datamarket.azure.com/developer/applications");
 
-            if (string.IsNullOrWhiteSpace(ClientSecret))
-                throw new ArgumentException("Invalid Client Secret. Go to Azure Marketplace and sign up for Microsoft Translator: https://datamarket.azure.com/developer/applications");
-
-            if ((DateTime.Now - tokenRequestTime).TotalSeconds > tokenValiditySeconds)
-            {
-                // Token has expired. Make a request for a new one.
-                tokenRequestTime = DateTime.Now;
-                AdmAuthentication admAuth = new AdmAuthentication(ClientID, ClientSecret);
-                var admToken = await admAuth.GetAccessToken();
-
-                tokenValiditySeconds = int.Parse(admToken.expires_in);
-                headerValue = "Bearer " + admToken.access_token;
-            }
+            this.headerValue= await AuthToken.GetAccessTokenAsync();
         }
     }
 }

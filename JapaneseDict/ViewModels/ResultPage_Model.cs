@@ -23,6 +23,7 @@ using JapaneseDict.OnlineService;
 using Windows.UI.Popups;
 using System.Net.Http;
 using Windows.Storage.Streams;
+using System.Text.RegularExpressions;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -35,10 +36,15 @@ namespace JapaneseDict.GUI.ViewModels
         // 如果您已经安装了 MVVMSidekick 代码片段，请用 propvm +tab +tab 输入属性
         ObservableCollection<MainDict> results;
         string _keyword;
+        ObservableCollection<JoyoKanji> kanjiresults;
+        MatchCollection _kanjikeyword;
         public ResultPage_Model(string keyword)
         {
+            
             _keyword = keyword;
             QueryWord();
+           
+            QueryKanji();
             EnableBackButtonOnTitleBar((sender, args) =>
             {
                 BindableBase model=this;
@@ -50,7 +56,6 @@ namespace JapaneseDict.GUI.ViewModels
 
                 }
                 DisableBackButtonOnTitleBar();
-
 
             });
             
@@ -68,7 +73,6 @@ namespace JapaneseDict.GUI.ViewModels
             EnableBackButtonOnTitleBar((sender, args) =>
             {
                 BindableBase model = this;
-
                 Frame rootFrame = Window.Current.Content as Frame;
                 if (rootFrame.CanGoBack)
                 {
@@ -76,8 +80,6 @@ namespace JapaneseDict.GUI.ViewModels
 
                 }
                 DisableBackButtonOnTitleBar();
-
-
             });
 
             if (IsInDesignMode)
@@ -86,11 +88,19 @@ namespace JapaneseDict.GUI.ViewModels
             }
 
         }
+        private async void QueryKanji()
+        {
+            Regex reg = new Regex("[\u4e00-\u9fa5]+"); //extract kanjis
+            _kanjikeyword = reg.Matches(_keyword);
+            this.kanjiresults = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(_kanjikeyword);
+            this.KanjiResults = kanjiresults;
+        }
         private async void QueryWord()
         {
 
             this.results = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(_keyword);
             this.Results = results;
+            //cn to jp translate method (obsolete)
             //this.Cn2JpResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryCn2JpForUIAsync(_keyword);
             //this.OnlineResult = await QueryEngine.QueryEngine.OnlineQueryEngine.Query(_keyword);
         }
@@ -99,6 +109,11 @@ namespace JapaneseDict.GUI.ViewModels
 
             this.results = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(id);
             this.Results = results;
+            if(this.results!=null&&this.results.Count!=0)
+            {
+                this._keyword = this.results.First().JpChar;
+                QueryKanji();
+            }
             //this.OnlineResult = await QueryEngine.QueryEngine.OnlineQueryEngine.Query(results.First().JpChar);
         }
 
@@ -118,6 +133,18 @@ namespace JapaneseDict.GUI.ViewModels
                 //TODO: Add the logic that produce default value from vm current status.
                 return vm.results;
             };
+        #endregion
+
+
+        public ObservableCollection<JoyoKanji> KanjiResults
+        {
+            get { return _KanjiResultsLocator(this).Value; }
+            set { _KanjiResultsLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property ObservableCollection<JoyoKanji> KanjiResults Setup        
+        protected Property<ObservableCollection<JoyoKanji>> _KanjiResults = new Property<ObservableCollection<JoyoKanji>> { LocatorFunc = _KanjiResultsLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<JoyoKanji>>> _KanjiResultsLocator = RegisterContainerLocator<ObservableCollection<JoyoKanji>>(nameof(KanjiResults), model => model.Initialize(nameof(KanjiResults), ref model._KanjiResults, ref _KanjiResultsLocator, _KanjiResultsDefaultValueFactory));
+        static Func<ObservableCollection<JoyoKanji>> _KanjiResultsDefaultValueFactory = () => default(ObservableCollection<JoyoKanji>);
         #endregion
 
         private void EnableBackButtonOnTitleBar(EventHandler<BackRequestedEventArgs> onBackRequested)
@@ -174,7 +201,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 if (rootFrame.CanGoBack)
                                 {
                                     rootFrame.GoBack();
-                                    rootFrame.Navigate(typeof(ResultPage), e.EventArgs.Parameter.ToString());
+                                    rootFrame.Navigate(typeof(ResultPage), Util.StringHelper.ResolveReplicator(e.EventArgs.Parameter.ToString().Replace(" ", "").Replace(" ", "")));
                                     //GC.Collect();
                                 }
                             }
@@ -257,7 +284,7 @@ namespace JapaneseDict.GUI.ViewModels
                         async e =>
                         {
                             vm.IsOnlineQueryBusy = true;
-                            vm.OnlineResult = await QueryEngine.QueryEngine.OnlineQueryEngine.Query(vm.results.First().JpChar);
+                            vm.OnlineResult = await OnlineQueryEngine.Query(vm.results.First().JpChar);
                             //Todo: Add QueryOnline logic here, or
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
                             vm.IsOnlineQueryBusy = false;
@@ -386,11 +413,15 @@ namespace JapaneseDict.GUI.ViewModels
                         vm,
                         async e =>
                         {
-                            const string CLIENT_ID = "skylark_jpdict";
-                            const string CLIENT_SECRET = "uzHa5qUm4+GehYnL2pMIw8XtNox8sbqGNq7S+UiM6bk=";
+                            ///obsoleted: azure marketplace secret
+                            //const string CLIENT_ID = "skylark_jpdict";
+                            //const string CLIENT_SECRET = "uzHa5qUm4+GehYnL2pMIw8XtNox8sbqGNq7S+UiM6bk=";
+                            //const string CLIENT_ID = "skylarkjpdict";
+
+                            const string CLIENT_SECRET = "b155421d3d7746ebbfcb2e7922b60a87";
                             try
                             {
-                                SpeechSynthesizer speech = new SpeechSynthesizer(CLIENT_ID, CLIENT_SECRET);
+                                SpeechSynthesizer speech = new SpeechSynthesizer(CLIENT_SECRET);
                                 string text = e.EventArgs.Parameter.ToString();
                                 string language = "ja";
                                 // Gets the audio stream.

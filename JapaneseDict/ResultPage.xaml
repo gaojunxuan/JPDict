@@ -24,12 +24,12 @@
             <ScrollViewer x:Name="resultViewer" RequestedTheme="Light">
                 <StackPanel>
 
-                    <TextBlock x:Name="pageTitle" Text="{Binding JpChar}" Style="{StaticResource HeaderTextBlockStyle}"
+                    <TextBlock FontFamily="Yu Gothic UI" x:Name="pageTitle" Text="{Binding JpChar}" Style="{StaticResource HeaderTextBlockStyle}"
                                   IsHitTestVisible="false" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20,30,30,0" FontWeight="Normal" Foreground="#FF00B294" FontSize="32" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
                     <StackPanel Orientation="Vertical" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource boolToVisibility}}">
-                        <Button x:Name="Speak_Btn" Command="{Binding CommandSpeak,Source={StaticResource ResourceKey=DesignVM}}" CommandParameter="{Binding Kana}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="26.667" FontFamily="Microsoft JhengHei UI" Height="44" Background="#FF00B294" Foreground="White">
+                        <Button x:Name="Speak_Btn" Command="{Binding CommandSpeak,Source={StaticResource ResourceKey=DesignVM}}" CommandParameter="{Binding Kana}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="26.667" Height="44" Background="#FF00B294" Foreground="White">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Kana}" FontSize="18.667" TextWrapping="Wrap"/>
+                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kana}" FontSize="18.667" TextWrapping="Wrap"/>
                                 <SymbolIcon Symbol="Volume" Margin="10,0,0,0"/>
                             </StackPanel>
                         </Button>
@@ -43,7 +43,7 @@
                         </StackPanel>
 
                     </StackPanel>
-                    <TextBlock x:Name="explanationBox" Text="{Binding Explanation}" Margin="20,20,30,40" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
+                    <TextBlock FontFamily="Yu Gothic UI" x:Name="explanationBox" Text="{Binding Explanation}" Margin="20,20,30,40" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
                     <Button x:Name="sendFeedback_Btn" Content="提交反馈" Command="{Binding CommandSendFeedback,Source={StaticResource ResourceKey=DesignVM}}" CommandParameter="{Binding JpChar}" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource negateConverter}}" Margin="20,0,30,0" Foreground="White" Background="#FF00B294" Height="40" Width="80"></Button>
                     <Button x:Name="seeOnlineResult_Btn" Content="在线释义" CommandParameter="{Binding JpChar}" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource negateConverter}}" Margin="20,20,30,0" Foreground="White" Background="#FF00B294" Height="40" Width="80" Click="seeOnlineResult_Btn_Click"></Button>
                 </StackPanel>
@@ -81,7 +81,7 @@
         <DataTemplate x:Key="DataTemplate3">
             <ScrollViewer x:Name="resultViewer" RequestedTheme="Light">
                 <StackPanel>
-                    <TextBlock x:Name="pageTitle" Text="{Binding JpChar}" Style="{StaticResource HeaderTextBlockStyle}"
+                    <TextBlock x:Name="pageTitle" FontFamily="Yu Gothic UI" Text="{Binding JpChar}" Style="{StaticResource HeaderTextBlockStyle}"
                                   IsHitTestVisible="false" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20,30,30,0" FontWeight="Normal" Foreground="#FF00B294" FontSize="32" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
                     <TextBlock x:Name="explanatioBox" Text="{Binding Explanation}" Margin="20,20,30,0" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
                 </StackPanel>
@@ -112,7 +112,7 @@
                         <FontIcon Glyph="&#xE90A;" Width="25" Margin="0,0,5,0"></FontIcon>
                         <StackPanel Height="48">
                             <TextBlock FontSize="24">结果</TextBlock>
-                            <TextBlock FontSize="8">けっか</TextBlock>
+                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">けっか</TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
@@ -125,7 +125,7 @@
                         <FontIcon Glyph="&#xE12B;" Width="25" Margin="0,0,5,0"></FontIcon>
                         <StackPanel Height="48">
                             <TextBlock FontSize="24">在线结果</TextBlock>
-                            <TextBlock FontSize="8">オンラインのけっか</TextBlock>
+                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">オンラインのけっか</TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
@@ -140,15 +140,64 @@
                     </FlipView>
                 </Grid>
             </PivotItem>
-            
+            <PivotItem>
+                <PivotItem.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                        <StackPanel Height="48">
+                            <TextBlock FontSize="24">汉字</TextBlock>
+                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">かんじ</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </PivotItem.Header>
+                <Grid>
+                    <GridView ItemsSource="{Binding KanjiResults}" SelectionMode="None" IsSwipeEnabled="False">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Name="kanjiItem" Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal" Tapped="kanjiItem_Tapped">
+                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kanji}" VerticalAlignment="Center" Foreground="#00b294" FontSize="48" Margin="20,0,0,0"/>
+                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Hantaiji}" VerticalAlignment="Center" Margin="8,0,0,0" Foreground="#B200B294" FontSize="24"></TextBlock>
+                                    <ScrollViewer HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled">
+                                        <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                            <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="{Binding Reading}" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="{Binding Strokes}" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                    <FlyoutBase.AttachedFlyout>
+                                        <Flyout>
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="读音: "></TextBlock>
+                                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Reading}" Margin="8,0,0,0"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="笔画: "></TextBlock>
+                                                    <TextBlock Text="{Binding Strokes}" Margin="8,0,0,0"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="等级: "></TextBlock>
+                                                    <TextBlock Text="{Binding Grade}" Margin="8,0,0,0"></TextBlock>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                        <GridViewItem>
+
+                        </GridViewItem>
+                    </GridView>
+                </Grid>
+            </PivotItem>
         </Pivot>
         <StackPanel Background="#00b294" Height="65" VerticalAlignment="Bottom">
 
-            <AutoSuggestBox x:Name="QueryBox" TextMemberPath="JpChar"  PlaceholderText="请输入要查询的词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen">
+            <AutoSuggestBox x:Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="JpChar"  PlaceholderText="请输入要查询的词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen">
                 <AutoSuggestBox.Resources>
                     <DataTemplate x:Key="DataTemplate1">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding JpChar}" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding JpChar}" FontFamily="Yu Gothic UI" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding PreviewExplanation}" Margin="10,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>

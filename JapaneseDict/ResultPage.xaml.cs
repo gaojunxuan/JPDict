@@ -181,5 +181,10 @@ namespace JapaneseDict.GUI
             rootFrame.GoBack();
             rootFrame.Navigate(typeof(ResultPage),((StackPanel)sender).Tag.ToString());
         }
+
+        private void kanjiItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+        }
     }
 }

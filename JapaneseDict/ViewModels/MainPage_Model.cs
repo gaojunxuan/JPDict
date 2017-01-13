@@ -91,7 +91,7 @@ namespace JapaneseDict.GUI.ViewModels
                             if ((!string.IsNullOrWhiteSpace(e.EventArgs.Parameter.ToString()))&&(e.EventArgs.Parameter.ToString()!= "Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs"))
                             {
                                 Frame rootFrame = Window.Current.Content as Frame;
-                                rootFrame.Navigate(typeof(ResultPage), e.EventArgs.Parameter.ToString().Replace(" ", "").Replace(" ", ""));
+                                rootFrame.Navigate(typeof(ResultPage), Util.StringHelper.ResolveReplicator(e.EventArgs.Parameter.ToString().Replace(" ", "").Replace(" ", "")));
                                 //GC.Collect();
                             }
                                 

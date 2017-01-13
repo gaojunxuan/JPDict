@@ -1,0 +1,271 @@
+﻿<mvvm:MVVMPage 
+    x:Name="pageRoot"
+    x:Class="JapaneseDict.GUI.KanaFlashcardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:JapaneseDict.GUI"
+    xmlns:mvvm="using:MVVMSidekick.Views"     
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:JapaneseDict.GUI.ViewModels"
+    mc:Ignorable="d">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  >
+        <d:FrameworkElement.DataContext>
+            <vm:KanaFlashcardPage_Model/>
+        </d:FrameworkElement.DataContext>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
+        <Pivot Name="mainPivot" RequestedTheme="Dark" Margin="0,0,0,0">
+            <PivotItem Margin="0,0,0,0">
+                <PivotItem.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                        <StackPanel Height="48">
+                            <TextBlock FontSize="24">平假名</TextBlock>
+                            <TextBlock FontSize="8">ひらがな</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </PivotItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#00b294" Grid.RowSpan="1" Margin="0,-12,0,12">
+                        <FlipView ItemsSource="{Binding Hiragana}" Background="{x:Null}">
+                            <FlipView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock x:Name="kana_Tbk" Text="{Binding Content}" FontFamily="Yu Gothic UI" TextAlignment="Center" FontSize="72"></TextBlock>
+                                        <TextBlock x:Name="reading_Tbk" Text="{Binding Romaji}" TextAlignment="Center" FontSize="32" Margin="0,8,0,0"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </FlipView.ItemTemplate>
+                        </FlipView>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <ListView SelectionMode="None" Margin="0,0,0,8">
+                            <ListViewItem x:Name="showhistoryhira_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="32" Width="40" Height="40" TextAlignment="Center">ゑ</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣い「ゐ」と「ゑ」を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hidehistoryhira_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="30" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,9">ゑ</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣い「ゐ」と「ゑ」を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="showHiraSonant_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="32" Width="40" Height="18" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">゛゜</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示浊音及半浊音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="濁音と半濁音を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hideHiraSonant_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="21" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,9">゛゜</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏浊音及半浊音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="濁音と半濁音を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="showHiraRomaji_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="40" TextAlignment="Center">tsu</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示罗马音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="ローマ字を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hideHiraRomaji_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="40" TextAlignment="Center">tsu</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏罗马音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="ローマ字を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="replayHira_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontSize="28" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0"></TextBlock>
+                                        <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="重新开始" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="リプレイ" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="orderHira_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontSize="28" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0"></TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="顺序浏览" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="順序で表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="disorderHira_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontSize="28" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0"></TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="乱序浏览" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="ランダムに表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </PivotItem>
+            <PivotItem Margin="0,0,0,0">
+                <PivotItem.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                        <StackPanel Height="48">
+                            <TextBlock FontSize="24">片假名</TextBlock>
+                            <TextBlock FontSize="8">カタカナ</TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </PivotItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#00b294" Grid.RowSpan="1" Margin="0,-12,0,12">
+                        <FlipView ItemsSource="{Binding Katakana}" Background="{x:Null}">
+                            <FlipView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock x:Name="kana_Tbk" Text="{Binding Content}" FontFamily="Yu Gothic UI" TextAlignment="Center" FontSize="72"></TextBlock>
+                                        <TextBlock x:Name="reading_Tbk" Text="{Binding Romaji}" TextAlignment="Center" FontSize="32" Margin="0,8,0,0"></TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </FlipView.ItemTemplate>
+                        </FlipView>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <ListView SelectionMode="None" Margin="0,0,0,8">
+                            <ListViewItem x:Name="showhistorykata_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="32" Width="40" Height="40" TextAlignment="Center">ヱ</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣い「ヰ」と「ヱ」を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hidehistorykata_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="30" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,9">ヱ</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣い「ヰ」と「ヱ」を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="showKataSonant_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="32" Width="40" Height="18" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">゛゜</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示浊音及半浊音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="濁音と半濁音を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hideKataSonant_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="21" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,14,0,9">゛゜</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏浊音及半浊音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="濁音と半濁音を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="showKataromaji_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="40" TextAlignment="Center">tsu</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示罗马音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="ローマ字を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hideKataromaji_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="40" TextAlignment="Center">tsu</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏罗马音" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="ローマ字を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="replayKata_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontSize="28" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0"></TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="重新开始" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="リプレイ" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="orderKata_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontSize="28" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0"></TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="顺序浏览" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="順序で表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem x:Name="disorderKata_item" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontSize="28" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0"></TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="乱序浏览" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="ランダムに表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</mvvm:MVVMPage>

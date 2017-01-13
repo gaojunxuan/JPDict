@@ -123,6 +123,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="JapaneseDict_StoreKey.pfx" />
+    <Content Include="kanji.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="project.json" />
     <None Include="Package.StoreAssociation.xml">
       <SubType>Designer</SubType>
@@ -131,8 +134,13 @@
     <Content Include="Segoe Translator Symbol.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\BoolNegativeConverter.cs" />
+    <Compile Include="Helpers\MediaPositionConverter.cs" />
     <Compile Include="HiraganaRecitePage.xaml.cs">
       <DependentUpon>HiraganaRecitePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="KanaFlashcardPage.xaml.cs">
+      <DependentUpon>KanaFlashcardPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\GroupedNoteItem.cs" />
     <Compile Include="Extensions\ItemsControlExtension.cs" />
@@ -153,15 +161,21 @@
     </Compile>
     <Compile Include="Startups\FeedbackPage.cs" />
     <Compile Include="Startups\HiraganaRecitePage.cs" />
+    <Compile Include="Startups\KanaFlashcardPage.cs" />
     <Compile Include="Startups\NotebookPage.cs" />
     <Compile Include="Startups\ResultPage.cs" />
     <Compile Include="Startups\SettingsPage.cs" />
     <Compile Include="Startups\TranslationPage.cs" />
+    <Compile Include="Startups\UpdatePage.cs" />
     <Compile Include="TranslationPage.xaml.cs">
       <DependentUpon>TranslationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UpdatePage.xaml.cs">
+      <DependentUpon>UpdatePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\FeedbackPage_Model.cs" />
     <Compile Include="ViewModels\HiraganaRecitePage_Model.cs" />
+    <Compile Include="ViewModels\KanaFlashcardPage_Model.cs" />
     <Compile Include="ViewModels\MainPage_Model.cs" />
     <Compile Include="Startups\StartupFunctions.cs" />
     <Compile Include="App.xaml.cs">
@@ -175,6 +189,7 @@
     <Compile Include="ViewModels\ResultPage_Model.cs" />
     <Compile Include="ViewModels\SettingsPage_Model.cs" />
     <Compile Include="ViewModels\TranslationPage_Model.cs" />
+    <Compile Include="ViewModels\UpdatePage_Model.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -205,6 +220,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="KanaFlashcardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -222,6 +241,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TranslationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UpdatePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

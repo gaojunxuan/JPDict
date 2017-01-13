@@ -118,6 +118,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\IDictItem.cs" />
+    <Compile Include="Models\IKanji.cs" />
+    <Compile Include="Models\JoyoKanji.cs" />
     <Compile Include="Models\MainDict.cs" />
     <Compile Include="Models\OnlineDict.cs" />
     <Compile Include="Models\UserDefDict.cs" />
@@ -125,12 +127,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryEngine.cs" />
     <Content Include="Properties\JapaneseDict.QueryEngine.rd.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JapaneseDict.OnlineService\JapaneseDict.OnlineService.csproj">
-      <Project>{f385bdf1-4053-41a3-b9b7-cf504577c533}</Project>
-      <Name>JapaneseDict.OnlineService</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="SQLite.UAP.2015, Version=3.9.2">

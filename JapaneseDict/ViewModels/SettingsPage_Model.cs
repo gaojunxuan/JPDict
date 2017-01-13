@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Controls;
 using JapaneseDict.QueryEngine;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
+using Windows.UI.Popups;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -122,7 +123,7 @@ namespace JapaneseDict.GUI.ViewModels
                         vm,
                         async e =>
                         {
-                            (Window.Current.Content as Frame).Navigate(typeof(HiraganaRecitePage));
+                            (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage));
                             //Todo: Add NavToFeedbackPage logic here, or
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
                         })
@@ -140,6 +141,59 @@ namespace JapaneseDict.GUI.ViewModels
 
         #endregion
 
+
+        public CommandModel<ReactiveCommand, String> CommandUpdateDict
+        {
+            get { return _CommandUpdateDictLocator(this).Value; }
+            set { _CommandUpdateDictLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandUpdateDict Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandUpdateDict = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandUpdateDictLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandUpdateDictLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandUpdateDict), model => model.Initialize(nameof(CommandUpdateDict), ref model._CommandUpdateDict, ref _CommandUpdateDictLocator, _CommandUpdateDictDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandUpdateDictDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandUpdateDict);           // Command resource  
+                var commandId = nameof(CommandUpdateDict);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            try
+                            {
+                                await Task.Run(async () => 
+                                {
+                                    var updates = await OnlineService.OnlineUpdate.GetAllUpdates();
+                                    await OnlineUpdate.ApplyUpdate(updates);
+                                });
+                                
+                                await new MessageDialog("已经成功升级了您的词库", "升级成功").ShowAsync();
+                            }
+                            catch
+                            {
+                                await new MessageDialog("升级失败，请检查您的网络连接", "升级失败").ShowAsync();
+
+                            }
+                            //Todo: Add UpdateDict logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
 
         #region Life Time Event Handling
 

@@ -103,13 +103,12 @@ namespace JapaneseDict.GUI
         MainPage_Model vm = new MainPage_Model();
         private void MVVMPage_Loaded(object sender, RoutedEventArgs e)
         {
-
             Observable.FromEventPattern<AutoSuggestBoxTextChangedEventArgs>(this.QueryBox, "TextChanged").Throttle(TimeSpan.FromMilliseconds(900)).Subscribe(async x =>
                             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-                             {
-                                 this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(Util.StringHelper.ResolveReplicator(QueryBox.Text));
-                                 //await Task.Delay(500);
-                             }));
+                            {
+                                this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(Util.StringHelper.ResolveReplicator(QueryBox.Text));
+                                //await Task.Delay(500);
+                            }));
 
         }
 
@@ -129,10 +128,11 @@ namespace JapaneseDict.GUI
             this.mediaEle.Source = null;
             this.mediaEle.Stop();
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
+            this.listeningPosition_Slider.Visibility = Visibility.Collapsed;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            
+
             base.OnNavigatedTo(e);
             this.mediaEle.Stop();
         }
@@ -140,6 +140,7 @@ namespace JapaneseDict.GUI
         {
             try
             {
+                ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
                 mediaEle.Stop();
                 var currentBtn = ((Button)sender);
 
@@ -148,16 +149,18 @@ namespace JapaneseDict.GUI
                 {
                     mediaEle.Source = new Uri(tag, UriKind.Absolute);
                     mediaEle.Position = TimeSpan.FromMilliseconds(0);
+
                     mediaEle.Play();
 
                     StopNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
+                    listeningPosition_Slider.Visibility = Visibility.Visible;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await new MessageDialog("详细信息:\n\n" + ex.ToString() + "\n\n您可以在联系作者时提供以上的错误信息", "出现错误").ShowAsync();
             }
-           
+
         }
         private void translate_frame_Loaded(object sender, RoutedEventArgs e)
         {
@@ -196,8 +199,9 @@ namespace JapaneseDict.GUI
 
         private void StopNHKRadiosPlay_Btn_Click(object sender, RoutedEventArgs e)
         {
-            mediaEle.Stop();
+            mediaEle.Pause();
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
+            ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
         }
 
         private void QueryBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
@@ -219,6 +223,13 @@ namespace JapaneseDict.GUI
         private void mediaEle_MediaEnded(object sender, RoutedEventArgs e)
         {
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
+            listeningPosition_Slider.Visibility = Visibility.Collapsed;
+        }
+        private void ResumeNHKRadiosPlay_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            mediaEle.Play();
+            (sender as HyperlinkButton).Visibility = Visibility.Collapsed;
+            StopNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
         }
     }
 }

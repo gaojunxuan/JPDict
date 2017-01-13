@@ -49,6 +49,8 @@ namespace JapaneseDict
             {
                 await file.CopyAsync(ApplicationData.Current.LocalFolder, "dict.db");
             }
+            var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanji.db"));
+            await kanjifile.CopyAsync(ApplicationData.Current.LocalFolder, "kanji.db",NameCollisionOption.ReplaceExisting);
         }
         
        
