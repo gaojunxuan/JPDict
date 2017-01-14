@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace JapaneseDict.Util
 {
@@ -13,6 +14,7 @@ namespace JapaneseDict.Util
             public string Content { get; set; }
             public string Romaji { get; set; }
             public bool IsHistory { get; set; }
+            public Visibility ShowRomaji { get; set; } = Visibility.Visible;
         }
         public static List<Kana> hiragana = new List<Kana>()
         {
@@ -174,7 +176,7 @@ namespace JapaneseDict.Util
         };
         public static IEnumerable<Kana> GetRandomHiragana()
         {
-            Random ran = new Random(DateTime.Now.Millisecond);
+            Random ran = new Random();
             List<Kana> res = new List<Kana>(hiragana);
             int index = 0;
             Kana temp = null;
@@ -191,9 +193,19 @@ namespace JapaneseDict.Util
             }
             return res;
         }
+        public static IEnumerable<Kana> GetOrderHiragana()
+        {
+            return new List<Kana>(hiragana);
+        }
+        public static IEnumerable<Kana> GetOrderHiraganaWithVoicedConsonants()
+        {
+            var res = new List<Kana>(hiragana);
+            res.Concat(hiraganaVoiced);
+            return res;
+        }
         public static IEnumerable<Kana> GetRandomHiraganaWithVoicedConsonants()
         {
-            Random ran = new Random(DateTime.Now.Millisecond);
+            Random ran = new Random();
             List<Kana> res = new List<Kana>(hiragana.Concat(hiraganaVoiced));
             int index = 0;
             Kana temp = null;
@@ -212,7 +224,7 @@ namespace JapaneseDict.Util
         }
         public static IEnumerable<Kana> GetRandomKatakana()
         {
-            Random ran = new Random(DateTime.Now.Millisecond);
+            Random ran = new Random();
             List<Kana> res = new List<Kana>(katakana);
             int index = 0;
             Kana temp = null;
@@ -231,7 +243,7 @@ namespace JapaneseDict.Util
         }
         public static IEnumerable<Kana> GetRandomKatakanaWithVoicedConsonants()
         {
-            Random ran = new Random(DateTime.Now.Millisecond);
+            Random ran = new Random();
             List<Kana> res = new List<Kana>(katakana.Concat(hiraganaVoiced));
             int index = 0;
             Kana temp = null;
@@ -246,6 +258,16 @@ namespace JapaneseDict.Util
                     res[index] = temp;
                 }
             }
+            return res;
+        }
+        public static IEnumerable<Kana> GetOrderKatakana()
+        {
+            return new List<Kana>(katakana);
+        }
+        public static IEnumerable<Kana> GetOrderKatakanaWithVoicedConsonants()
+        {
+            var res = new List<Kana>(katakana);
+            res.Concat(katakanaVoiced);
             return res;
         }
     }

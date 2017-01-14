@@ -101,47 +101,6 @@ namespace JapaneseDict.GUI.ViewModels
             };
         #endregion
 
-
-        public CommandModel<ReactiveCommand, String> CommandNavToFeedbackPage
-        {
-            get { return _CommandNavToFeedbackPageLocator(this).Value; }
-            set { _CommandNavToFeedbackPageLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandNavToFeedbackPage Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandNavToFeedbackPage = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandNavToFeedbackPageLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandNavToFeedbackPageLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandNavToFeedbackPage), model => model.Initialize(nameof(CommandNavToFeedbackPage), ref model._CommandNavToFeedbackPage, ref _CommandNavToFeedbackPageLocator, _CommandNavToFeedbackPageDefaultValueFactory));
-        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandNavToFeedbackPageDefaultValueFactory =
-            model =>
-            {
-                var resource = nameof(CommandNavToFeedbackPage);           // Command resource  
-                var commandId = nameof(CommandNavToFeedbackPage);
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUIBusyTask(
-                        vm,
-                        async e =>
-                        {
-                            (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage));
-                            //Todo: Add NavToFeedbackPage logic here, or
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(resource);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
-
-
         public CommandModel<ReactiveCommand, String> CommandUpdateDict
         {
             get { return _CommandUpdateDictLocator(this).Value; }

@@ -233,7 +233,7 @@
                 <ScrollViewer RequestedTheme="Light" VerticalScrollBarVisibility="Auto" Margin="-12,-11,-12,0" Style="{StaticResource ScrollViewerStyle1}">
                     <Grid>
                         <ProgressRing IsActive="True" Foreground="#00b294" VerticalAlignment="Top" Margin="0,88,0,0"></ProgressRing>
-                        <FlipView VerticalAlignment="Top" ItemsSource="{Binding EverdaySentenceList}" ItemTemplate="{StaticResource DataTemplate2}" Height="200"></FlipView>
+                        <FlipView VerticalAlignment="Top" ItemsSource="{Binding EverdaySentenceList}" ItemTemplate="{StaticResource DataTemplate2}" Height="200" Margin="0,-2,0,0"></FlipView>
 
                         <ScrollViewer Margin="0,200,-12,0" VerticalAlignment="Top" RequestedTheme="Light" VerticalScrollBarVisibility="Auto">
                             <StackPanel>

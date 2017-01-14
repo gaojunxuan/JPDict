@@ -82,11 +82,20 @@ namespace JapaneseDict.GUI
             }
             KanaFlashcardPage_Model vm = new KanaFlashcardPage_Model();
             var hirares = KanaFlashcardHelper.GetRandomHiragana();
+            foreach (var i in hirares)
+            {
+                i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+            }
             vm.Hiragana = new ObservableCollection<Kana>(hirares);
             vm.Hiragana.Remove(vm.Hiragana.Where(k=>k.Content=="ゐ").First());
             vm.Hiragana.Remove(vm.Hiragana.Where(k => k.Content == "ゑ").First());
-            var katakana = KanaFlashcardHelper.GetRandomKatakana();
-            vm.Katakana = new ObservableCollection<Kana>(katakana);
+
+            var katares = KanaFlashcardHelper.GetRandomKatakana();
+            foreach (var i in katares)
+            {
+                i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+            }
+            vm.Katakana = new ObservableCollection<Kana>(katares);
             vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヰ").First());
             vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヱ").First());
             this.ViewModel = vm;
@@ -126,24 +135,149 @@ namespace JapaneseDict.GUI
         {
             (sender as UIElement).Visibility = Visibility.Collapsed;
             hideHiraSonant_item.Visibility = Visibility.Visible;
+            orderHira_item.Visibility = Visibility.Visible;
+            disorderHira_item.Visibility = Visibility.Collapsed;
         }
 
         private void hideHiraSonant_item_Tapped(object sender, TappedRoutedEventArgs e)
         {
             (sender as UIElement).Visibility = Visibility.Collapsed;
             showHiraSonant_item.Visibility = Visibility.Visible;
+            orderHira_item.Visibility = Visibility.Visible;
+            disorderHira_item.Visibility = Visibility.Collapsed;
         }
 
         private void showhistoryhira_item_Tapped(object sender, TappedRoutedEventArgs e)
         {
             (sender as UIElement).Visibility = Visibility.Collapsed;
             hidehistoryhira_item.Visibility = Visibility.Visible;
+            orderHira_item.Visibility = Visibility.Visible;
+            disorderHira_item.Visibility = Visibility.Collapsed;
         }
 
         private void hidehistoryhira_item_Tapped(object sender, TappedRoutedEventArgs e)
         {
             (sender as UIElement).Visibility = Visibility.Collapsed;
             showhistoryhira_item.Visibility = Visibility.Visible;
+            orderHira_item.Visibility = Visibility.Visible;
+            disorderHira_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void showhiraganahelp_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Flyout.ShowAttachedFlyout(sender as FrameworkElement);
+        }
+
+        private void showHiraRomaji_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            hideHiraRomaji_item.Visibility = Visibility.Visible;
+        }
+
+        private void hideHiraRomaji_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            showHiraRomaji_item.Visibility = Visibility.Visible;
+        }
+
+        private void orderHira_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            disorderHira_item.Visibility = Visibility.Visible;
+            showHiraSonant_item.Visibility = Visibility.Collapsed;
+            hideHiraSonant_item.Visibility = Visibility.Collapsed;
+            showhistoryhira_item.Visibility = Visibility.Collapsed;
+            hidehistoryhira_item.Visibility = Visibility.Collapsed;
+            replayHira_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void disorderHira_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            orderHira_item.Visibility = Visibility.Visible;
+            showHiraSonant_item.Visibility = Visibility.Visible;
+            hideHiraSonant_item.Visibility = Visibility.Collapsed;
+            showhistoryhira_item.Visibility = Visibility.Visible;
+            hidehistoryhira_item.Visibility = Visibility.Collapsed;
+            replayHira_item.Visibility = Visibility.Visible;
+        }
+
+        private void replayHira_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            orderHira_item.Visibility = Visibility.Visible;
+            disorderHira_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void showKataSonant_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            hideKataSonant_item.Visibility = Visibility.Visible;
+            orderKata_item.Visibility = Visibility.Visible;
+            disorderKata_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void hideKataSonant_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            showKataSonant_item.Visibility = Visibility.Visible;
+            orderKata_item.Visibility = Visibility.Visible;
+            disorderKata_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void showhistoryKata_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            hidehistoryKata_item.Visibility = Visibility.Visible;
+            orderKata_item.Visibility = Visibility.Visible;
+            disorderKata_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void hidehistoryKata_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            showhistoryKata_item.Visibility = Visibility.Visible;
+            orderKata_item.Visibility = Visibility.Visible;
+            disorderKata_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void showKataRomaji_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            hideKataRomaji_item.Visibility = Visibility.Visible;
+        }
+
+        private void hideKataRomaji_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            showKataRomaji_item.Visibility = Visibility.Visible;
+        }
+
+        private void replayKata_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            orderKata_item.Visibility = Visibility.Visible;
+            disorderKata_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void orderKata_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            disorderKata_item.Visibility = Visibility.Visible;
+            showKataSonant_item.Visibility = Visibility.Collapsed;
+            hideKataSonant_item.Visibility = Visibility.Collapsed;
+            showhistoryKata_item.Visibility = Visibility.Collapsed;
+            hidehistoryKata_item.Visibility = Visibility.Collapsed;
+            replayKata_item.Visibility = Visibility.Collapsed;
+        }
+
+        private void disorderKata_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            orderKata_item.Visibility = Visibility.Visible;
+            showKataSonant_item.Visibility = Visibility.Visible;
+            hideKataSonant_item.Visibility = Visibility.Collapsed;
+            showhistoryKata_item.Visibility = Visibility.Visible;
+            hidehistoryKata_item.Visibility = Visibility.Collapsed;
+            replayKata_item.Visibility = Visibility.Visible;
         }
     }
 }

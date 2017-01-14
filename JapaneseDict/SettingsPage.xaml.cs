@@ -97,5 +97,10 @@ namespace JapaneseDict.GUI
             var uri = new Uri($"https://skylark-workshop.xyz/privacy-jpdict/");
             await Launcher.LaunchUriAsync(uri);
         }
+
+        private void gotoFeedbackPage_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage));
+        }
     }
 }

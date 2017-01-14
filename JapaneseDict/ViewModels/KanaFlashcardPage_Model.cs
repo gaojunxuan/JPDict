@@ -157,6 +157,21 @@ namespace JapaneseDict.GUI.ViewModels
                                 res.Remove(res.Where(k => k.Content == "ゐ").First());
                                 res.Remove(res.Where(k => k.Content == "ゑ").First());
                             }
+
+                            if (vm.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
                             vm.Hiragana = new ObservableCollection<Kana>(res);
                             //Todo: Add ShowVoicedHiragana logic here, or
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -201,6 +216,20 @@ namespace JapaneseDict.GUI.ViewModels
                                 res.Remove(res.Where(k => k.Content == "ゐ").First());
                                 res.Remove(res.Where(k => k.Content == "ゑ").First());
                             }
+                            if (vm.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
                             vm.Hiragana = new ObservableCollection<Kana>(res);
                             //Todo: Add HideVoicedHiragana logic here, or
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -243,12 +272,27 @@ namespace JapaneseDict.GUI.ViewModels
                             Random rand = new Random(DateTime.Now.Millisecond);
                             var wyi = new Kana() { Content = "ゐ", Romaji = "wyi", IsHistory = true };
                             var wye = new Kana() { Content = "ゑ", Romaji = "wye", IsHistory = true };
-                            if (!(vm.Hiragana.Contains(wyi)&&vm.Hiragana.Contains(wye)))
+                            if (vm.Hiragana.Where(k => k.IsHistory == true).Count() == 0)
                             {
                                 vm.Hiragana.Insert(rand.Next(0, vm.Hiragana.Count - 1), wyi);
                                 vm.Hiragana.Insert(rand.Next(0, vm.Hiragana.Count - 1), wye);
                             }
-                                                      
+                            var res = new ObservableCollection<Kana>(vm.Hiragana);
+                            if (vm.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Hiragana = res;
                             //Todo: Add ShowHistoryHiragana logic here, or
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
                         })
@@ -288,17 +332,10 @@ namespace JapaneseDict.GUI.ViewModels
                         vm,
                         async e =>
                         {
-                            try
+                            if (vm.Hiragana.Where(k => k.IsHistory == true).Count() != 0)
                             {
                                 vm.Hiragana.Remove(vm.Hiragana.Where(k => k.Content == "ゐ").First());
                                 vm.Hiragana.Remove(vm.Hiragana.Where(k => k.Content == "ゑ").First());
-                            }
-                            catch
-                            {
-                                var wyi = new Kana() { Content = "ゐ", Romaji = "wyi", IsHistory = true };
-                                var wye = new Kana() { Content = "ゑ", Romaji = "wye", IsHistory = true };
-                                vm.Hiragana.Add(wyi);
-                                vm.Hiragana.Add(wye);
                             }
                             //Todo: Add HideHistoryHiragana logic here, or
                             await MVVMSidekick.Utilities.TaskExHelper.Yield();
@@ -317,6 +354,767 @@ namespace JapaneseDict.GUI.ViewModels
 
         #endregion
 
+        public CommandModel<ReactiveCommand, String> CommandReplayHiragana
+        {
+            get { return _CommandReplayHiraganaLocator(this).Value; }
+            set { _CommandReplayHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandReplayHiragana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandReplayHiragana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandReplayHiraganaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandReplayHiraganaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandReplayHiragana), model => model.Initialize(nameof(CommandReplayHiragana), ref model._CommandReplayHiragana, ref _CommandReplayHiraganaLocator, _CommandReplayHiraganaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandReplayHiraganaDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandReplayHiragana);           // Command resource  
+                var commandId = nameof(CommandReplayHiragana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res;
+                            if (vm.Hiragana.Where(k => k.Content == "ば").Count() != 0)
+                            {
+                                res = new ObservableCollection<Kana>(GetRandomHiraganaWithVoicedConsonants());
+                            }
+                            else
+                            {
+                                res = new ObservableCollection<Kana>(GetRandomHiragana());
+                            }
+
+                            if (vm.Hiragana.Where(k => k.IsHistory == true).Count() == 0)
+                            {
+                                res.Remove(res.Where(k => k.Content == "ゐ").First());
+                                res.Remove(res.Where(k => k.Content == "ゑ").First());
+                            }
+                            if (vm.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Hiragana = res;
+                            //Todo: Add ReplayHiragana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandHideHiraganaRomaji
+        {
+            get { return _CommandHideHiraganaRomajiLocator(this).Value; }
+            set { _CommandHideHiraganaRomajiLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandHideHiraganaRomaji Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandHideHiraganaRomaji = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandHideHiraganaRomajiLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandHideHiraganaRomajiLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandHideHiraganaRomaji), model => model.Initialize(nameof(CommandHideHiraganaRomaji), ref model._CommandHideHiraganaRomaji, ref _CommandHideHiraganaRomajiLocator, _CommandHideHiraganaRomajiDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandHideHiraganaRomajiDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandHideHiraganaRomaji);           // Command resource  
+                var commandId = nameof(CommandHideHiraganaRomaji);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res = new ObservableCollection<Kana>(vm.Hiragana);
+                            foreach(var i in res)
+                            {
+                                i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                            }
+                            vm.Hiragana = res;
+                            //Todo: Add HideHiraganaRomaji logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandShowHiraganaRomaji
+        {
+            get { return _CommandShowHiraganaRomajiLocator(this).Value; }
+            set { _CommandShowHiraganaRomajiLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandShowHiraganaRomaji Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowHiraganaRomaji = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowHiraganaRomajiLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowHiraganaRomajiLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandShowHiraganaRomaji), model => model.Initialize(nameof(CommandShowHiraganaRomaji), ref model._CommandShowHiraganaRomaji, ref _CommandShowHiraganaRomajiLocator, _CommandShowHiraganaRomajiDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowHiraganaRomajiDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandShowHiraganaRomaji);           // Command resource  
+                var commandId = nameof(CommandShowHiraganaRomaji);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res = new ObservableCollection<Kana>(vm.Hiragana);
+                            foreach (var i in res)
+                            {
+                                i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                            }
+                            vm.Hiragana = res;
+                            //Todo: Add ShowHiraganaRomaji logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandGetOrderHiragana
+        {
+            get { return _CommandGetOrderHiraganaLocator(this).Value; }
+            set { _CommandGetOrderHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandGetOrderHiragana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandGetOrderHiragana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandGetOrderHiraganaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandGetOrderHiraganaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandGetOrderHiragana), model => model.Initialize(nameof(CommandGetOrderHiragana), ref model._CommandGetOrderHiragana, ref _CommandGetOrderHiraganaLocator, _CommandGetOrderHiraganaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandGetOrderHiraganaDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandGetOrderHiragana);           // Command resource  
+                var commandId = nameof(CommandGetOrderHiragana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res;
+                            res = new ObservableCollection<Kana>(GetOrderHiraganaWithVoicedConsonants());
+                            res.Remove(res.Where(k => k.Content == "ゐ").First());
+                            res.Remove(res.Where(k => k.Content == "ゑ").First());
+                            
+                            if (vm.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Hiragana = res;
+                            //Todo: Add GetOrderHiragana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandGetDisorderHiragana
+        {
+            get { return _CommandGetDisorderHiraganaLocator(this).Value; }
+            set { _CommandGetDisorderHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandGetDisorderHiragana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandGetDisorderHiragana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandGetDisorderHiraganaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandGetDisorderHiraganaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandGetDisorderHiragana), model => model.Initialize(nameof(CommandGetDisorderHiragana), ref model._CommandGetDisorderHiragana, ref _CommandGetDisorderHiraganaLocator, _CommandGetDisorderHiraganaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandGetDisorderHiraganaDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandGetDisorderHiragana);           // Command resource  
+                var commandId = nameof(CommandGetDisorderHiragana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            var res=new ObservableCollection<Kana>(GetRandomHiragana());
+                            if (vm.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Hiragana = res;
+                            //Todo: Add GetDisorderHiragana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+
+        public CommandModel<ReactiveCommand, String> CommandShowVoicedKatakana
+        {
+            get { return _CommandShowVoicedKatakanaLocator(this).Value; }
+            set { _CommandShowVoicedKatakanaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandShowVoicedKatakana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowVoicedKatakana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowVoicedKatakanaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowVoicedKatakanaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandShowVoicedKatakana), model => model.Initialize(nameof(CommandShowVoicedKatakana), ref model._CommandShowVoicedKatakana, ref _CommandShowVoicedKatakanaLocator, _CommandShowVoicedKatakanaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowVoicedKatakanaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandShowVoicedKatakana);           // Command state  
+                var commandId = nameof(CommandShowVoicedKatakana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            List<Kana> res = GetRandomKatakanaWithVoicedConsonants().ToList();
+
+                            if (vm.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                            {
+                                res.Remove(res.Where(k => k.Content == "ヰ").First());
+                                res.Remove(res.Where(k => k.Content == "ヱ").First());
+                            }
+
+                            if (vm.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Katakana = new ObservableCollection<Kana>(res);
+                            //Todo: Add ShowVoicedKatakana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+        #endregion
+        public CommandModel<ReactiveCommand, String> CommandHideVoicedKatakana
+        {
+            get { return _CommandHideVoicedKatakanaLocator(this).Value; }
+            set { _CommandHideVoicedKatakanaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandHideVoicedKatakana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandHideVoicedKatakana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandHideVoicedKatakanaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandHideVoicedKatakanaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandHideVoicedKatakana), model => model.Initialize(nameof(CommandHideVoicedKatakana), ref model._CommandHideVoicedKatakana, ref _CommandHideVoicedKatakanaLocator, _CommandHideVoicedKatakanaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandHideVoicedKatakanaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandHideVoicedKatakana);           // Command state  
+                var commandId = nameof(CommandHideVoicedKatakana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            List<Kana> res = GetRandomKatakana().ToList();
+
+                            if (vm.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                            {
+                                res.Remove(res.Where(k => k.Content == "ヰ").First());
+                                res.Remove(res.Where(k => k.Content == "ヱ").First());
+                            }
+                            if (vm.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Katakana = new ObservableCollection<Kana>(res);
+                            //Todo: Add HideVoicedKatakana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandShowHistoryKatakana
+        {
+            get { return _CommandShowHistoryKatakanaLocator(this).Value; }
+            set { _CommandShowHistoryKatakanaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandShowHistoryKatakana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowHistoryKatakana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowHistoryKatakanaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowHistoryKatakanaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandShowHistoryKatakana), model => model.Initialize(nameof(CommandShowHistoryKatakana), ref model._CommandShowHistoryKatakana, ref _CommandShowHistoryKatakanaLocator, _CommandShowHistoryKatakanaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowHistoryKatakanaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandShowHistoryKatakana);           // Command state  
+                var commandId = nameof(CommandShowHistoryKatakana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            Random rand = new Random(DateTime.Now.Millisecond);
+                            var wyi = new Kana() { Content = "ヰ", Romaji = "wyi", IsHistory = true };
+                            var wye = new Kana() { Content = "ヱ", Romaji = "wye", IsHistory = true };
+                            if (vm.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                            {
+                                vm.Katakana.Insert(rand.Next(0, vm.Katakana.Count - 1), wyi);
+                                vm.Katakana.Insert(rand.Next(0, vm.Katakana.Count - 1), wye);
+                            }
+                            var res = new ObservableCollection<Kana>(vm.Katakana);
+                            if (vm.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Katakana = res;
+                            //Todo: Add ShowHistoryKatakana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+
+        public CommandModel<ReactiveCommand, String> CommandHideHistoryKatakana
+        {
+            get { return _CommandHideHistoryKatakanaLocator(this).Value; }
+            set { _CommandHideHistoryKatakanaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandHideHistoryKatakana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandHideHistoryKatakana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandHideHistoryKatakanaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandHideHistoryKatakanaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandHideHistoryKatakana), model => model.Initialize(nameof(CommandHideHistoryKatakana), ref model._CommandHideHistoryKatakana, ref _CommandHideHistoryKatakanaLocator, _CommandHideHistoryKatakanaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandHideHistoryKatakanaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandHideHistoryKatakana);           // Command state  
+                var commandId = nameof(CommandHideHistoryKatakana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            if (vm.Katakana.Where(k => k.IsHistory == true).Count() != 0)
+                            {
+                                vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヰ").First());
+                                vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヱ").First());
+                            }
+                            //Todo: Add HideHistoryKatakana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandReplayKatakana
+        {
+            get { return _CommandReplayKatakanaLocator(this).Value; }
+            set { _CommandReplayKatakanaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandReplayKatakana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandReplayKatakana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandReplayKatakanaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandReplayKatakanaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandReplayKatakana), model => model.Initialize(nameof(CommandReplayKatakana), ref model._CommandReplayKatakana, ref _CommandReplayKatakanaLocator, _CommandReplayKatakanaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandReplayKatakanaDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandReplayKatakana);           // Command resource  
+                var commandId = nameof(CommandReplayKatakana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res;
+                            if (vm.Katakana.Where(k => k.Content == "バ").Count() != 0)
+                            {
+                                res = new ObservableCollection<Kana>(GetRandomKatakanaWithVoicedConsonants());
+                            }
+                            else
+                            {
+                                res = new ObservableCollection<Kana>(GetRandomKatakana());
+                            }
+
+                            if (vm.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                            {
+                                res.Remove(res.Where(k => k.Content == "ヰ").First());
+                                res.Remove(res.Where(k => k.Content == "ヱ").First());
+                            }
+                            if (vm.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Katakana = res;
+                            //Todo: Add ReplayKatakana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandHideKatakanaRomaji
+        {
+            get { return _CommandHideKatakanaRomajiLocator(this).Value; }
+            set { _CommandHideKatakanaRomajiLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandHideKatakanaRomaji Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandHideKatakanaRomaji = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandHideKatakanaRomajiLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandHideKatakanaRomajiLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandHideKatakanaRomaji), model => model.Initialize(nameof(CommandHideKatakanaRomaji), ref model._CommandHideKatakanaRomaji, ref _CommandHideKatakanaRomajiLocator, _CommandHideKatakanaRomajiDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandHideKatakanaRomajiDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandHideKatakanaRomaji);           // Command resource  
+                var commandId = nameof(CommandHideKatakanaRomaji);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res = new ObservableCollection<Kana>(vm.Katakana);
+                            foreach (var i in res)
+                            {
+                                i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                            }
+                            vm.Katakana = res;
+                            //Todo: Add HideKatakanaRomaji logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandShowKatakanaRomaji
+        {
+            get { return _CommandShowKatakanaRomajiLocator(this).Value; }
+            set { _CommandShowKatakanaRomajiLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandShowKatakanaRomaji Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowKatakanaRomaji = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowKatakanaRomajiLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowKatakanaRomajiLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandShowKatakanaRomaji), model => model.Initialize(nameof(CommandShowKatakanaRomaji), ref model._CommandShowKatakanaRomaji, ref _CommandShowKatakanaRomajiLocator, _CommandShowKatakanaRomajiDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowKatakanaRomajiDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandShowKatakanaRomaji);           // Command resource  
+                var commandId = nameof(CommandShowKatakanaRomaji);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res = new ObservableCollection<Kana>(vm.Katakana);
+                            foreach (var i in res)
+                            {
+                                i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                            }
+                            vm.Katakana = res;
+                            //Todo: Add ShowKatakanaRomaji logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandGetOrderKatakana
+        {
+            get { return _CommandGetOrderKatakanaLocator(this).Value; }
+            set { _CommandGetOrderKatakanaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandGetOrderKatakana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandGetOrderKatakana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandGetOrderKatakanaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandGetOrderKatakanaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandGetOrderKatakana), model => model.Initialize(nameof(CommandGetOrderKatakana), ref model._CommandGetOrderKatakana, ref _CommandGetOrderKatakanaLocator, _CommandGetOrderKatakanaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandGetOrderKatakanaDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandGetOrderKatakana);           // Command resource  
+                var commandId = nameof(CommandGetOrderKatakana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            ObservableCollection<Kana> res;
+                            res = new ObservableCollection<Kana>(GetOrderKatakanaWithVoicedConsonants());
+                            res.Remove(res.Where(k => k.Content == "ヰ").First());
+                            res.Remove(res.Where(k => k.Content == "ヱ").First());
+
+                            if (vm.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Katakana = res;
+                            //Todo: Add GetOrderKatakana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandGetDisorderKatakana
+        {
+            get { return _CommandGetDisorderKatakanaLocator(this).Value; }
+            set { _CommandGetDisorderKatakanaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandGetDisorderKatakana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandGetDisorderKatakana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandGetDisorderKatakanaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandGetDisorderKatakanaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandGetDisorderKatakana), model => model.Initialize(nameof(CommandGetDisorderKatakana), ref model._CommandGetDisorderKatakana, ref _CommandGetDisorderKatakanaLocator, _CommandGetDisorderKatakanaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandGetDisorderKatakanaDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandGetDisorderKatakana);           // Command resource  
+                var commandId = nameof(CommandGetDisorderKatakana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            var res = new ObservableCollection<Kana>(GetRandomKatakana());
+                            if (vm.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
+                                }
+                            }
+                            else
+                            {
+                                foreach (var i in res)
+                                {
+                                    i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
+                                }
+                            }
+                            vm.Katakana = res;
+                            //Todo: Add GetDisorderKatakana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
     }
 
 }
