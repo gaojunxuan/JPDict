@@ -128,6 +128,7 @@ namespace JapaneseDict.GUI
             this.mediaEle.Source = null;
             this.mediaEle.Stop();
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
+            ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             this.listeningPosition_Slider.Visibility = Visibility.Collapsed;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)

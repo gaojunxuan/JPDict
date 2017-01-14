@@ -8,6 +8,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:JapaneseDict.GUI.ViewModels"
+    xmlns:Interactivity ="using:Microsoft.Xaml.Interactivity"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  >
         <d:FrameworkElement.DataContext>
@@ -49,28 +51,7 @@
                     </Grid>
                     <Grid Grid.Row="1">
                         <ListView SelectionMode="None" Margin="0,0,0,8">
-                            <ListViewItem x:Name="showhistoryhira_item" >
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="32" Width="40" Height="40" TextAlignment="Center">ゑ</TextBlock>
-                                    <StackPanel Margin="20,0,0,0">
-                                        <TextBlock Text="显示历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
-                                        <TextBlock Text="歴史的仮名遣い「ゐ」と「ゑ」を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                            </ListViewItem>
-                            <ListViewItem x:Name="hidehistoryhira_item" >
-                                <StackPanel Orientation="Horizontal">
-                                    <Grid>
-                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
-                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="30" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,9">ゑ</TextBlock>
-                                    </Grid>
-                                    <StackPanel Margin="20,0,0,0">
-                                        <TextBlock Text="隐藏历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
-                                        <TextBlock Text="歴史的仮名遣い「ゐ」と「ゑ」を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                            </ListViewItem>
-                            <ListViewItem x:Name="showHiraSonant_item" >
+                            <ListViewItem x:Name="showHiraSonant_item" Tapped="showHiraSonant_item_Tapped">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="32" Width="40" Height="18" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">゛゜</TextBlock>
                                     <StackPanel Margin="20,0,0,0">
@@ -78,8 +59,13 @@
                                         <TextBlock Text="濁音と半濁音を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Tapped">
+                                        <Core:InvokeCommandAction Command="{Binding CommandShowVoicedHiragana}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
                             </ListViewItem>
-                            <ListViewItem x:Name="hideHiraSonant_item" >
+                            <ListViewItem x:Name="hideHiraSonant_item" Visibility="Collapsed" Tapped="hideHiraSonant_item_Tapped">
                                 <StackPanel Orientation="Horizontal">
                                     <Grid>
                                         <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
@@ -90,6 +76,42 @@
                                         <TextBlock Text="濁音と半濁音を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Tapped">
+                                        <Core:InvokeCommandAction Command="{Binding CommandHideVoicedHiragana}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </ListViewItem>
+                            <ListViewItem x:Name="showhistoryhira_item" Tapped="showhistoryhira_item_Tapped" >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="32" Width="40" Height="40" TextAlignment="Center">ゑ</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣い「ゐ」と「ゑ」を表示する" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Tapped">
+                                        <Core:InvokeCommandAction Command="{Binding CommandShowHistoryHiragana}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hidehistoryhira_item" Visibility="Collapsed" Tapped="hidehistoryhira_item_Tapped">
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="30" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,9">ゑ</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏历史假名遣" Foreground="Black" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣い「ゐ」と「ゑ」を表示しない" Foreground="Gray" FontSize="11" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Tapped">
+                                        <Core:InvokeCommandAction Command="{Binding CommandHideHistoryHiragana}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
                             </ListViewItem>
                             <ListViewItem x:Name="showHiraRomaji_item" >
                                 <StackPanel Orientation="Horizontal">

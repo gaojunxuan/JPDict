@@ -83,8 +83,12 @@ namespace JapaneseDict.GUI
             KanaFlashcardPage_Model vm = new KanaFlashcardPage_Model();
             var hirares = KanaFlashcardHelper.GetRandomHiragana();
             vm.Hiragana = new ObservableCollection<Kana>(hirares);
+            vm.Hiragana.Remove(vm.Hiragana.Where(k=>k.Content=="ゐ").First());
+            vm.Hiragana.Remove(vm.Hiragana.Where(k => k.Content == "ゑ").First());
             var katakana = KanaFlashcardHelper.GetRandomKatakana();
             vm.Katakana = new ObservableCollection<Kana>(katakana);
+            vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヰ").First());
+            vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヱ").First());
             this.ViewModel = vm;
         }
 
@@ -116,6 +120,30 @@ namespace JapaneseDict.GUI
         {
             var currentView = SystemNavigationManager.GetForCurrentView();
             currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+        }
+
+        private void showHiraSonant_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            hideHiraSonant_item.Visibility = Visibility.Visible;
+        }
+
+        private void hideHiraSonant_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            showHiraSonant_item.Visibility = Visibility.Visible;
+        }
+
+        private void showhistoryhira_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            hidehistoryhira_item.Visibility = Visibility.Visible;
+        }
+
+        private void hidehistoryhira_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            showhistoryhira_item.Visibility = Visibility.Visible;
         }
     }
 }

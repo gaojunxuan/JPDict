@@ -116,6 +116,62 @@ namespace JapaneseDict.Util
             new Kana() {Content="ヲ",Romaji="wo" },
             new Kana() {Content="ン",Romaji="n" }
         };
+        public static List<Kana> hiraganaVoiced = new List<Kana>()
+        {
+            new Kana() {Content="が",Romaji="ga" },
+            new Kana() {Content="ぎ",Romaji="gi" },
+            new Kana() {Content="ぐ",Romaji="gu" },
+            new Kana() {Content="げ",Romaji="ge" },
+            new Kana() {Content="ご",Romaji="go" },
+            new Kana() {Content="ざ",Romaji="za" },
+            new Kana() {Content="じ",Romaji="ji" },
+            new Kana() {Content="ず",Romaji="zu" },
+            new Kana() {Content="ぜ",Romaji="ze" },
+            new Kana() {Content="ぞ",Romaji="zo" },
+            new Kana() {Content="だ",Romaji="da" },
+            new Kana() {Content="ぢ",Romaji="ji" },
+            new Kana() {Content="づ",Romaji="zu" },
+            new Kana() {Content="で",Romaji="de" },
+            new Kana() {Content="ど",Romaji="do" },
+            new Kana() {Content="ば",Romaji="ba" },
+            new Kana() {Content="び",Romaji="bi" },
+            new Kana() {Content="ぶ",Romaji="bu" },
+            new Kana() {Content="べ",Romaji="be" },
+            new Kana() {Content="ぼ",Romaji="bo" },
+            new Kana() {Content="ぱ",Romaji="pa" },
+            new Kana() {Content="ぴ",Romaji="pi" },
+            new Kana() {Content="ぷ",Romaji="pu" },
+            new Kana() {Content="ぺ",Romaji="pe" },
+            new Kana() {Content="ぽ",Romaji="po" },
+        };
+        public static List<Kana> katakanaVoiced = new List<Kana>()
+        {
+            new Kana() {Content="ガ",Romaji="ga" },
+            new Kana() {Content="ギ",Romaji="gi" },
+            new Kana() {Content="グ",Romaji="gu" },
+            new Kana() {Content="ゲ",Romaji="ge" },
+            new Kana() {Content="ゴ",Romaji="go" },
+            new Kana() {Content="ザ",Romaji="za" },
+            new Kana() {Content="ジ",Romaji="ji" },
+            new Kana() {Content="ズ",Romaji="zu" },
+            new Kana() {Content="ゼ",Romaji="ze" },
+            new Kana() {Content="ゾ",Romaji="zo" },
+            new Kana() {Content="ダ",Romaji="da" },
+            new Kana() {Content="ヂ",Romaji="ji" },
+            new Kana() {Content="ヅ",Romaji="zu" },
+            new Kana() {Content="デ",Romaji="de" },
+            new Kana() {Content="ド",Romaji="do" },
+            new Kana() {Content="バ",Romaji="ba" },
+            new Kana() {Content="ビ",Romaji="bi" },
+            new Kana() {Content="ブ",Romaji="bu" },
+            new Kana() {Content="ベ",Romaji="be" },
+            new Kana() {Content="ボ",Romaji="bo" },
+            new Kana() {Content="パ",Romaji="pa" },
+            new Kana() {Content="ピ",Romaji="pi" },
+            new Kana() {Content="プ",Romaji="pu" },
+            new Kana() {Content="ペ",Romaji="pe" },
+            new Kana() {Content="ポ",Romaji="po" },
+        };
         public static IEnumerable<Kana> GetRandomHiragana()
         {
             Random ran = new Random(DateTime.Now.Millisecond);
@@ -135,10 +191,48 @@ namespace JapaneseDict.Util
             }
             return res;
         }
+        public static IEnumerable<Kana> GetRandomHiraganaWithVoicedConsonants()
+        {
+            Random ran = new Random(DateTime.Now.Millisecond);
+            List<Kana> res = new List<Kana>(hiragana.Concat(hiraganaVoiced));
+            int index = 0;
+            Kana temp = null;
+            for (int i = 0; i < res.Count; i++)
+            {
+
+                index = ran.Next(0, res.Count - 1);
+                if (index != i)
+                {
+                    temp = res[i];
+                    res[i] = res[index];
+                    res[index] = temp;
+                }
+            }
+            return res;
+        }
         public static IEnumerable<Kana> GetRandomKatakana()
         {
             Random ran = new Random(DateTime.Now.Millisecond);
             List<Kana> res = new List<Kana>(katakana);
+            int index = 0;
+            Kana temp = null;
+            for (int i = 0; i < res.Count; i++)
+            {
+
+                index = ran.Next(0, res.Count - 1);
+                if (index != i)
+                {
+                    temp = res[i];
+                    res[i] = res[index];
+                    res[index] = temp;
+                }
+            }
+            return res;
+        }
+        public static IEnumerable<Kana> GetRandomKatakanaWithVoicedConsonants()
+        {
+            Random ran = new Random(DateTime.Now.Millisecond);
+            List<Kana> res = new List<Kana>(katakana.Concat(hiraganaVoiced));
             int index = 0;
             Kana temp = null;
             for (int i = 0; i < res.Count; i++)

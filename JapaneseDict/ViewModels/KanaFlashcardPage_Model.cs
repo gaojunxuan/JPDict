@@ -129,7 +129,193 @@ namespace JapaneseDict.GUI.ViewModels
         #endregion
 
 
+        public CommandModel<ReactiveCommand, String> CommandShowVoicedHiragana
+        {
+            get { return _CommandShowVoicedHiraganaLocator(this).Value; }
+            set { _CommandShowVoicedHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandShowVoicedHiragana Setup        
 
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowVoicedHiragana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowVoicedHiraganaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowVoicedHiraganaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandShowVoicedHiragana), model => model.Initialize(nameof(CommandShowVoicedHiragana), ref model._CommandShowVoicedHiragana, ref _CommandShowVoicedHiraganaLocator, _CommandShowVoicedHiraganaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowVoicedHiraganaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandShowVoicedHiragana);           // Command state  
+                var commandId = nameof(CommandShowVoicedHiragana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            List<Kana> res = GetRandomHiraganaWithVoicedConsonants().ToList();
+
+                            if (vm.Hiragana.Where(k => k.IsHistory == true).Count() == 0)
+                            {
+                                res.Remove(res.Where(k => k.Content == "ゐ").First());
+                                res.Remove(res.Where(k => k.Content == "ゑ").First());
+                            }
+                            vm.Hiragana = new ObservableCollection<Kana>(res);
+                            //Todo: Add ShowVoicedHiragana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+        #endregion
+        public CommandModel<ReactiveCommand, String> CommandHideVoicedHiragana
+        {
+            get { return _CommandHideVoicedHiraganaLocator(this).Value; }
+            set { _CommandHideVoicedHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandHideVoicedHiragana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandHideVoicedHiragana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandHideVoicedHiraganaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandHideVoicedHiraganaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandHideVoicedHiragana), model => model.Initialize(nameof(CommandHideVoicedHiragana), ref model._CommandHideVoicedHiragana, ref _CommandHideVoicedHiraganaLocator, _CommandHideVoicedHiraganaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandHideVoicedHiraganaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandHideVoicedHiragana);           // Command state  
+                var commandId = nameof(CommandHideVoicedHiragana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            List<Kana> res = GetRandomHiragana().ToList();
+                            
+                            if (vm.Hiragana.Where(k => k.IsHistory==true).Count() == 0)
+                            {
+                                res.Remove(res.Where(k => k.Content == "ゐ").First());
+                                res.Remove(res.Where(k => k.Content == "ゑ").First());
+                            }
+                            vm.Hiragana = new ObservableCollection<Kana>(res);
+                            //Todo: Add HideVoicedHiragana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandShowHistoryHiragana
+        {
+            get { return _CommandShowHistoryHiraganaLocator(this).Value; }
+            set { _CommandShowHistoryHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandShowHistoryHiragana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowHistoryHiragana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowHistoryHiraganaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowHistoryHiraganaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandShowHistoryHiragana), model => model.Initialize(nameof(CommandShowHistoryHiragana), ref model._CommandShowHistoryHiragana, ref _CommandShowHistoryHiraganaLocator, _CommandShowHistoryHiraganaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowHistoryHiraganaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandShowHistoryHiragana);           // Command state  
+                var commandId = nameof(CommandShowHistoryHiragana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            Random rand = new Random(DateTime.Now.Millisecond);
+                            var wyi = new Kana() { Content = "ゐ", Romaji = "wyi", IsHistory = true };
+                            var wye = new Kana() { Content = "ゑ", Romaji = "wye", IsHistory = true };
+                            if (!(vm.Hiragana.Contains(wyi)&&vm.Hiragana.Contains(wye)))
+                            {
+                                vm.Hiragana.Insert(rand.Next(0, vm.Hiragana.Count - 1), wyi);
+                                vm.Hiragana.Insert(rand.Next(0, vm.Hiragana.Count - 1), wye);
+                            }
+                                                      
+                            //Todo: Add ShowHistoryHiragana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+
+        public CommandModel<ReactiveCommand, String> CommandHideHistoryHiragana
+        {
+            get { return _CommandHideHistoryHiraganaLocator(this).Value; }
+            set { _CommandHideHistoryHiraganaLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandHideHistoryHiragana Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandHideHistoryHiragana = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandHideHistoryHiraganaLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandHideHistoryHiraganaLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandHideHistoryHiragana), model => model.Initialize(nameof(CommandHideHistoryHiragana), ref model._CommandHideHistoryHiragana, ref _CommandHideHistoryHiraganaLocator, _CommandHideHistoryHiraganaDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandHideHistoryHiraganaDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandHideHistoryHiragana);           // Command state  
+                var commandId = nameof(CommandHideHistoryHiragana);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            try
+                            {
+                                vm.Hiragana.Remove(vm.Hiragana.Where(k => k.Content == "ゐ").First());
+                                vm.Hiragana.Remove(vm.Hiragana.Where(k => k.Content == "ゑ").First());
+                            }
+                            catch
+                            {
+                                var wyi = new Kana() { Content = "ゐ", Romaji = "wyi", IsHistory = true };
+                                var wye = new Kana() { Content = "ゑ", Romaji = "wye", IsHistory = true };
+                                vm.Hiragana.Add(wyi);
+                                vm.Hiragana.Add(wye);
+                            }
+                            //Todo: Add HideHistoryHiragana logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
 
     }
 
