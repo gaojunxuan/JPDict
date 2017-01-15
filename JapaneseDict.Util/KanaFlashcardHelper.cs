@@ -64,7 +64,7 @@ namespace JapaneseDict.Util
             new Kana() {Content="わ",Romaji="wa" },
             new Kana() {Content="ゐ",Romaji="wyi",IsHistory=true },
             new Kana() {Content="ゑ",Romaji="wye",IsHistory=true },
-            new Kana() {Content="を",Romaji="wo" },
+            new Kana() {Content="を",Romaji="o" },
             new Kana() {Content="ん",Romaji="n" }
         };
         public static List<Kana> katakana = new List<Kana>()
@@ -115,7 +115,7 @@ namespace JapaneseDict.Util
             new Kana() {Content="ワ",Romaji="wa" },
             new Kana() {Content="ヰ",Romaji="wyi",IsHistory=true },
             new Kana() {Content="ヱ",Romaji="wye",IsHistory=true },
-            new Kana() {Content="ヲ",Romaji="wo" },
+            new Kana() {Content="ヲ",Romaji="o" },
             new Kana() {Content="ン",Romaji="n" }
         };
         public static List<Kana> hiraganaVoiced = new List<Kana>()
