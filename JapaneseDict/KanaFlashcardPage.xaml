@@ -53,18 +53,6 @@
                                 </DataTemplate>
                             </FlipView.ItemTemplate>
                         </FlipView>
-                        <HyperlinkButton x:Name="showhiraganahelp_Btn"  HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe MDL2 Assets" Foreground="White" Margin="0,0,24,24" Click="showhiraganahelp_Btn_Click">
-                            <HyperlinkButton.Content>
-                                <TextBlock FontSize="16"></TextBlock>
-                            </HyperlinkButton.Content>
-                            <FlyoutBase.AttachedFlyout>
-                                <Flyout>
-                                    <StackPanel Width="174">
-                                        <TextBlock TextWrapping="WrapWholeWords" Text="本应用所使用的罗马字表示法为平文式罗马字（ヘボン式ローマ字），大多数日语书中也使用了这种罗马音表示方法，这种表示方法和训令式罗马字以及 ISO3602 中的罗马字表示方法可能略有出入。例如 つ 用训令式罗马字应表示为 tu 而不是 tsu。" Height="238"/>
-                                    </StackPanel>
-                                </Flyout>
-                            </FlyoutBase.AttachedFlyout>
-                        </HyperlinkButton>
                     </Grid>
                     <Grid Grid.Row="1">
                         <ListView SelectionMode="None" Margin="0,-12,0,8">

@@ -163,11 +163,6 @@ namespace JapaneseDict.GUI
             disorderHira_item.Visibility = Visibility.Collapsed;
         }
 
-        private void showhiraganahelp_Btn_Click(object sender, RoutedEventArgs e)
-        {
-            Flyout.ShowAttachedFlyout(sender as FrameworkElement);
-        }
-
         private void showHiraRomaji_item_Tapped(object sender, TappedRoutedEventArgs e)
         {
             (sender as UIElement).Visibility = Visibility.Collapsed;

@@ -245,7 +245,7 @@
                                     <ListView SelectionMode="None" UseSystemFocusVisuals="False" Margin="4,8,0,0" ItemsSource="{Binding NHKNews}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,0,0,0">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,0,24,0">
                                                     <Grid>
                                                         <ProgressRing IsActive="True" Foreground="#00b294"></ProgressRing>
                                                         <Image Source="{Binding IconPath}" Stretch="Uniform" Width="160" Height="80"></Image>
