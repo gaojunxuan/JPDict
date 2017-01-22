@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JapaneseDict.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,19 +7,14 @@ using System.Threading.Tasks;
 
 namespace JapaneseDict.Models
 {
-    public class JoyoKanji : IKanji
+    public class Kanjidict : IKanji
     {
         public string Grade
         {
             get;set;
         }
 
-        public string Hantaiji
-        {
-            get; set;
-        }
-
-        public int ID
+        public string Jlpt
         {
             get; set;
         }
@@ -28,12 +24,17 @@ namespace JapaneseDict.Models
             get; set;
         }
 
-        public string Reading
+        public string KunReading
         {
             get; set;
         }
 
-        public int Strokes
+        public string OnReading
+        {
+            get; set;
+        }
+
+        public string Strokes
         {
             get; set;
         }

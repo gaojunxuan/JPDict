@@ -422,7 +422,7 @@
                                     <VisualState x:Name="Portrait"/>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <TextBox x:Name="TextBox" MaxLength="75" ScrollViewer.BringIntoViewOnFocusChange="False" DesiredCandidateWindowAlignment="BottomEdge" Header="{TemplateBinding Header}" Margin="0" PlaceholderText="{TemplateBinding PlaceholderText}" Style="{StaticResource TextBoxStyle1}" Width="{TemplateBinding Width}" Canvas.ZIndex="0" Background="{x:Null}" BorderBrush="#B2FFFFFF" BorderThickness="0" VerticalAlignment="Center" Foreground="White" SelectionHighlightColor="#99B0B0B0" AcceptsReturn="False"/>
+                            <TextBox x:Name="TextBox" MaxLength="75" ScrollViewer.BringIntoViewOnFocusChange="False" DesiredCandidateWindowAlignment="BottomEdge" Header="{TemplateBinding Header}" Margin="0" PlaceholderText="{TemplateBinding PlaceholderText}" Style="{StaticResource TextBoxStyle1}" Width="{TemplateBinding Width}" Canvas.ZIndex="0" Background="{x:Null}" BorderBrush="#B2FFFFFF" BorderThickness="0" VerticalAlignment="Center" Foreground="White" SelectionHighlightColor="#99B0B0B0" AcceptsReturn="False" FontFamily="Yu Gothic UI"/>
                             <Popup x:Name="SuggestionsPopup">
                                 <Border x:Name="SuggestionsContainer">
                                     <Border.RenderTransform>

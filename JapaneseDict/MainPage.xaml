@@ -415,7 +415,7 @@
                 </PivotItem.Header>
                 <Frame Name="translate_frame" Loaded="translate_frame_Loaded"></Frame>
             </PivotItem>
-            <PivotItem Margin="12,-8,0,0">
+            <PivotItem Margin="4,0,0,0">
                 <PivotItem.Header>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
@@ -425,7 +425,7 @@
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
-                <GridView Margin="0">
+                <GridView Margin="0" SelectionMode="None">
                     <GridViewItem>
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="あ" VerticalAlignment="Center" Foreground="#00b294" FontSize="46" Margin="20,0,0,0"/>
@@ -434,6 +434,11 @@
                                 <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="ひらがな" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <Core:InvokeCommandAction Command="{Binding CommandNavToKanaFlashcardPage}" CommandParameter="0"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
                     </GridViewItem>
                     <GridViewItem Margin="0">
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
@@ -443,69 +448,67 @@
                                 <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="カタカナ" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <Core:InvokeCommandAction Command="{Binding CommandNavToKanaFlashcardPage}" CommandParameter="1"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
                     </GridViewItem>
                     <GridViewItem Margin="0">
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="人" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
+                            <TextBlock FontFamily="Yu Gothic UI" Text="磯" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="常用汉字 1" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="じょうようかんじ１" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N1 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT１" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <Core:InvokeCommandAction Command="{Binding CommandNavToKanjiFlashcardPage}" CommandParameter="1"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
                     </GridViewItem>
                     <GridViewItem Margin="0">
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="家" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
+                            <TextBlock FontFamily="Yu Gothic UI" Text="囲" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="常用汉字 2" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="じょうようかんじ２" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N2 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT２" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <Core:InvokeCommandAction Command="{Binding CommandNavToKanjiFlashcardPage}" CommandParameter="2"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
                     </GridViewItem>
                     <GridViewItem Margin="0">
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="育" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
+                            <TextBlock FontFamily="Yu Gothic UI" Text="夏" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="常用汉字 3" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="じょうようかんじ３" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N3 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT３" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <Core:InvokeCommandAction Command="{Binding CommandNavToKanjiFlashcardPage}" CommandParameter="3"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
                     </GridViewItem>
                     <GridViewItem Margin="0">
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="選" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
+                            <TextBlock FontFamily="Yu Gothic UI" Text="円" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="常用汉字 4" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="じょうようかんじ４" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N4 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT４" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
-                    </GridViewItem>
-                    <GridViewItem Margin="0">
-                        <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="護" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
-                            <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="常用汉字 5" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="じょうようかんじ５" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </GridViewItem>
-                    <GridViewItem Margin="0">
-                        <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="賃" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
-                            <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="常用汉字 6" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="じょうようかんじ６" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </GridViewItem>
-                    <GridViewItem Margin="0">
-                        <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="謄" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
-                            <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="常用汉字 6+" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="じょうようかんじ６＋" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
-                            </StackPanel>
-                        </StackPanel>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <Core:InvokeCommandAction Command="{Binding CommandNavToKanjiFlashcardPage}" CommandParameter="4"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
                     </GridViewItem>
                 </GridView>
             </PivotItem>

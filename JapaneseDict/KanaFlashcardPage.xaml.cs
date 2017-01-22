@@ -80,6 +80,15 @@ namespace JapaneseDict.GUI
             {
                 HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             }
+            if (e.Parameter != null)
+            {
+                int index = 0;
+                bool result = Int32.TryParse(e.Parameter.ToString(), out index);
+                if (result)
+                {
+                    this.mainPivot.SelectedIndex = index;
+                }
+            }
             KanaFlashcardPage_Model vm = new KanaFlashcardPage_Model();
             var hirares = KanaFlashcardHelper.GetRandomHiragana();
             foreach (var i in hirares)

@@ -113,11 +113,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KanaFlashcardHelper.cs" />
-    <Compile Include="KanaReciteHelper.cs" />
     <Compile Include="Md5Helper.cs" />
     <Compile Include="SharingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringHelper.cs" />
+    <Compile Include="VerbConjugationHelper.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

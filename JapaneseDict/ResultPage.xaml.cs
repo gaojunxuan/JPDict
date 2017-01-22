@@ -186,5 +186,18 @@ namespace JapaneseDict.GUI
         {
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
+        string _content = "";
+        private void explanationBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            var content = (sender as TextBlock).Text;
+            _content += content;
+            if(_content!="")
+            {
+                if (!(_content.Contains("五 ]") | _content.Contains("一 ]") | _content.Contains("サ ]") | _content.Contains("カ ]")))
+                {
+                    this.mainPivot.Items.Remove(mainPivot.Items[3]);
+                }
+            }
+        }
     }
 }

@@ -100,7 +100,7 @@ namespace JapaneseDict.GUI
 
         private void gotoFeedbackPage_Btn_Click(object sender, RoutedEventArgs e)
         {
-            (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage));
+            (Window.Current.Content as Frame).Navigate(typeof(FeedbackPage));
         }
     }
 }

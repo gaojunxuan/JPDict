@@ -199,33 +199,91 @@ namespace JapaneseDict.QueryEngine
             /// <returns></returns>
             public static IEnumerable<MainDict> Query(string key)
             {
-                return _kanjiconn.Query<MainDict>("SELECT * FROM JoyoKanji WHERE Kanji = ?", key);
+                return _kanjiconn.Query<MainDict>("SELECT * FROM Kanjidict WHERE Kanji = ?", key);
             }
             /// <summary>
             /// Query kanji database using the given kanji and return the result in ObservableCollection type
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            public static async Task<ObservableCollection<JoyoKanji>> QueryForUIAsync(string key)
+            public static async Task<ObservableCollection<Kanjidict>> QueryForUIAsync(string key)
             {
                 return await Task.Run(() =>
                 {
                     if (!(string.IsNullOrEmpty(key)))
                     {
-                        var result = new ObservableCollection<JoyoKanji>(_kanjiconn.Query<JoyoKanji>("SELECT * FROM JoyoKanji WHERE Kanji = ?", key.Replace(" ", "").Replace("　", "")));
+                        var result = new ObservableCollection<Kanjidict>(_kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Kanji = ?", key.Replace(" ", "").Replace("　", "")));
                         if (result.Count != 0)
                         {
                             return result;
                         }
                         else
                         {
-                            var err = new ObservableCollection<JoyoKanji>();
+                            var err = new ObservableCollection<Kanjidict>();
                             return err;
                         }
                     }
                     else
                     {
-                        return new ObservableCollection<JoyoKanji>();
+                        return new ObservableCollection<Kanjidict>();
+                    }
+                });
+
+            }
+            /// <summary>
+            /// Query kanji database using the given jlpt level and return the result in ObservableCollection type
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public static async Task<ObservableCollection<Kanjidict>> QueryForUIAsync(int jlpt)
+            {
+                return await Task.Run(() =>
+                {
+                    if (jlpt<6&jlpt>0)
+                    {
+                        var result = new ObservableCollection<Kanjidict>(_kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Jlpt = ?", jlpt));
+                        if (result.Count != 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            var err = new ObservableCollection<Kanjidict>();
+                            return err;
+                        }
+                    }
+                    else
+                    {
+                        return new ObservableCollection<Kanjidict>();
+                    }
+                });
+
+            }
+            /// <summary>
+            /// Query kanji database using the given jlpt level and return the result in ObservableCollection type
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public static async Task<List<Kanjidict>> QueryAsync(int jlpt)
+            {
+                return await Task.Run(() =>
+                {
+                    if (jlpt < 6 & jlpt > 0)
+                    {
+                        var result = _kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Jlpt = ?", jlpt);
+                        if (result.Count != 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            var err = new List<Kanjidict>();
+                            return err;
+                        }
+                    }
+                    else
+                    {
+                        return new List<Kanjidict>();
                     }
                 });
 
@@ -235,19 +293,19 @@ namespace JapaneseDict.QueryEngine
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            public static async Task<ObservableCollection<JoyoKanji>> QueryForUIAsync(MatchCollection keywords)
+            public static async Task<ObservableCollection<Kanjidict>> QueryForUIAsync(MatchCollection keywords)
             {
                 return await Task.Run(() =>
                 {
                     if (keywords.Count != 0)
                     {
-                        ObservableCollection<JoyoKanji> result = new ObservableCollection<JoyoKanji>();
+                        ObservableCollection<Kanjidict> result = new ObservableCollection<Kanjidict>();
                         foreach (var ks in keywords)
                         {
                             foreach (var k in ks.ToString())
                             {
 
-                                foreach (var r in _kanjiconn.Query<JoyoKanji>("SELECT * FROM JoyoKanji WHERE Kanji = ?", k.ToString()))
+                                foreach (var r in _kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Kanji = ?", k.ToString()))
                                 {
                                     result.Add(r);
                                 }
@@ -259,13 +317,13 @@ namespace JapaneseDict.QueryEngine
                         }
                         else
                         {
-                            var err = new ObservableCollection<JoyoKanji>();
+                            var err = new ObservableCollection<Kanjidict>();
                             return err;
                         }
                     }
                     else
                     {
-                        return new ObservableCollection<JoyoKanji>();
+                        return new ObservableCollection<Kanjidict>();
                     }
                 });
 

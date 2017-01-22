@@ -110,6 +110,96 @@ namespace JapaneseDict.GUI.ViewModels
             };
 
         #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandNavToKanjiFlashcardPage
+        {
+            get { return _CommandNavToKanjiFlashcardPageLocator(this).Value; }
+            set { _CommandNavToKanjiFlashcardPageLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandNavToKanjiFlashcardPage Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandNavToKanjiFlashcardPage = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandNavToKanjiFlashcardPageLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandNavToKanjiFlashcardPageLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandNavToKanjiFlashcardPage), model => model.Initialize(nameof(CommandNavToKanjiFlashcardPage), ref model._CommandNavToKanjiFlashcardPage, ref _CommandNavToKanjiFlashcardPageLocator, _CommandNavToKanjiFlashcardPageDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandNavToKanjiFlashcardPageDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandNavToKanjiFlashcardPage);           // Command resource  
+                var commandId = nameof(CommandNavToKanjiFlashcardPage);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            var parm = e.EventArgs.Parameter.ToString();
+                            int jlpt = 0;
+                            bool result = Int32.TryParse(parm, out jlpt);
+                            if(result)
+                            {
+                                (Window.Current.Content as Frame).Navigate(typeof(KanjiFlashcardPage),jlpt);
+                            }
+                            //Todo: Add NavToKanjiFlashcardPage logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandNavToKanaFlashcardPage
+        {
+            get { return _CommandNavToKanaFlashcardPageLocator(this).Value; }
+            set { _CommandNavToKanaFlashcardPageLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandNavToKanaFlashcardPage Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandNavToKanaFlashcardPage = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandNavToKanaFlashcardPageLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandNavToKanaFlashcardPageLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandNavToKanaFlashcardPage), model => model.Initialize(nameof(CommandNavToKanaFlashcardPage), ref model._CommandNavToKanaFlashcardPage, ref _CommandNavToKanaFlashcardPageLocator, _CommandNavToKanaFlashcardPageDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandNavToKanaFlashcardPageDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandNavToKanaFlashcardPage);           // Command resource  
+                var commandId = nameof(CommandNavToKanaFlashcardPage);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            var parm = e.EventArgs.Parameter.ToString();
+                            int index = 0;
+                            bool result = Int32.TryParse(parm, out index);
+                            if (result)
+                            {
+                                (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage), index);
+                            }
+                            //Todo: Add NavToKanaFlashcardPage logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
         //propvm tab tab string tab Title
         public String Title
         {

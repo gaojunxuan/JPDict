@@ -111,6 +111,7 @@
     <Content Include="Assets\NewStoreLogo.scale-150.png" />
     <Content Include="Assets\NewStoreLogo.scale-200.png" />
     <Content Include="Assets\NewStoreLogo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-125.png" />
     <Content Include="Assets\StoreLogo.scale-150.png" />
@@ -134,13 +135,14 @@
     <Content Include="Segoe Translator Symbol.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ListExtension.cs" />
     <Compile Include="Helpers\BoolNegativeConverter.cs" />
     <Compile Include="Helpers\MediaPositionConverter.cs" />
-    <Compile Include="HiraganaRecitePage.xaml.cs">
-      <DependentUpon>HiraganaRecitePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="KanaFlashcardPage.xaml.cs">
       <DependentUpon>KanaFlashcardPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="KanjiFlashcardPage.xaml.cs">
+      <DependentUpon>KanjiFlashcardPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\GroupedNoteItem.cs" />
     <Compile Include="Extensions\ItemsControlExtension.cs" />
@@ -150,6 +152,7 @@
     <Compile Include="Helpers\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\BooleanToVisibilityNegateConverter.cs" />
     <Compile Include="Helpers\StringEquationToBoolConverter.cs" />
+    <Compile Include="Models\Verb.cs" />
     <Compile Include="NotebookPage.xaml.cs">
       <DependentUpon>NotebookPage.xaml</DependentUpon>
     </Compile>
@@ -160,8 +163,8 @@
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Startups\FeedbackPage.cs" />
-    <Compile Include="Startups\HiraganaRecitePage.cs" />
     <Compile Include="Startups\KanaFlashcardPage.cs" />
+    <Compile Include="Startups\KanjiFlashcardPage.cs" />
     <Compile Include="Startups\NotebookPage.cs" />
     <Compile Include="Startups\ResultPage.cs" />
     <Compile Include="Startups\SettingsPage.cs" />
@@ -176,6 +179,7 @@
     <Compile Include="ViewModels\FeedbackPage_Model.cs" />
     <Compile Include="ViewModels\HiraganaRecitePage_Model.cs" />
     <Compile Include="ViewModels\KanaFlashcardPage_Model.cs" />
+    <Compile Include="ViewModels\KanjiFlashcardPage_Model.cs" />
     <Compile Include="ViewModels\MainPage_Model.cs" />
     <Compile Include="Startups\StartupFunctions.cs" />
     <Compile Include="App.xaml.cs">
@@ -216,11 +220,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HiraganaRecitePage.xaml">
+    <Page Include="KanaFlashcardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="KanaFlashcardPage.xaml">
+    <Page Include="KanjiFlashcardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -24,6 +24,7 @@ using Windows.UI.Popups;
 using System.Net.Http;
 using Windows.Storage.Streams;
 using System.Text.RegularExpressions;
+using JapaneseDict.Util;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -36,14 +37,13 @@ namespace JapaneseDict.GUI.ViewModels
         // 如果您已经安装了 MVVMSidekick 代码片段，请用 propvm +tab +tab 输入属性
         ObservableCollection<MainDict> results;
         string _keyword;
-        ObservableCollection<JoyoKanji> kanjiresults;
+        ObservableCollection<Kanjidict> kanjiresults;
         MatchCollection _kanjikeyword;
         public ResultPage_Model(string keyword)
         {
             
             _keyword = keyword;
             QueryWord();
-           
             QueryKanji();
             EnableBackButtonOnTitleBar((sender, args) =>
             {
@@ -100,6 +100,11 @@ namespace JapaneseDict.GUI.ViewModels
 
             this.results = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(_keyword);
             this.Results = results;
+            foreach (var i in results)
+            {
+                var content = i.Explanation;
+                
+            }
             //cn to jp translate method (obsolete)
             //this.Cn2JpResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryCn2JpForUIAsync(_keyword);
             //this.OnlineResult = await QueryEngine.QueryEngine.OnlineQueryEngine.Query(_keyword);
@@ -113,7 +118,20 @@ namespace JapaneseDict.GUI.ViewModels
             {
                 this._keyword = this.results.First().JpChar;
                 QueryKanji();
-            }
+                foreach(var i in results)
+                {
+                    var content = i.Explanation;
+                    if (content.Contains("五 ]") | content.Contains("一 ]") | content.Contains("サ ]") | content.Contains("カ ]"))
+                    {
+                        this.IsVerbQueryEnabled = Visibility.Visible;
+                    }
+                    else
+                    {
+                        this.IsVerbQueryEnabled = Visibility.Collapsed;
+                    }
+                }
+                
+          }
             //this.OnlineResult = await QueryEngine.QueryEngine.OnlineQueryEngine.Query(results.First().JpChar);
         }
 
@@ -136,15 +154,27 @@ namespace JapaneseDict.GUI.ViewModels
         #endregion
 
 
-        public ObservableCollection<JoyoKanji> KanjiResults
+        public ObservableCollection<Kanjidict> KanjiResults
         {
             get { return _KanjiResultsLocator(this).Value; }
             set { _KanjiResultsLocator(this).SetValueAndTryNotify(value); }
         }
-        #region Property ObservableCollection<JoyoKanji> KanjiResults Setup        
-        protected Property<ObservableCollection<JoyoKanji>> _KanjiResults = new Property<ObservableCollection<JoyoKanji>> { LocatorFunc = _KanjiResultsLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<JoyoKanji>>> _KanjiResultsLocator = RegisterContainerLocator<ObservableCollection<JoyoKanji>>(nameof(KanjiResults), model => model.Initialize(nameof(KanjiResults), ref model._KanjiResults, ref _KanjiResultsLocator, _KanjiResultsDefaultValueFactory));
-        static Func<ObservableCollection<JoyoKanji>> _KanjiResultsDefaultValueFactory = () => default(ObservableCollection<JoyoKanji>);
+        #region Property ObservableCollection<Kanjidict> KanjiResults Setup        
+        protected Property<ObservableCollection<Kanjidict>> _KanjiResults = new Property<ObservableCollection<Kanjidict>> { LocatorFunc = _KanjiResultsLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<Kanjidict>>> _KanjiResultsLocator = RegisterContainerLocator<ObservableCollection<Kanjidict>>(nameof(KanjiResults), model => model.Initialize(nameof(KanjiResults), ref model._KanjiResults, ref _KanjiResultsLocator, _KanjiResultsDefaultValueFactory));
+        static Func<ObservableCollection<Kanjidict>> _KanjiResultsDefaultValueFactory = () => default(ObservableCollection<Kanjidict>);
+        #endregion
+
+
+        public ObservableCollection<Verb> VerbResult
+        {
+            get { return _VerbResultLocator(this).Value; }
+            set { _VerbResultLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property ObservableCollection<Verb> VerbResult Setup        
+        protected Property<ObservableCollection<Verb>> _VerbResult = new Property<ObservableCollection<Verb>> { LocatorFunc = _VerbResultLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<Verb>>> _VerbResultLocator = RegisterContainerLocator<ObservableCollection<Verb>>(nameof(VerbResult), model => model.Initialize(nameof(VerbResult), ref model._VerbResult, ref _VerbResultLocator, _VerbResultDefaultValueFactory));
+        static Func<ObservableCollection<Verb>> _VerbResultDefaultValueFactory = () => default(ObservableCollection<Verb>);
         #endregion
 
         private void EnableBackButtonOnTitleBar(EventHandler<BackRequestedEventArgs> onBackRequested)
@@ -303,6 +333,102 @@ namespace JapaneseDict.GUI.ViewModels
 
         #endregion
 
+        public CommandModel<ReactiveCommand, String> CommandQueryVerb
+        {
+            get { return _CommandQueryVerbLocator(this).Value; }
+            set { _CommandQueryVerbLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandQueryVerb Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandQueryVerb = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandQueryVerbLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandQueryVerbLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandQueryVerb), model => model.Initialize(nameof(CommandQueryVerb), ref model._CommandQueryVerb, ref _CommandQueryVerbLocator, _CommandQueryVerbDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandQueryVerbDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandQueryVerb);           // Command resource  
+                var commandId = nameof(CommandQueryVerb);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            var vbres = new ObservableCollection<Verb>();
+                            foreach (var i in vm.results)
+                            {
+                                
+                                var content = i.Explanation;
+                                if (content.Contains("五 ]") | content.Contains("一 ]") | content.Contains("サ ]") | content.Contains("カ ]"))
+                                {
+                                    Regex reg = new Regex("[\u4e00-\u9fa5]+");
+                                    string keyword=i.JpChar;
+                                    var matches = reg.Matches(keyword);
+                                    if (matches.Count==0)
+                                    {
+                                        var newkey = content.Split('\r')[1];
+                                        if(!string.IsNullOrEmpty(newkey)&!newkey.Contains("["))
+                                        {
+                                            if(newkey.Contains("；"))
+                                            {
+                                                keyword = newkey.Split('；')[0].Replace(" ", "").Replace("　", "");
+                                            }
+                                            else
+                                            {
+                                                keyword = newkey.Replace(" ","").Replace("　","");
+                                            }
+                                        }
+                                    }
+                                    if(content.Contains("サ ]")&!i.JpChar.EndsWith("する"))
+                                    {
+                                        keyword += "する";
+                                    }
+                                    
+                                    //vm.IsVerbQueryEnabled = Visibility.Visible;
+                                    vbres.Add(new Verb()
+                                    {
+                                        Causative = VerbConjugationHelper.GetCausative(keyword),
+                                        EbaForm = VerbConjugationHelper.GetEbaForm(keyword),
+                                        Imperative = VerbConjugationHelper.GetImperative(keyword),
+                                        MasuForm = VerbConjugationHelper.GetMasuForm(keyword),
+                                        MasuNegative = VerbConjugationHelper.GetMasuNegative(keyword),
+                                        NegativeCausative = VerbConjugationHelper.GetNegativeCausative(keyword),
+                                        NegativeForm = VerbConjugationHelper.GetNegative(keyword),
+                                        NegativeImperative = VerbConjugationHelper.GetNegativeImperative(keyword),
+                                        NegativePassive = VerbConjugationHelper.GetNegativePassive(keyword),
+                                        NegativePotential = VerbConjugationHelper.GetNegativePotential(keyword),
+                                        OriginalForm = keyword,
+                                        Passive = VerbConjugationHelper.GetPassive(keyword),
+                                        PastNegative = VerbConjugationHelper.GetPastNegative(keyword),
+                                        Potential = VerbConjugationHelper.GetPotential(keyword),
+                                        TaForm = VerbConjugationHelper.GetTaForm(keyword),
+                                        TeForm = VerbConjugationHelper.GetTeForm(keyword),
+                                        Volitional = VerbConjugationHelper.GetVolitional(keyword)
+                                    });
+                                }
+                                else
+                                {
+                                    //vm.IsVerbQueryEnabled = Visibility.Collapsed;
+                                }
+                            }
+                            vm.VerbResult = vbres;
+                            //Todo: Add QueryVerb logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
         public bool IsOnlineQueryBusy
         {
             get { return _IsOnlineQueryBusyLocator(this).Value; }
@@ -337,6 +463,23 @@ namespace JapaneseDict.GUI.ViewModels
             };
         #endregion
 
+
+        public Visibility IsVerbQueryEnabled
+        {
+            get { return _IsVerbQueryEnabledLocator(this).Value; }
+            set { _IsVerbQueryEnabledLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property Visibility IsVerbQueryEnabled Setup        
+        protected Property<Visibility> _IsVerbQueryEnabled = new Property<Visibility> { LocatorFunc = _IsVerbQueryEnabledLocator };
+        static Func<BindableBase, ValueContainer<Visibility>> _IsVerbQueryEnabledLocator = RegisterContainerLocator<Visibility>(nameof(IsVerbQueryEnabled), model => model.Initialize(nameof(IsVerbQueryEnabled), ref model._IsVerbQueryEnabled, ref _IsVerbQueryEnabledLocator, _IsVerbQueryEnabledDefaultValueFactory));
+        static Func<BindableBase, Visibility> _IsVerbQueryEnabledDefaultValueFactory =
+            model =>
+            {
+                var vm = CastToCurrentType(model);
+                //TODO: Add the logic that produce default value from vm current status.
+                return default(Visibility);
+            };
+        #endregion
 
         #region Obsoleted Code
         //public string JpChar
