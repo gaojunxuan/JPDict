@@ -34,7 +34,7 @@
                         <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
                         <StackPanel Height="48">
                             <TextBlock FontSize="24">反馈</TextBlock>
-                            <TextBlock FontSize="8">フィードバック</TextBlock>
+                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">フィードバック</TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
