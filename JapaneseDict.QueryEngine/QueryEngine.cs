@@ -302,9 +302,9 @@ namespace JapaneseDict.QueryEngine
                         ObservableCollection<Kanjidict> result = new ObservableCollection<Kanjidict>();
                         foreach (var ks in keywords)
                         {
-                            foreach (var k in ks.ToString())
+                            var distincted = ks.ToString().Distinct();
+                            foreach (var k in distincted)
                             {
-
                                 foreach (var r in _kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Kanji = ?", k.ToString()))
                                 {
                                     result.Add(r);

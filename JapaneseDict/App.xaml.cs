@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Services.Store.Engagement;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -65,7 +66,7 @@ namespace JapaneseDict
         /// <param name="e">Details about the launch request and process.</param>
         public static MobileServiceClient MobileService =new MobileServiceClient("https://skylarkjpdict.azurewebsites.net");
 
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 
 #if DEBUG
@@ -76,6 +77,8 @@ namespace JapaneseDict
 #endif
             
             CopyMainDb();
+            StoreServicesEngagementManager mgr=StoreServicesEngagementManager.GetDefault();
+            await mgr.RegisterNotificationChannelAsync();
             //Init MVVM-Sidekick Navigations:
             InitNavigationConfigurationInThisAssembly();
 

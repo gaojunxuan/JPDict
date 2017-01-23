@@ -151,10 +151,11 @@
                     </StackPanel>
                 </PivotItem.Header>
                 <Grid>
-                    <GridView ItemsSource="{Binding KanjiResults}" SelectionMode="None" IsSwipeEnabled="False">
+                    <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="没有结果的说" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray" Name="kanjinores_Tbx"  Visibility="Visible"></TextBlock>
+                    <GridView Name="kanji_gridview" ItemsSource="{Binding KanjiResults}" SelectionMode="None" IsSwipeEnabled="False">
                         <GridView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Name="kanjiItem" Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal" Tapped="kanjiItem_Tapped">
+                                <StackPanel Name="kanjiItem" Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal" Tapped="kanjiItem_Tapped" Loaded="kanjiItem_Loaded">
                                     <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kanji}" VerticalAlignment="Center" Foreground="#00b294" FontSize="48" Margin="20,20,0,20"/>
                                     <ScrollViewer HorizontalScrollMode="Enabled" VerticalScrollMode="Disabled" Margin="16,0,0,12">
                                         <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
@@ -191,9 +192,11 @@
                                 </StackPanel>
                             </DataTemplate>
                         </GridView.ItemTemplate>
-                        <GridViewItem>
-
-                        </GridViewItem>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Loaded">
+                                <Core:InvokeCommandAction Command="{Binding CommandQueryKanji}"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
                     </GridView>
                 </Grid>
             </PivotItem>

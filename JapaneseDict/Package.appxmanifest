@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="45240.SkylarkJPDict" Publisher="CN=47610EF9-B72C-4C0E-B513-511D56E63511" Version="1.1.4.0" />
+  <Identity Name="45240.SkylarkJPDict" Publisher="CN=47610EF9-B72C-4C0E-B513-511D56E63511" Version="1.9.9.0" />
   <mp:PhoneIdentity PhoneProductId="4780de93-7a9f-4f06-91ce-82351e9de4ec" PhonePublisherId="47610EF9-B72C-4C0E-B513-511D56E63511" />
   <Properties>
     <DisplayName>Skylark JPDict</DisplayName>

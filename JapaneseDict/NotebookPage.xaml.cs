@@ -98,6 +98,7 @@ namespace JapaneseDict.GUI
         {
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
+
     }
    
 

@@ -199,5 +199,15 @@ namespace JapaneseDict.GUI
                 }
             }
         }
+
+        private void kanji_gridview_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void kanjiItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            kanjinores_Tbx.Visibility = Visibility.Collapsed;
+        }
     }
 }

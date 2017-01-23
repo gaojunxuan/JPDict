@@ -37,14 +37,14 @@ namespace JapaneseDict.GUI.ViewModels
         // 如果您已经安装了 MVVMSidekick 代码片段，请用 propvm +tab +tab 输入属性
         ObservableCollection<MainDict> results;
         string _keyword;
-        ObservableCollection<Kanjidict> kanjiresults;
-        MatchCollection _kanjikeyword;
+        //ObservableCollection<Kanjidict> kanjiresults;
+        //MatchCollection _kanjikeyword;
         public ResultPage_Model(string keyword)
         {
             
             _keyword = keyword;
             QueryWord();
-            QueryKanji();
+            //QueryKanji();
             EnableBackButtonOnTitleBar((sender, args) =>
             {
                 BindableBase model=this;
@@ -88,13 +88,17 @@ namespace JapaneseDict.GUI.ViewModels
             }
 
         }
-        private async void QueryKanji()
-        {
-            Regex reg = new Regex("[\u4e00-\u9fa5]+"); //extract kanjis
-            _kanjikeyword = reg.Matches(_keyword);
-            this.kanjiresults = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(_kanjikeyword);
-            this.KanjiResults = kanjiresults;
-        }
+        //private async void QueryKanji()
+        //{
+        //    Regex reg = new Regex("[\u4e00-\u9fa5]+"); //extract kanjis
+        //    _kanjikeyword = reg.Matches(_keyword);
+        //    if(_kanjikeyword.Count==0)
+        //    {
+
+        //    }
+        //    this.kanjiresults = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(_kanjikeyword);
+        //    this.KanjiResults = kanjiresults;
+        //}
         private async void QueryWord()
         {
 
@@ -117,7 +121,7 @@ namespace JapaneseDict.GUI.ViewModels
             if(this.results!=null&&this.results.Count!=0)
             {
                 this._keyword = this.results.First().JpChar;
-                QueryKanji();
+                //QueryKanji();
                 foreach(var i in results)
                 {
                     var content = i.Explanation;
@@ -429,6 +433,74 @@ namespace JapaneseDict.GUI.ViewModels
 
         #endregion
 
+
+        public CommandModel<ReactiveCommand, String> CommandQueryKanji
+        {
+            get { return _CommandQueryKanjiLocator(this).Value; }
+            set { _CommandQueryKanjiLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandQueryKanji Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandQueryKanji = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandQueryKanjiLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandQueryKanjiLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandQueryKanji), model => model.Initialize(nameof(CommandQueryKanji), ref model._CommandQueryKanji, ref _CommandQueryKanjiLocator, _CommandQueryKanjiDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandQueryKanjiDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandQueryKanji);           // Command resource  
+                var commandId = nameof(CommandQueryKanji);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            Regex reg = new Regex("[\u4e00-\u9fa5]+");
+                            StringBuilder sbkey = new StringBuilder();
+                            foreach (var i in vm.Results)
+                            {
+                                sbkey.Append(i.JpChar);
+                                if(reg.Matches(i.JpChar).Count==0)
+                                {
+                                    if(i.Explanation!="没有本地释义")
+                                    {
+                                        var lines = i.Explanation.Split('\r');
+                                        if (string.IsNullOrWhiteSpace(lines[0]))
+                                        {
+                                            if(!lines[1].Contains("["))
+                                            {
+                                                sbkey.Append(lines[1]);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (!lines[0].Contains("["))
+                                            {
+                                                sbkey.Append(lines[0]);
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                            var matches = reg.Matches(sbkey.ToString());
+                            vm.KanjiResults = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(matches);
+                            //Todo: Add QueryKanji logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
         public bool IsOnlineQueryBusy
         {
             get { return _IsOnlineQueryBusyLocator(this).Value; }
