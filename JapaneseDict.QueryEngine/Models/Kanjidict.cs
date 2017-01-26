@@ -1,9 +1,11 @@
 ﻿using JapaneseDict.Models;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace JapaneseDict.Models
 {
@@ -38,5 +40,7 @@ namespace JapaneseDict.Models
         {
             get; set;
         }
+        [Ignore]
+        public Visibility ShowReading { get; set; } = Visibility.Visible;
     }
 }

@@ -66,6 +66,37 @@
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>
                             </ListViewItem>
+                            <ListViewItem x:Name="showReading_item" Margin="0,12,0,0" Tapped="showReading_item_Tapped" Visibility="Collapsed">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="34" Width="40" Height="40" TextAlignment="Center">あ</TextBlock>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="显示读音" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
+                                        <TextBlock Text="読み方を表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Tapped">
+                                        <Core:InvokeCommandAction Command="{Binding CommandShowReading}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </ListViewItem>
+                            <ListViewItem x:Name="hideReading_item" Margin="0,12,0,0" Tapped="hideReading_item_Tapped">
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="30" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,9">あ</TextBlock>
+                                    </Grid>
+                                    <StackPanel Margin="20,0,0,0">
+                                        <TextBlock Text="隐藏读音" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
+                                        <TextBlock Text="読み方を表示しない" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Tapped">
+                                        <Core:InvokeCommandAction Command="{Binding CommandHideReading}"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </ListViewItem>
                         </ListView>
                     </Grid>
                 </Grid>

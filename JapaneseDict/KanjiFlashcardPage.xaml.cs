@@ -122,5 +122,17 @@ namespace JapaneseDict.GUI
             var currentView = SystemNavigationManager.GetForCurrentView();
             currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
         }
+
+        private void showReading_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            hideReading_item.Visibility = Visibility.Visible;
+        }
+
+        private void hideReading_item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            (sender as UIElement).Visibility = Visibility.Collapsed;
+            showReading_item.Visibility = Visibility.Visible;
+        }
     }
 }

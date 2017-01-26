@@ -339,7 +339,7 @@
                                                     <StackPanel Name="playercontrolnormal" Orientation="Horizontal">
                                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
                                                         <StackPanel Margin="8,0,0,0">
-                                                            <TextBlock Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
+                                                            <TextBlock Text="{Binding Title}" FontFamily="Yu Gothic UI" FontSize="21.333" Foreground="White"></TextBlock>
                                                             <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
                                                         </StackPanel>
                                                     </StackPanel>
@@ -359,7 +359,7 @@
                                                     <StackPanel Name="playercontrolslow" Orientation="Horizontal">
                                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
                                                         <StackPanel Margin="8,0,0,0">
-                                                            <TextBlock Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
+                                                            <TextBlock Text="{Binding Title}" FontFamily="Yu Gothic UI" FontSize="21.333" Foreground="White"></TextBlock>
                                                             <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
                                                         </StackPanel>
                                                     </StackPanel>

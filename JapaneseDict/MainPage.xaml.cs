@@ -136,6 +136,10 @@ namespace JapaneseDict.GUI
 
             base.OnNavigatedTo(e);
             this.mediaEle.Stop();
+            if(e.Parameter!=null&e.Parameter.ToString()=="update")
+            {
+                this.mainPivot.SelectedIndex = 4;
+            }
         }
         private async void playNHKRadio_Btn_Click(object sender, RoutedEventArgs e)
         {

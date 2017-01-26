@@ -22,6 +22,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Services.Store.Engagement;
+using Windows.Networking.PushNotifications;
+using Microsoft.WindowsAzure.Messaging;
+using System.Diagnostics;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -46,15 +49,42 @@ namespace JapaneseDict
         private async void CopyMainDb()
         {
             var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///dict.db"));
-            if(await ApplicationData.Current.LocalFolder.TryGetItemAsync("dict.db")==null)
+            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("dict.db") == null)
             {
                 await file.CopyAsync(ApplicationData.Current.LocalFolder, "dict.db");
             }
-            var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanji.db"));
-            await kanjifile.CopyAsync(ApplicationData.Current.LocalFolder, "kanji.db",NameCollisionOption.ReplaceExisting);
+            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("kanji.db") == null)
+            {
+                var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanji.db"));
+                await kanjifile.CopyAsync(ApplicationData.Current.LocalFolder, "kanji.db", NameCollisionOption.ReplaceExisting);
+            }
+            var updatefile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///update.db"));
+            await updatefile.CopyAsync(ApplicationData.Current.LocalFolder, "update.db", NameCollisionOption.ReplaceExisting);
         }
-        
-       
+
+        private async void InitNotificationsAsync()
+        {
+            try
+            {
+                var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+
+                var hub = new NotificationHub("jpdictNotificationHub", "Endpoint=sb://jpdictnotificationnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+0qpDUdC1vjcW+eDWKDA8+znl5gTDzJt8oYYJFbyUy8=");
+                var result = await hub.RegisterNativeAsync(channel.Uri);
+            }
+            catch
+            {
+                Debug.WriteLine("Registration failed");
+            }
+
+            //// Displays the registration ID so you know it was successful
+            //if (result.RegistrationId != null)
+            //{
+            //    var dialog = new MessageDialog("Registration successful: " + result.RegistrationId);
+            //    dialog.Commands.Add(new UICommand("OK"));
+            //    await dialog.ShowAsync();
+            //}
+
+        }
         public static void InitNavigationConfigurationInThisAssembly()
 		{
 			MVVMSidekick.Startups.StartupFunctions.RunAllConfig();
@@ -66,7 +96,7 @@ namespace JapaneseDict
         /// <param name="e">Details about the launch request and process.</param>
         public static MobileServiceClient MobileService =new MobileServiceClient("https://skylarkjpdict.azurewebsites.net");
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
 #if DEBUG
@@ -77,8 +107,9 @@ namespace JapaneseDict
 #endif
             
             CopyMainDb();
-            StoreServicesEngagementManager mgr=StoreServicesEngagementManager.GetDefault();
-            await mgr.RegisterNotificationChannelAsync();
+            InitNotificationsAsync();
+            //StoreServicesEngagementManager mgr=StoreServicesEngagementManager.GetDefault();
+            //await mgr.RegisterNotificationChannelAsync();
             //Init MVVM-Sidekick Navigations:
             InitNavigationConfigurationInThisAssembly();
 
@@ -114,7 +145,44 @@ namespace JapaneseDict
             Window.Current.Activate();
            
     }
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
 
+            if (args is ToastNotificationActivatedEventArgs)
+            {
+                var toastActivationArgs = args as ToastNotificationActivatedEventArgs;
+                Frame rootFrame = Window.Current.Content as Frame;
+
+                CopyMainDb();
+                InitNotificationsAsync();
+                InitNavigationConfigurationInThisAssembly();
+                // Do not repeat app initialization when the Window already has content,
+                // just ensure that the window is active
+                if (rootFrame == null)
+                {
+                    // Create a Frame to act as the navigation context and navigate to the first page
+                    rootFrame = new Frame();
+
+                    rootFrame.NavigationFailed += OnNavigationFailed;
+
+
+                    // Place the frame in the current Window
+                    Window.Current.Content = rootFrame;
+                }
+                if (rootFrame.Content == null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+                    rootFrame.Navigate(typeof(MainPage),"update");
+                }
+                // Ensure the current window is active
+                Window.Current.Activate();
+                // Use the originalArgs variable to access the original arguments
+                // that were passed to the app.
+            }
+        }
         /// <summary>
         /// Invoked when Navigation to a certain page fails
         /// </summary>

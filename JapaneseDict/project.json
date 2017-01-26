@@ -16,7 +16,8 @@
     "Rx-Main": "2.2.5",
     "Rx-PlatformServices": "2.2.5",
     "SQLite.Net-PCL": "3.1.1",
-    "Unity": "4.0.1"
+    "Unity": "4.0.1",
+    "WindowsAzure.Messaging.Managed": "0.1.7.9"
   },
   "frameworks": {
     "uap10.0": {}

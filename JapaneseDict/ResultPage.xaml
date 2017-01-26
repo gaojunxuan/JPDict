@@ -152,7 +152,7 @@
                 </PivotItem.Header>
                 <Grid>
                     <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="没有结果的说" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray" Name="kanjinores_Tbx"  Visibility="Visible"></TextBlock>
-                    <GridView Name="kanji_gridview" ItemsSource="{Binding KanjiResults}" SelectionMode="None" IsSwipeEnabled="False">
+                    <GridView Name="kanji_gridview" ItemsSource="{Binding KanjiResults}" SelectionMode="None" IsSwipeEnabled="False" Margin="-8,0,0,0">
                         <GridView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Name="kanjiItem" Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal" Tapped="kanjiItem_Tapped" Loaded="kanjiItem_Loaded">

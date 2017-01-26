@@ -93,6 +93,93 @@ namespace JapaneseDict.GUI.ViewModels
 
         #endregion
 
+        public CommandModel<ReactiveCommand, String> CommandShowReading
+        {
+            get { return _CommandShowReadingLocator(this).Value; }
+            set { _CommandShowReadingLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandShowReading Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandShowReading = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandShowReadingLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandShowReadingLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandShowReading), model => model.Initialize(nameof(CommandShowReading), ref model._CommandShowReading, ref _CommandShowReadingLocator, _CommandShowReadingDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandShowReadingDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandShowReading);           // Command resource  
+                var commandId = nameof(CommandShowReading);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            var res = new ObservableCollection<Kanjidict>(vm.Kanji);
+                            foreach (var i in res)
+                            {
+                                i.ShowReading = Windows.UI.Xaml.Visibility.Visible;
+                            }
+                            vm.Kanji = res;
+                            //Todo: Add ShowReading logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandHideReading
+        {
+            get { return _CommandHideReadingLocator(this).Value; }
+            set { _CommandHideReadingLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandHideReading Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandHideReading = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandHideReadingLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandHideReadingLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandHideReading), model => model.Initialize(nameof(CommandHideReading), ref model._CommandHideReading, ref _CommandHideReadingLocator, _CommandHideReadingDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandHideReadingDefaultValueFactory =
+            model =>
+            {
+                var resource = nameof(CommandHideReading);           // Command resource  
+                var commandId = nameof(CommandHideReading);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            var res = new ObservableCollection<Kanjidict>(vm.Kanji);
+                            foreach (var i in res)
+                            {
+                                i.ShowReading = Windows.UI.Xaml.Visibility.Collapsed;
+                            }
+                            vm.Kanji = res;
+                            //Todo: Add HideReading logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion 
         #region Life Time Event Handling
 
         ///// <summary>
