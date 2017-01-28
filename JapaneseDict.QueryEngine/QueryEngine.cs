@@ -80,14 +80,14 @@ namespace JapaneseDict.QueryEngine
                         //@"\[[^\]]+\]" Regex pat for removing [XXX]
                         //@"[\（][\s\S]*[\）]" Regex pat for removing （XXX）
                         var queryres = _conn.Table<MainDict>().Select(s => s).Where(w =>
-                         {
-                             string a = Regex.Replace(Regex.Replace(w.PreviewExplanation, @"\[[^\]]+\]", ""), @"[\（][\s\S]*[\）]", "");
-                             if (a.Contains(key + "；") || a.Contains(key + "，") || w.PreviewExplanation.EndsWith("] " + key + " ..."))
-                             {
-                                 return true;
-                             }
-                             return false;
-                         });
+                        {
+                            string a = Regex.Replace(Regex.Replace(w.PreviewExplanation, @"\[[^\]]+\]", ""), @"[\（][\s\S]*[\）]", "");
+                            if (a.Contains(key + "；") || a.Contains(key + "，") || w.PreviewExplanation.EndsWith("] " + key + " ..."))
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
                         var result = new ObservableCollection<MainDict>(queryres);
 
                         if (result.Count != 0)
@@ -175,18 +175,18 @@ namespace JapaneseDict.QueryEngine
             /// <param name="jpchar"></param>
             /// <param name="explanation"></param>
             /// <param name="Kana"></param>
-            public static void Add(string jpchar, string explanation, string Kana,int id)
+            public static void Add(string jpchar, string explanation, string Kana, int id)
             {
                 _conn.CreateTable<MainDict>();
                 var maxid = _conn.ExecuteScalar<int>("SELECT MAX( ID ) FROM MainDict ;");
                 _conn.Execute($"UPDATE SQLITE_SEQUENCE SET seq = {maxid}  WHERE name = 'MainDict'");
-                var entries=_conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", id);
-                if(entries.Count==0)
+                var entries = _conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", id);
+                if (entries.Count == 0)
                 {
                     _conn.Insert(new MainDict() { JpChar = jpchar, Explanation = explanation, Kana = Kana, ID = id });
                     _conn.Commit();
                 }
-                
+
             }
         }
         public static class KanjiDictQueryEngine
@@ -239,7 +239,7 @@ namespace JapaneseDict.QueryEngine
             {
                 return await Task.Run(() =>
                 {
-                    if (jlpt<6&jlpt>0)
+                    if (jlpt < 6 & jlpt > 0)
                     {
                         var result = new ObservableCollection<Kanjidict>(_kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Jlpt = ?", jlpt));
                         if (result.Count != 0)
@@ -300,15 +300,20 @@ namespace JapaneseDict.QueryEngine
                     if (keywords.Count != 0)
                     {
                         ObservableCollection<Kanjidict> result = new ObservableCollection<Kanjidict>();
+                        StringBuilder sb = new StringBuilder();
                         foreach (var ks in keywords)
                         {
                             var distincted = ks.ToString().Distinct();
                             foreach (var k in distincted)
                             {
-                                foreach (var r in _kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Kanji = ?", k.ToString()))
-                                {
-                                    result.Add(r);
-                                }
+                                sb.Append(k);                                
+                            }
+                        }
+                        foreach(var s in sb.ToString().Distinct())
+                        {
+                            foreach (var r in _kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Kanji = ?", s.ToString()))
+                            {
+                                result.Add(r);
                             }
                         }
                         if (result != null && result.Count != 0)
@@ -440,7 +445,7 @@ namespace JapaneseDict.QueryEngine
                 _noteconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
             }
         }
-        
+
 
     }
 }
