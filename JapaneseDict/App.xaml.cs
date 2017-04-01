@@ -68,7 +68,7 @@ namespace JapaneseDict
             {
                 var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
 
-                var hub = new NotificationHub("jpdictNotificationHub", "Endpoint=sb://jpdictnotificationnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=+0qpDUdC1vjcW+eDWKDA8+znl5gTDzJt8oYYJFbyUy8=");
+                var hub = new NotificationHub("jpdictHub", "Endpoint=sb://jpdictnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=tv6BtTuCBWg6dxe45cwGAhA6C7IpE94gTq3If8TWDJI=");
                 var result = await hub.RegisterNativeAsync(channel.Uri);
             }
             catch
