@@ -8,6 +8,7 @@
     "Microsoft.Bcl": "1.1.10",
     "Microsoft.Bcl.Async": "1.0.168",
     "Microsoft.Bcl.Build": "1.0.21",
+    "Microsoft.Graph": "1.2.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
     "MVVM-Sidekick": "1.6.12",
     "Rx-Core": "2.2.5",

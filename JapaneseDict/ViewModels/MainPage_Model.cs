@@ -8,6 +8,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using JapaneseDict.Models;
 using JapaneseDict.OnlineService;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -46,11 +48,8 @@ namespace JapaneseDict.GUI.ViewModels
         }
         async void GetNHKNews()
         {
-            this.NHKNews = new ObservableCollection<JapaneseDict.Models.NHKNews>();
-            for (int i = 0; i < 4; i++)
-            {
-                this.NHKNews.Add((await JapaneseDict.OnlineService.JsonHelper.GetNHKNews(i)));
-            }
+            var res = await JapaneseDict.OnlineService.JsonHelper.GetNHKNews();
+            this.NHKNews = new ObservableCollection<NHKNews>(res.Take(4));
         }
         async void GetListening()
         {

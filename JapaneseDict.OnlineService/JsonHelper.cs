@@ -106,6 +106,39 @@ namespace JapaneseDict.OnlineService
                 return new NHKNews() { Title = "出现连接错误",IconPath=new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) };
             }
         }
+        public static async Task<List<NHKNews>> GetNHKNews()
+        {
+            try
+            {
+                string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/NHKNews");
+                JsonObject jsonobj = JsonObject.Parse(jsonStr);
+                var resultarritem = jsonobj["data"].GetObject()["item"].GetArray();
+                List<NHKNews> res = new List<NHKNews>();
+                foreach(var i in resultarritem)
+                {
+                    res.Add(new NHKNews() { Title = i.GetObject()["title"].GetString(), Link = new Uri(i.GetObject()["link"].GetString()), IconPath = new Uri(i.GetObject()["iconPath"].GetString()), VideoPath = new Uri(i.GetObject()["videoPath"].GetString()) });
+                }
+                return res;
+            }
+            catch (HttpRequestException)
+            {
+                var err = new List<NHKNews>();
+                for(int i=0;i<10;i++)
+                {
+                    err.Add(new NHKNews() { Title = "出现连接错误", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
+                }
+                return err;
+            }
+            catch (Exception)
+            {
+                var err = new List<NHKNews>();
+                for (int i = 0; i < 10; i++)
+                {
+                    err.Add(new NHKNews() { Title = "出现连接错误", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
+                }
+                return err;
+            }
+        }
         public static async Task<NHKRadios> GetNHKRadios(int index, string speed)
         {
             try

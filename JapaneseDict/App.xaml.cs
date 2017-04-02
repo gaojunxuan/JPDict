@@ -25,6 +25,7 @@ using Microsoft.Services.Store.Engagement;
 using Windows.Networking.PushNotifications;
 using Microsoft.WindowsAzure.Messaging;
 using System.Diagnostics;
+using Windows.UI.Notifications;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -66,9 +67,16 @@ namespace JapaneseDict
         {
             try
             {
+                var tileUpdater = Windows.UI.Notifications.TileUpdateManager.CreateTileUpdaterForApplication();
+                IReadOnlyList<ScheduledTileNotification> plannedUpdated = tileUpdater.GetScheduledTileNotifications();
+                tileUpdater.Clear();
+                for (int i = 0, len = plannedUpdated.Count; i < len; i++)
+                {
+                    // The itemId value is the unique ScheduledTileNotification.Id assigned to the notification when it was created.
+                    tileUpdater.RemoveFromSchedule(plannedUpdated[i]);
+                }
                 var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-
-                var hub = new NotificationHub("jpdictHub", "Endpoint=sb://jpdictnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=tv6BtTuCBWg6dxe45cwGAhA6C7IpE94gTq3If8TWDJI=");
+                var hub = new NotificationHub("jpdictHub", "Endpoint=sb://jpdictnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=b7P3q6gSzqgLDiCIFOv8q62J7EUft7RQr3F6TEIfXMg=");
                 var result = await hub.RegisterNativeAsync(channel.Uri);
             }
             catch

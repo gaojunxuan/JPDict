@@ -632,7 +632,7 @@ namespace JapaneseDict.GUI.ViewModels
                             //const string CLIENT_ID = "skylark_jpdict";
                             //const string CLIENT_SECRET = "uzHa5qUm4+GehYnL2pMIw8XtNox8sbqGNq7S+UiM6bk=";
                             //const string CLIENT_ID = "skylarkjpdict";
-                            const string CLIENT_SECRET = "0bbdd2908cba434696291ae3c68d1ff6";
+                            const string CLIENT_SECRET = "80d5b0ade63946efb57fd09d1d1db6fb";
                             //0bbdd2908cba434696291ae3c68d1ff6
                             //const string CLIENT_SECRET = "b155421d3d7746ebbfcb2e7922b60a87";
                             try
