@@ -119,6 +119,7 @@
     <Compile Include="Models\NHKNews.cs" />
     <Compile Include="Models\NHKRadios.cs" />
     <Compile Include="JsonHelper.cs" />
+    <Compile Include="NoteSync.cs" />
     <Compile Include="OnlineQuery.cs" />
     <Compile Include="OnlineUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

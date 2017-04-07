@@ -49,15 +49,21 @@ namespace JapaneseDict
         }
         private async void CopyMainDb()
         {
+            Windows.Storage.StorageFolder storageFolder =Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///dict.db"));
-            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("dict.db") == null)
+            if (await storageFolder.TryGetItemAsync("dict.db") == null)
             {
-                await file.CopyAsync(ApplicationData.Current.LocalFolder, "dict.db");
+                await file.CopyAsync(storageFolder, "dict.db");
             }
-            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("kanji.db") == null)
+            if (await storageFolder.TryGetItemAsync("kanji.db") == null)
             {
                 var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanji.db"));
-                await kanjifile.CopyAsync(ApplicationData.Current.LocalFolder, "kanji.db", NameCollisionOption.ReplaceExisting);
+                await kanjifile.CopyAsync(storageFolder, "kanji.db", NameCollisionOption.ReplaceExisting);
+            }
+            if(await storageFolder.TryGetItemAsync("synclog.log") == null)
+            {
+                Windows.Storage.StorageFile logFile = await storageFolder.CreateFileAsync("synclog.log", Windows.Storage.CreationCollisionOption.OpenIfExists);
+                Windows.Storage.StorageFile onlineFile = await storageFolder.CreateFileAsync("onlinelog.log", Windows.Storage.CreationCollisionOption.OpenIfExists);
             }
             var updatefile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///update.db"));
             await updatefile.CopyAsync(ApplicationData.Current.LocalFolder, "update.db", NameCollisionOption.ReplaceExisting);
