@@ -51,6 +51,15 @@ namespace JapaneseDict.Util
                 return false;
             }
         }
+        //いらっしゃる、ござる、くださる、なさる、おっしゃる
+        static bool IsRaHen(string word)
+        {
+            if(word=="いらっしゃる"| word == "ござる" | word == "御座る" | word == "なさる" | word == "為さる" | word == "くださる" | word == "下さる" | word == "おっしゃる" | word == "仰しゃる")
+            {
+                return true;
+            }
+            return false;
+        }
         #endregion
         #region phonetic changes
         static string PrepGodanVerbPhoneticChange(string word)
@@ -212,6 +221,10 @@ namespace JapaneseDict.Util
             }
             else
             {
+                if(IsRaHen(word))
+                {
+                    return word.Substring(0, word.Length - 1) + "い";
+                }
                 return MoveToELine(word);
             }
         }
@@ -274,6 +287,10 @@ namespace JapaneseDict.Util
             }
             else
             {
+                if (IsRaHen(word))
+                {
+                    return word.Substring(0, word.Length - 1) + "いま";
+                }
                 return MoveToILine(word) + "ま";
             }
         }

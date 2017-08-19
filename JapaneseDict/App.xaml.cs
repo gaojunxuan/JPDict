@@ -26,6 +26,7 @@ using Windows.Networking.PushNotifications;
 using Microsoft.WindowsAzure.Messaging;
 using System.Diagnostics;
 using Windows.UI.Notifications;
+using JapaneseDict.OnlineService;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -67,6 +68,7 @@ namespace JapaneseDict
             }
             var updatefile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///update.db"));
             await updatefile.CopyAsync(ApplicationData.Current.LocalFolder, "update.db", NameCollisionOption.ReplaceExisting);
+            await OnlineUpdate.ApplyLocalUpdate();
         }
 
         private async void InitNotificationsAsync()

@@ -7,11 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using JapaneseDict.QueryEngine;
 using static JapaneseDict.QueryEngine.QueryEngine;
+using SQLite.Net;
+using System.IO;
+using Windows.Storage;
 
 namespace JapaneseDict.OnlineService
 {
     public class OnlineUpdate
     {
+        private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db"));
+
         private static async Task<string> GetJsonString(string uri)
         {
             try
@@ -36,6 +41,18 @@ namespace JapaneseDict.OnlineService
             string jsonStr = await GetJsonString($"http://jpdictbackend.azurewebsites.net/getupdates");
             var deserialized = JsonConvert.DeserializeObject<List<UpdateDict>>(jsonStr);
             return deserialized;
+        }
+        public static async Task ApplyLocalUpdate()
+        {
+            await Task.Run(() =>
+            {
+                _conn.CreateTable<UpdateDict>();
+                var data = _conn.Table<UpdateDict>();
+                foreach (var d in data)
+                {
+                    QueryEngine.QueryEngine.MainDictQueryEngine.Add(d.JpChar, d.Defination, d.Reading, d.AutoId);
+                }
+            });
         }
         public static async Task ApplyUpdate(IEnumerable<UpdateDict> source)
         {

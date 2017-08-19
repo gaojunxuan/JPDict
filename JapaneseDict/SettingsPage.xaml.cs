@@ -88,7 +88,7 @@ namespace JapaneseDict.GUI
 
         private async void oss_Btn_Click(object sender, RoutedEventArgs e)
         {
-            var uri = new Uri($"https://skylark-workshop.xyz/oss-license/");
+            var uri = new Uri($"https://skylark-workshop.xyz/oss-license.htm");
             await Launcher.LaunchUriAsync(uri);
         }
 
