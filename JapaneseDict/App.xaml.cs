@@ -27,6 +27,9 @@ using Microsoft.WindowsAzure.Messaging;
 using System.Diagnostics;
 using Windows.UI.Notifications;
 using JapaneseDict.OnlineService;
+using Windows.UI.Core;
+using Windows.Phone.UI.Input;
+using JapaneseDict.GUI.Helpers;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -66,9 +69,6 @@ namespace JapaneseDict
                 Windows.Storage.StorageFile logFile = await storageFolder.CreateFileAsync("synclog.log", Windows.Storage.CreationCollisionOption.OpenIfExists);
                 Windows.Storage.StorageFile onlineFile = await storageFolder.CreateFileAsync("onlinelog.log", Windows.Storage.CreationCollisionOption.OpenIfExists);
             }
-            var updatefile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///update.db"));
-            await updatefile.CopyAsync(ApplicationData.Current.LocalFolder, "update.db", NameCollisionOption.ReplaceExisting);
-            await OnlineUpdate.ApplyLocalUpdate();
         }
 
         private async void InitNotificationsAsync()
@@ -155,8 +155,13 @@ namespace JapaneseDict
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                UpdatePromptHelper.LoadState();
+                if (UpdatePromptHelper.Updated)
+                    rootFrame.Navigate(typeof(UpdatePage));
+                else
+                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
             }
+            rootFrame.Navigated += OnNavigated;
             // Ensure the current window is active
             Window.Current.Activate();
            
@@ -221,6 +226,45 @@ namespace JapaneseDict
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+        private void OnNavigated(object sender, NavigationEventArgs e)
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = ((Frame)sender).CanGoBack ?
+                AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+            SystemNavigationManager.GetForCurrentView().BackRequested += BackRequested;
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            }
+
+        }
+        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+            else
+            {
+                //e.Handled = false;
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+                {
+                    HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+                }
+            }
+        }
+        private void BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame == null)
+                return;
+            if (rootFrame.CanGoBack && e.Handled == false)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
         }
     }
 }

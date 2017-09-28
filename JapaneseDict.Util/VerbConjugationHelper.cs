@@ -38,27 +38,36 @@ namespace JapaneseDict.Util
                 return false;
             }
         }
-        static bool IsIchidan(string word)
+        static bool IsIchidan(string word,string tag)
         {
-            word = word.Replace(" ", "").Replace("　", "");
-            var okurigana = word.Substring(word.Length - 2);
-            if (okurigana == "べる" || okurigana == "める" || okurigana == "える" || okurigana == "へる" || okurigana == "ける" || okurigana == "ぺる" || okurigana == "げる" || okurigana == "せる" || okurigana == "れる")
+            //word = word.Replace(" ", "").Replace("　", "");
+            ////var okurigana = word.Substring(word.Length - 2);
+            if(tag.Contains("一 ]") || tag.Contains("[ 一段動詞 ]"))
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            //if (okurigana == "べる" || okurigana == "める" || okurigana == "える" || okurigana == "へる" || okurigana == "ける" || okurigana == "ぺる" || okurigana == "げる" || okurigana == "せる" || okurigana == "れる")
+            //{
+            //    if(tag.Contains("一 ]")||tag.Contains("[ 一段動詞 ]"))
+            //    {
+            //        return true;
+            //    }
+            //    return false;
+            //}
+            return false;
         }
         //いらっしゃる、ござる、くださる、なさる、おっしゃる
         static bool IsRaHen(string word)
         {
-            if(word=="いらっしゃる"| word == "ござる" | word == "御座る" | word == "なさる" | word == "為さる" | word == "くださる" | word == "下さる" | word == "おっしゃる" | word == "仰しゃる")
+            if (word == "いらっしゃる" | word == "ござる" | word == "御座る" | word == "なさる" | word == "為さる" | word == "くださる" | word == "下さる" | word == "おっしゃる" | word == "仰しゃる")
             {
                 return true;
             }
             return false;
+        }
+        public static bool IsNegative(string word)
+        {
+            return word.Length>2&&word.EndsWith("ない");
         }
         #endregion
         #region phonetic changes
@@ -98,7 +107,7 @@ namespace JapaneseDict.Util
         }
         #endregion
         #region prep
-        static string PrepNegative(string word)
+        static string PrepNegative(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
             if (IsKuruVerb(word))
@@ -123,7 +132,7 @@ namespace JapaneseDict.Util
                     return word.Substring(0, word.Length - 2) + "しな";
                 }
             }
-            else if (IsIchidan(word))
+            else if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "な";
             }
@@ -136,7 +145,7 @@ namespace JapaneseDict.Util
         {
             return PrepGodanVerbPhoneticChange(word);
         }
-        static string PrepPotential(string word)
+        static string PrepPotential(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
             if (IsKuruVerb(word))
@@ -161,7 +170,7 @@ namespace JapaneseDict.Util
                     return word.Substring(0, word.Length - 2) + "でき";
                 }
             }
-            else if (IsIchidan(word))
+            else if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "られ";
             }
@@ -170,7 +179,7 @@ namespace JapaneseDict.Util
                 return MoveToELine(word);
             }
         }
-        static string PrepPassive(string word)
+        static string PrepPassive(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
             if (IsKuruVerb(word))
@@ -195,7 +204,7 @@ namespace JapaneseDict.Util
                     return word.Substring(0, word.Length - 2) + "され";
                 }
             }
-            else if (IsIchidan(word))
+            else if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "られ";
             }
@@ -204,7 +213,7 @@ namespace JapaneseDict.Util
                 return MoveToALine(word) + "れ";
             }
         }
-        static string PrepImperative(string word)
+        static string PrepImperative(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
             if (IsKuruVerb(word))
@@ -213,22 +222,22 @@ namespace JapaneseDict.Util
             }
             else if (IsSuruVerb(word))
             {
-                return word.Substring(0,word.Length-2)+"しろ(せよ)";
+                return word.Substring(0, word.Length - 2) + "しろ(せよ)";
             }
-            else if (IsIchidan(word))
+            else if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "ろ";
             }
             else
             {
-                if(IsRaHen(word))
+                if (IsRaHen(word))
                 {
                     return word.Substring(0, word.Length - 1) + "い";
                 }
                 return MoveToELine(word);
             }
         }
-        static string PrepCausative(string word)
+        static string PrepCausative(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
             if (IsKuruVerb(word))
@@ -253,7 +262,7 @@ namespace JapaneseDict.Util
                     return word.Substring(0, word.Length - 2) + "させ";
                 }
             }
-            else if (IsIchidan(word))
+            else if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "させ";
             }
@@ -262,24 +271,24 @@ namespace JapaneseDict.Util
                 return MoveToALine(word) + "せ";
             }
         }
-        static string PrepMasuForm(string word)
+        static string PrepMasuForm(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
-            if (IsIchidan(word))
+            if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "ま";
             }
-            else if(IsKuruVerb(word))
+            else if (IsKuruVerb(word))
             {
-                if(word=="来る")
+                if (word == "来る")
                 {
                     return "きま";
                 }
                 return "きま";
             }
-            else if(IsSuruVerb(word))
+            else if (IsSuruVerb(word))
             {
-                if(word== "為る")
+                if (word == "為る")
                 {
                     return "しま";
                 }
@@ -318,12 +327,18 @@ namespace JapaneseDict.Util
             okuri = hira[hira.IndexOf(okuri) + 2];
             return word.Substring(0, word.Length - 1) + okuri;
         }
+        static string MoveFromAToU(string word)
+        {
+            string okuri = word.Substring(word.Length - 1);
+            okuri = hira[hira.IndexOf(okuri) + 2];
+            return word.Substring(0, word.Length - 1) + okuri;
+        }
         #endregion
         #region get
-        public static string GetTeForm(string word)
+        public static string GetTeForm(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
-            if (IsIchidan(word))
+            if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "て";
             }
@@ -342,7 +357,7 @@ namespace JapaneseDict.Util
             else
             {
                 var newword = PrepGodanVerbPhoneticChange(word);
-                if (word[word.Length-1] == 'ぐ' || word[word.Length - 1] == 'ぬ' || word[word.Length - 1] == 'む' || word[word.Length - 1] == 'ぶ')
+                if (word[word.Length - 1] == 'ぐ' || word[word.Length - 1] == 'ぬ' || word[word.Length - 1] == 'む' || word[word.Length - 1] == 'ぶ')
                 {
                     return newword + "で";
                 }
@@ -352,10 +367,10 @@ namespace JapaneseDict.Util
                 }
             }
         }
-        public static string GetTaForm(string word)
+        public static string GetTaForm(string word,string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
-            if (IsIchidan(word))
+            if (IsIchidan(word,tag))
             {
                 return word.Substring(0, word.Length - 1) + "た";
             }
@@ -374,7 +389,7 @@ namespace JapaneseDict.Util
             else
             {
                 var newword = PrepGodanVerbPhoneticChange(word);
-                if (word[word.Length-1] == 'ぐ' || word[word.Length - 1] == 'ぬ' || word[word.Length - 1] == 'む' || word[word.Length - 1] == 'ぶ')
+                if (word[word.Length - 1] == 'ぐ' || word[word.Length - 1] == 'ぬ' || word[word.Length - 1] == 'む' || word[word.Length - 1] == 'ぶ')
                 {
                     return newword + "だ";
                 }
@@ -384,17 +399,17 @@ namespace JapaneseDict.Util
                 }
             }
         }
-        public static string GetNegative(string word)
+        public static string GetNegative(string word,string tag)
         {
-            return PrepNegative(word) + "い";
+            return PrepNegative(word,tag) + "い";
         }
-        public static string GetPastNegative(string word)
+        public static string GetPastNegative(string word, string tag)
         {
-            return PrepNegative(word) + "かった";
+            return PrepNegative(word,tag) + "かった";
         }
-        public static string GetEbaForm(string word)
+        public static string GetEbaForm(string word, string tag)
         {
-            if (IsIchidan(word))
+            if (IsIchidan(word, tag))
             {
                 return word.Substring(0, word.Length - 1) + "れば";
             }
@@ -411,42 +426,42 @@ namespace JapaneseDict.Util
                 return MoveToELine(word) + "ば";
             }
         }
-        public static string GetPotential(string word)
+        public static string GetPotential(string word, string tag)
         {
-            return PrepPotential(word) + "る";
+            return PrepPotential(word, tag) + "る";
         }
-        public static string GetNegativePotential(string word)
+        public static string GetNegativePotential(string word, string tag)
         {
-            return PrepPotential(word) + "ない";
+            return PrepPotential(word, tag) + "ない";
         }
-        public static string GetPassive(string word)
+        public static string GetPassive(string word, string tag)
         {
-            return PrepPassive(word) + "る";
+            return PrepPassive(word, tag) + "る";
         }
-        public static string GetNegativePassive(string word)
+        public static string GetNegativePassive(string word, string tag)
         {
-            return PrepPassive(word) + "ない";
+            return PrepPassive(word, tag) + "ない";
         }
-        public static string GetCausative(string word)
+        public static string GetCausative(string word, string tag)
         {
-            return PrepCausative(word) + "る";
+            return PrepCausative(word, tag) + "る";
         }
-        public static string GetNegativeCausative(string word)
+        public static string GetNegativeCausative(string word, string tag)
         {
-            return PrepCausative(word) + "ない";
+            return PrepCausative(word, tag) + "ない";
         }
-        public static string GetImperative(string word)
+        public static string GetImperative(string word, string tag)
         {
-            return PrepImperative(word);
+            return PrepImperative(word, tag);
         }
         public static string GetNegativeImperative(string word)
         {
             return word + "な";
         }
-        public static string GetVolitional(string word)
+        public static string GetVolitional(string word, string tag)
         {
             word = word.Replace(" ", "").Replace("　", "");
-            if (IsIchidan(word))
+            if (IsIchidan(word, tag))
             {
                 return word.Substring(0, word.Length - 1) + "よう";
             }
@@ -454,9 +469,9 @@ namespace JapaneseDict.Util
             {
                 return "こよう";
             }
-            else if(IsSuruVerb(word))
+            else if (IsSuruVerb(word))
             {
-                if (word == "為る"||word=="する")
+                if (word == "為る" || word == "する")
                 {
                     return "しよう(そう)";
                 }
@@ -470,15 +485,36 @@ namespace JapaneseDict.Util
                 return MoveToOLine(word) + "う";
             }
         }
-        public static string GetMasuForm(string word)
+        public static string GetMasuForm(string word,string tag)
         {
-            return PrepMasuForm(word) + "す";
+            return PrepMasuForm(word, tag) + "す";
         }
-        public static string GetMasuNegative(string word)
+        public static string GetMasuNegative(string word,string tag)
         {
-            return PrepMasuForm(word) + "せん";
+            return PrepMasuForm(word, tag) + "せん";
         }
 
+        #endregion
+        #region convert
+        public static string FromNegativeToOriginal(string word)
+        {
+            string wordroot = word.Substring(0, word.Length - 2);
+            string okurigana = wordroot.Substring(wordroot.Length - 1);
+            if (okurigana == "べ" || okurigana == "め" || okurigana == "え" || okurigana == "へ" || okurigana == "け" || okurigana == "ぺ" || okurigana == "げ" || okurigana == "せ" || okurigana == "れ")
+                return word.Substring(0, word.Length - 2) + "る";
+            else if(word=="こない"||word=="来ない")
+            {
+                return "くる";
+            }
+            else if(word.EndsWith("しない"))
+            {
+                return word.Substring(0, word.Length - 3);
+            }
+            else
+            {
+                return MoveFromAToU(wordroot);
+            }
+        }
         #endregion
     }
 }

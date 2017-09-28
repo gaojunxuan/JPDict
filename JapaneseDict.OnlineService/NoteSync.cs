@@ -1,6 +1,8 @@
-﻿using Microsoft.OneDrive.Sdk;
+﻿using Microsoft.Graph;
+using Microsoft.OneDrive.Sdk;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,69 +11,51 @@ using Windows.Storage;
 
 namespace JapaneseDict.OnlineService
 {
-    public class NoteSync
+    public static class NoteSync
     {
-        private StorageFolder _localFolder = ApplicationData.Current.LocalFolder;
-        private StorageFile _logFile;
-        private StorageFile _onlineLog;
-        private static readonly string[] scopes = new string[] { "onedrive.readwrite", "wl.offline_access", "wl.signin" };
-        private static IOneDriveClient oneDriveClient = OneDriveClientExtensions.GetUniversalClient(scopes);
-        private static AccountSession accountSession;
-        static bool _isBusy = false;
-        public async Task<NoteSync> Load()
+        public static StorageFolder _localFolder = ApplicationData.Current.LocalFolder;
+        private static GraphServiceClient _graphClient;
+        public static async Task<bool> SignInCurrentUserAsync()
         {
-            _logFile = await _localFolder.GetFileAsync("synclog.log");
-            _onlineLog = await _localFolder.GetFileAsync("onlinelog.log");
-            return this;
-        }
-        public async void RequestAuth()
-        {
-            accountSession = await oneDriveClient.AuthenticateAsync();
-        }
-        public async void WriteToLog(DateTime time)
-        {
-            if (_logFile != null)
-                await FileIO.WriteTextAsync(_logFile, time.ToString());
-        }
-        public async void UploadLog()
-        {
-            if (oneDriveClient.IsAuthenticated)
+            _graphClient = AuthenticationHelper.GetAuthenticatedClient();
+            if (_graphClient != null)
             {
-                if (_logFile != null)
-                {
-                    using (Stream stream = await _logFile.OpenStreamForReadAsync())
-                    {
-
-                        await oneDriveClient
-                                       .Drive
-                                       .Root
-                                       .ItemWithPath("JPDict/synclog.log")
-                                       .Content
-                                       .Request()
-                                       .PutAsync<Item>(stream);
-
-                    }
-                }
+                var user = await _graphClient.Me.Request().GetAsync();
+                string userId = user.Id;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
-        public async void DownloadOnlineLog()
+        public static async Task<DriveItem> UploadFileToOneDriveAsync()
         {
-            if (oneDriveClient.IsAuthenticated)
+            DriveItem uploadedFile = null;
+            try
             {
-                Stream stream=await oneDriveClient
-                                       .Drive
-                                       .Root
-                                       .ItemWithPath("JPDict/synclog.log")
-                                       .Content
-                                       .Request()
-                                       .GetAsync();
-                using (stream)
+                StorageFile file = await _localFolder.GetFileAsync("note.db");
+                if(file.IsAvailable)
                 {
-                    using (var file = await _logFile.OpenAsync(FileAccessMode.ReadWrite))
-                    {
-                        await stream.CopyToAsync(file.GetOutputStreamAt(0).AsStreamForWrite());
-                    }
+                    Stream stream = (await file.OpenReadAsync()).AsStreamForRead();
+                    uploadedFile = await _graphClient.Me.Drive.Root.ItemWithPath("JPDict/cloudnote.db").Content.Request().PutAsync<DriveItem>(stream);
                 }
+            }
+            catch (ServiceException)
+            {
+                return null;
+            }
+            return uploadedFile;
+        }
+        public static async Task<Stream> DownloadFileFromOneDriveAsync(string path)
+        {
+            try
+            {
+                return await _graphClient.Me.Drive.Root.ItemWithPath(path).Content.Request().GetAsync();
+            }
+            catch (ServiceException)
+            {
+                return null;
             }
         }
     }

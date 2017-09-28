@@ -29,7 +29,7 @@
         </Grid.ChildrenTransitions>
 
         <ProgressRing IsActive="{Binding IsBusy}" Foreground="#00b294"></ProgressRing>
-        <TextBlock Name="emptynotebook_Tbx" Style="{StaticResource HeaderTextBlockStyle}" Visibility="{Binding IsNotebookEmpty,Converter={StaticResource boolToVisibility}}" Text="生词本中没有单词 _(:3」∠)_" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray"></TextBlock>
+        <TextBlock Name="emptynotebook_Tbx" Style="{StaticResource HeaderTextBlockStyle}" Visibility="{Binding IsNotebookEmpty,Converter={StaticResource boolToVisibility}}" Text="生词本中没有单词 _(:3」∠)_" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray"/>
         <SemanticZoom Margin="-8,0,-8,0" ViewChangeStarted="SemanticZoom_ViewChangeStarted">
             <SemanticZoom.ZoomedInView>
                 <GridView ItemsSource="{Binding Source={StaticResource noteItems}}"  SelectionMode="None" IsSwipeEnabled="False">

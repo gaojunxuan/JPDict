@@ -36,9 +36,6 @@ namespace JapaneseDict.GUI
     /// </summary>
     public sealed partial class KanjiFlashcardPage : MVVMPage
     {
-
-
-
         public KanjiFlashcardPage()
         {
 
@@ -66,25 +63,10 @@ namespace JapaneseDict.GUI
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            EnableBackButtonOnTitleBar((sender, args) =>
-            {
-                Frame rootFrame = Window.Current.Content as Frame;
-                if (rootFrame.CanGoBack)
-                {
-                    rootFrame.GoBack();
-
-                }
-                DisableBackButtonOnTitleBar();
-            });
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-            }
             if (e.Parameter!=null)
             {
-                int jlpt = 0;
-                bool result = Int32.TryParse(e.Parameter.ToString(), out jlpt);
-                if(result)
+                bool result = Int32.TryParse(e.Parameter.ToString(), out int jlpt);
+                if (result)
                 {
                     var kanjires = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryAsync(jlpt);
                     kanjires.Shuffle();
@@ -97,32 +79,7 @@ namespace JapaneseDict.GUI
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-            }
         }
-        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            e.Handled = true;
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame.CanGoBack)
-            {
-                rootFrame.GoBack();
-            }
-        }
-        private void EnableBackButtonOnTitleBar(EventHandler<BackRequestedEventArgs> onBackRequested)
-        {
-            var currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            currentView.BackRequested += onBackRequested;
-        }
-        private void DisableBackButtonOnTitleBar()
-        {
-            var currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-        }
-
         private void showReading_item_Tapped(object sender, TappedRoutedEventArgs e)
         {
             (sender as UIElement).Visibility = Visibility.Collapsed;

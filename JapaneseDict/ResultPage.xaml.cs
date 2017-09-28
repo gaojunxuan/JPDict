@@ -38,6 +38,7 @@ namespace JapaneseDict.GUI
         public ResultPage()
             : this(null)
         {
+            this.InitializeComponent();
             //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             //{
             //    HardwareButtons.BackPressed += HardwareButtons_BackPressed;
@@ -54,31 +55,13 @@ namespace JapaneseDict.GUI
             /* because this page is cached, the constructor will not be triggered every time. */
             /* so the subscription of BackPressed should be in the handler of OnNavigatedTo event */
             /* because this event will be triggered every time when user navigate to this page */
-            //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            //{
-            //    HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-
-            //}
-            //NavigationCacheMode = NavigationCacheMode.Disabled;
             this.RegisterPropertyChangedCallback(ViewModelProperty, (_, __) =>
             {
                 StrongTypeViewModel = this.ViewModel as ResultPage_Model;
             });
             StrongTypeViewModel = this.ViewModel as ResultPage_Model;
-            //SetUpPageAnimation();
         }
 
-        //private void SetUpPageAnimation()
-        //{
-        //    TransitionCollection collection = new TransitionCollection();
-        //    NavigationThemeTransition theme = new NavigationThemeTransition();
-
-        //    var info = new DrillInNavigationTransitionInfo();
-
-        //    theme.DefaultNavigationTransitionInfo = info;
-        //    collection.Add(theme);
-        //    this.Transitions = collection;
-        //}
         public ResultPage_Model StrongTypeViewModel
         {
             get { return (ResultPage_Model)GetValue(StrongTypeViewModelProperty); }
@@ -94,10 +77,6 @@ namespace JapaneseDict.GUI
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-            }
             if (e.Parameter!=null&!(e.Parameter is int))
             {
                 _keyword = e.Parameter.ToString();
@@ -121,17 +100,9 @@ namespace JapaneseDict.GUI
             {
                 rootFrame.GoBack();
             }
-           
-
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            //{
-            //    HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-
-            //}
-            //GC.Collect();
             base.OnNavigatedFrom(e);
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
@@ -145,8 +116,6 @@ namespace JapaneseDict.GUI
                             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                             {
                                 this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(Util.StringHelper.ResolveReplicator(QueryBox.Text));
-                                //this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(QueryBox.Text);
-                                //await Task.Delay(500);
                             }));
         }
 
@@ -193,18 +162,12 @@ namespace JapaneseDict.GUI
             _content += content;
             if(_content!="")
             {
-                if (!(_content.Contains("五 ]") | _content.Contains("一 ]") | _content.Contains("サ ]") | _content.Contains("カ ]")))
+                if (!(_content.Contains("五 ]") | _content.Contains("一 ]") | _content.Contains("サ ]") | _content.Contains("カ ]") | content.Contains("動詞")))
                 {
                     this.mainPivot.Items.Remove(mainPivot.Items[3]);
                 }
             }
         }
-
-        private void kanji_gridview_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void kanjiItem_Loaded(object sender, RoutedEventArgs e)
         {
             kanjinores_Tbx.Visibility = Visibility.Collapsed;

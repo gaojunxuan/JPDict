@@ -1,9 +1,11 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
+    "Microsoft.Graph": "1.5.1",
+    "Microsoft.Identity.Client": "1.1.0-preview",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0"
   },
   "frameworks": {
-    "uap10.0": {}
+    "uap10.0.10586": {}
   },
   "runtimes": {
     "win10-arm": {},

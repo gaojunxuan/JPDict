@@ -24,9 +24,7 @@ namespace JapaneseDict.GUI.ViewModels
     [DataContract]
     public class NotebookPage_Model : ViewModelBase<NotebookPage_Model>
     {
-        // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property。
-        // 如果您已经安装了 MVVMSidekick 代码片段，请用 propvm +tab +tab 输入属性
-
+        // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property
         public String Title
         {
             get { return _TitleLocator(this).Value; }
@@ -37,7 +35,7 @@ namespace JapaneseDict.GUI.ViewModels
         static Func<BindableBase, ValueContainer<String>> _TitleLocator = RegisterContainerLocator<String>("Title", model => model.Initialize("Title", ref model._Title, ref _TitleLocator, _TitleDefaultValueFactory));
         static Func<BindableBase, String> _TitleDefaultValueFactory = m => m.GetType().Name;
         #endregion
-        private async void LoadData()
+        public async void LoadData()
         {
             this.IsBusy = true;
             try
@@ -47,6 +45,10 @@ namespace JapaneseDict.GUI.ViewModels
                 if (this.GroupedNoteList.Count == 0)
                 {
                     this.IsNotebookEmpty = true;
+                }
+                else
+                {
+                    this.IsNotebookEmpty = false;
                 }
                 this.IsBusy = false;
             }
@@ -112,9 +114,6 @@ namespace JapaneseDict.GUI.ViewModels
             };
 
         #endregion
-
-        #region Life Time Event Handling
-
         public bool IsBusy
         {
             get { return _IsBusyLocator(this).Value; }
@@ -148,6 +147,9 @@ namespace JapaneseDict.GUI.ViewModels
                 return default(bool);
             };
         #endregion
+
+        #region Life Time Event Handling
+
 
         ///// <summary>
         ///// This will be invoked by view when this viewmodel instance is set to view's ViewModel property. 
@@ -207,9 +209,6 @@ namespace JapaneseDict.GUI.ViewModels
         //}
 
         #endregion
-
-
-
 
     }
 

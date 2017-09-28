@@ -64,16 +64,7 @@ namespace JapaneseDict.GUI
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            EnableBackButtonOnTitleBar((sender, args) =>
-            {
-                Frame rootFrame = Window.Current.Content as Frame;
-                if (rootFrame.CanGoBack)
-                {
-                    rootFrame.GoBack();
-
-                }
-                DisableBackButtonOnTitleBar();
-            });
+            
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
                 HardwareButtons.BackPressed += HardwareButtons_BackPressed;
@@ -92,17 +83,6 @@ namespace JapaneseDict.GUI
                 rootFrame.GoBack();
             }
         }
-        private void EnableBackButtonOnTitleBar(EventHandler<BackRequestedEventArgs> onBackRequested)
-        {
-            var currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            currentView.BackRequested += onBackRequested;
-        }
-        private void DisableBackButtonOnTitleBar()
-        {
-            var currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-        }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
@@ -112,7 +92,6 @@ namespace JapaneseDict.GUI
 
             }
         }
-
         private async void sendFeedback_Btn_Click(object sender, RoutedEventArgs e)
         {
             if(!string.IsNullOrWhiteSpace(jpchar_Tbx.Text)&& !string.IsNullOrWhiteSpace(kana_Tbx.Text)&& !string.IsNullOrWhiteSpace(email_Tbx.Text))

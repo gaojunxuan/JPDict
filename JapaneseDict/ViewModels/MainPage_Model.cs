@@ -18,14 +18,8 @@ namespace JapaneseDict.GUI.ViewModels
     public class MainPage_Model : ViewModelBase<MainPage_Model>
     {
         // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property propcmd for command
-        // 如果您已经安装了 MVVMSidekick 代码片段，请用 propvm +tab +tab 输入属性 propcmd 输入命令
         public MainPage_Model()
         {
-
-            if (IsInDesignMode )
-            {
-                Title = "Title is a little different in Design mode";
-            }
             LoadData();
         }
         void LoadData()
@@ -37,14 +31,10 @@ namespace JapaneseDict.GUI.ViewModels
         async void GetEverydaySentence()
         {
             this.EverdaySentenceList = new ObservableCollection<EverydaySentence>();
-
-
             for (int i = 0; i < 3; i++)
             {
                 this.EverdaySentenceList.Add((await JapaneseDict.OnlineService.JsonHelper.GetEverydaySentence(i)));
-               
             }
-
         }
         async void GetNHKNews()
         {
@@ -90,7 +80,7 @@ namespace JapaneseDict.GUI.ViewModels
                             if ((!string.IsNullOrWhiteSpace(e.EventArgs.Parameter.ToString()))&&(e.EventArgs.Parameter.ToString()!= "Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs"))
                             {
                                 Frame rootFrame = Window.Current.Content as Frame;
-                                rootFrame.Navigate(typeof(ResultPage), Util.StringHelper.ResolveReplicator(e.EventArgs.Parameter.ToString().Replace(" ", "").Replace(" ", "")));
+                                rootFrame.Navigate(typeof(ResultPage),Util.StringHelper.ResolveReplicator(e.EventArgs.Parameter.ToString().Replace(" ", "").Replace(" ", "")));
                                 //GC.Collect();
                             }
                                 
@@ -132,9 +122,8 @@ namespace JapaneseDict.GUI.ViewModels
                         async e =>
                         {
                             var parm = e.EventArgs.Parameter.ToString();
-                            int jlpt = 0;
-                            bool result = Int32.TryParse(parm, out jlpt);
-                            if(result)
+                            bool result = Int32.TryParse(parm, out int jlpt);
+                            if (result)
                             {
                                 (Window.Current.Content as Frame).Navigate(typeof(KanjiFlashcardPage),jlpt);
                             }
@@ -177,8 +166,7 @@ namespace JapaneseDict.GUI.ViewModels
                         async e =>
                         {
                             var parm = e.EventArgs.Parameter.ToString();
-                            int index = 0;
-                            bool result = Int32.TryParse(parm, out index);
+                            bool result = Int32.TryParse(parm, out int index);
                             if (result)
                             {
                                 (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage), index);
@@ -199,18 +187,6 @@ namespace JapaneseDict.GUI.ViewModels
             };
 
         #endregion
-        //propvm tab tab string tab Title
-        public String Title
-        {
-            get { return _TitleLocator(this).Value; }
-            set { _TitleLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property String Title Setup
-        protected Property<String> _Title = new Property<String> { LocatorFunc = _TitleLocator };
-        static Func<BindableBase, ValueContainer<String>> _TitleLocator = RegisterContainerLocator<String>("Title", model => model.Initialize("Title", ref model._Title, ref _TitleLocator, _TitleDefaultValueFactory));
-        static Func<String> _TitleDefaultValueFactory = ()=>"Title is Here";
-        #endregion
-
 
         public ObservableCollection<EverydaySentence> EverdaySentenceList
         {
@@ -249,13 +225,13 @@ namespace JapaneseDict.GUI.ViewModels
 
         public ObservableCollection<NHKRadios> NHKListeningSlow
         {
-            get { return _ListeningSlowLocator(this).Value; }
-            set { _ListeningSlowLocator(this).SetValueAndTryNotify(value); }
+            get { return _NHKListeningSlowLocator(this).Value; }
+            set { _NHKListeningSlowLocator(this).SetValueAndTryNotify(value); }
         }
-        #region Property ObservableCollection<NHKRadios> ListeningSlow Setup        
-        protected Property<ObservableCollection<NHKRadios>> _ListeningSlow = new Property<ObservableCollection<NHKRadios>> { LocatorFunc = _ListeningSlowLocator };
-        static Func<BindableBase, ValueContainer<ObservableCollection<NHKRadios>>> _ListeningSlowLocator = RegisterContainerLocator<ObservableCollection<NHKRadios>>(nameof(NHKListeningSlow), model => model.Initialize(nameof(NHKListeningSlow), ref model._ListeningSlow, ref _ListeningSlowLocator, _ListeningSlowDefaultValueFactory));
-        static Func<BindableBase, ObservableCollection<NHKRadios>> _ListeningSlowDefaultValueFactory =
+        #region Property ObservableCollection<NHKRadios> NHKListeningSlow Setup        
+        protected Property<ObservableCollection<NHKRadios>> _NHKListeningSlow = new Property<ObservableCollection<NHKRadios>> { LocatorFunc = _NHKListeningSlowLocator };
+        static Func<BindableBase, ValueContainer<ObservableCollection<NHKRadios>>> _NHKListeningSlowLocator = RegisterContainerLocator<ObservableCollection<NHKRadios>>(nameof(NHKListeningSlow), model => model.Initialize(nameof(NHKListeningSlow), ref model._NHKListeningSlow, ref _NHKListeningSlowLocator, _NHKListeningSlowDefaultValueFactory));
+        static Func<BindableBase, ObservableCollection<NHKRadios>> _NHKListeningSlowDefaultValueFactory =
             model =>
             {
                 var vm = CastToCurrentType(model);
@@ -280,7 +256,6 @@ namespace JapaneseDict.GUI.ViewModels
                 return default(ObservableCollection<NHKRadios>);
             };
         #endregion
-
 
         public ObservableCollection<NHKRadios> NHKListeningFast
         {

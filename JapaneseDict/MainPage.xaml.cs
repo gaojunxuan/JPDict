@@ -10,6 +10,7 @@ using Windows.UI.Popups;
 using System.Reactive.Linq;
 using Windows.UI.Text;
 using Windows.System.Profile;
+using Windows.UI.Core;
 
 
 
@@ -25,37 +26,14 @@ namespace JapaneseDict.GUI
 
         public MainPage()
         {
-
             this.InitializeComponent();
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-
-            }
             this.NavigationCacheMode = NavigationCacheMode.Required;
             this.RegisterPropertyChangedCallback(ViewModelProperty, (_, __) =>
             {
                 StrongTypeViewModel = this.ViewModel as MainPage_Model;
             });
             StrongTypeViewModel = this.ViewModel as MainPage_Model;
-            //SetUpPageAnimation();
         }
-        //private void SetUpPageAnimation()
-        //{
-        //    TransitionCollection collection = new TransitionCollection();
-        //    NavigationThemeTransition theme = new NavigationThemeTransition();
-
-        //    var info = new DrillInNavigationTransitionInfo();
-
-        //    theme.DefaultNavigationTransitionInfo = info;
-        //    collection.Add(theme);
-        //    this.Transitions = collection;
-        //}
-        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            e.Handled = false;
-        }
-
         public MainPage_Model StrongTypeViewModel
         {
             get { return (MainPage_Model)GetValue(StrongTypeViewModelProperty); }
@@ -133,12 +111,12 @@ namespace JapaneseDict.GUI
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-
             base.OnNavigatedTo(e);
             this.mediaEle.Stop();
-            if(e.Parameter!=null&e.Parameter.ToString()=="update")
+            if(e.Parameter!=null)
             {
-                this.mainPivot.SelectedIndex = 4;
+                if(e.Parameter.ToString() == "update")
+                    this.mainPivot.SelectedIndex = 4;
             }
         }
         private async void playNHKRadio_Btn_Click(object sender, RoutedEventArgs e)
@@ -235,6 +213,21 @@ namespace JapaneseDict.GUI
             mediaEle.Play();
             (sender as HyperlinkButton).Visibility = Visibility.Collapsed;
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
+        }
+        //refresh the notebook list after recovering from backup
+        private void mainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if((sender as Pivot).SelectedIndex==1)
+            {
+                if (NotebookPage._needRefresh)
+                {
+                    if(noteBook_frame.Content!=null)
+                    {
+                        ((noteBook_frame.Content as NotebookPage).ViewModel as NotebookPage_Model).LoadData();
+                    }
+                    NotebookPage._needRefresh = false;
+                }
+            }
         }
     }
 }

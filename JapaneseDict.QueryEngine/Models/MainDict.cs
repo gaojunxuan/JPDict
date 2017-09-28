@@ -46,10 +46,24 @@ namespace JapaneseDict.Models
         {
             get
             {
-                return !(string.IsNullOrEmpty(Kana));
+                return !string.IsNullOrEmpty(Kana);
             }
         }
-       　public bool IsInUserDefDict
+        [Ignore]
+        public bool IsSeeAlsoBtnVisible
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(SeeAlso);
+            }
+        }
+        [Ignore]
+        public string SeeAlso
+        {
+            get;
+            set;
+        }
+        public bool IsInUserDefDict
         {
             get; set;
         }

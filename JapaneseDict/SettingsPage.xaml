@@ -29,10 +29,12 @@
         <ScrollViewer>
             <StackPanel>
                 <StackPanel Name="syncSettingsPanel" Margin="8">
-                    <TextBlock Text="同步设置" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                    <TextBlock Text="生词本备份" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
-                    <Button Content="同步生词本" IsEnabled="False" Background="#FF00B294" Foreground="White" Command="{Binding CommandSyncNotebook}" FontSize="18"></Button>
-                    <TextBlock Margin="0,12,0,0" Text="此功能将在下个版本提供，敬请期待" Foreground="Gray"></TextBlock>
+                    <Button x:Name="Upload_Btn" Content="备份至 OneDrive" Background="#FF00B294" Foreground="White" FontSize="18" Command="{Binding CommandUploadNotebook}"></Button>
+                    <Button x:Name="Download_Btn" Content="恢复备份" Background="#FF00B294" Foreground="White" FontSize="18" Margin="0,12,0,0" Command="{Binding CommandDownloadNotebook}"></Button>
+                    <!--<TextBlock Margin="0,12,0,0" Text="此功能将在下个版本提供，敬请期待" Foreground="Gray"></TextBlock>-->
+                    <ProgressBar Margin="0,12,0,0" IsIndeterminate="True" Visibility="{Binding ElementName=Upload_Btn,Path=IsEnabled,Converter={StaticResource negateConverter}}" Foreground="#00b294"></ProgressBar>
                 </StackPanel>
                 <StackPanel Name="aboutPanel" Margin="8">
                     <TextBlock Text="关于" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 

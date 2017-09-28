@@ -59,8 +59,10 @@ namespace JapaneseDict.QueryEngine
                         }
                         else
                         {
-                            var err = new ObservableCollection<MainDict>();
-                            err.Add(new MainDict() { JpChar = key, Explanation = "没有本地释义" });
+                            var err = new ObservableCollection<MainDict>
+                            {
+                                new MainDict() { JpChar = key, Explanation = "没有本地释义" }
+                            };
                             return err;
                         }
                     }
@@ -96,8 +98,10 @@ namespace JapaneseDict.QueryEngine
                         }
                         else
                         {
-                            var err = new ObservableCollection<MainDict>();
-                            err.Add(new MainDict() { JpChar = key, Explanation = "没有本地释义" });
+                            var err = new ObservableCollection<MainDict>
+                            {
+                                new MainDict() { JpChar = key, Explanation = "没有本地释义" }
+                            };
                             return err;
                         }
                     }
@@ -125,8 +129,10 @@ namespace JapaneseDict.QueryEngine
                     }
                     else
                     {
-                        var err = new ObservableCollection<MainDict>();
-                        err.Add(new MainDict() { JpChar = "没有本地释义", Explanation = "请查看网络释义" });
+                        var err = new ObservableCollection<MainDict>
+                        {
+                            new MainDict() { JpChar = "没有本地释义", Explanation = "请查看网络释义" }
+                        };
                         return err;
                     }
 
@@ -146,8 +152,10 @@ namespace JapaneseDict.QueryEngine
                         }
                         else
                         {
-                            var err = new ObservableCollection<MainDict>();
-                            err.Add(new MainDict() { JpChar = key, Explanation = "没有本地释义" });
+                            var err = new ObservableCollection<MainDict>
+                            {
+                                new MainDict() { JpChar = key, Explanation = "没有本地释义" }
+                            };
                             return err;
                         }
                     }
@@ -418,6 +426,7 @@ namespace JapaneseDict.QueryEngine
             {
                 SQLiteConnection _mergeConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, path));
                 _mergeConn.CreateTable<UserDefDict>();
+                _noteconn.CreateTable<UserDefDict>();
                 foreach (var i in _mergeConn.Table<UserDefDict>())
                 {
                     //put the data from given db into main db
@@ -431,10 +440,14 @@ namespace JapaneseDict.QueryEngine
                 _noteconn.Query<UserDefDict>("DELETE FROM UserDefDict WHERE ID NOT IN (SELECT MAX(ID) ID FROM UserDefDict GROUP BY OriginID)");
                 _mergeConn.Close();
             }
-            public static void SyncDb()
+            //Recover from backup
+            public static async void CopyFromBackup()
             {
-                OnedriveHelper.RequestAuth();
-                OnedriveHelper.SyncNotebook();
+                if(await ApplicationData.Current.LocalFolder.GetFileAsync("cloudnote.db")!=null)
+                {
+                    MergeDb("cloudnote.db");
+                }
+
             }
             private static void CloseConnection()
             {

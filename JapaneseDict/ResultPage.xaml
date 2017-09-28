@@ -43,47 +43,25 @@
                         </StackPanel>
 
                     </StackPanel>
-                    <TextBlock FontFamily="Yu Gothic UI" x:Name="explanationBox" Text="{Binding Explanation}" Margin="20,20,30,40" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294" Loaded="explanationBox_Loaded"/>
+
+                    <TextBlock x:Name="explanationBox" Text="{Binding Explanation}" Margin="20,20,30,40" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294" Loaded="explanationBox_Loaded" FontFamily="DengXian" FontWeight="Normal" LineHeight="30"/>
+                    <StackPanel Visibility="{Binding IsSeeAlsoBtnVisible,Converter={StaticResource boolToVisibility},UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Margin="20,20,30,40">
+                        <TextBlock Text="您查找的词可能是" FontSize="16"></TextBlock>
+                        <Button Content="{Binding SeeAlso}" FontSize="16" Margin="10,0,0,0"></Button>
+                    </StackPanel>
                     <Button x:Name="sendFeedback_Btn" Content="提交反馈" Command="{Binding CommandSendFeedback,Source={StaticResource ResourceKey=DesignVM}}" CommandParameter="{Binding JpChar}" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource negateConverter}}" Margin="20,0,30,0" Foreground="White" Background="#FF00B294" Height="40" Width="80"></Button>
                     <Button x:Name="seeOnlineResult_Btn" Content="在线释义" CommandParameter="{Binding JpChar}" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource negateConverter}}" Margin="20,20,30,0" Foreground="White" Background="#FF00B294" Height="40" Width="80" Click="seeOnlineResult_Btn_Click"></Button>
                 </StackPanel>
 
             </ScrollViewer>
         </DataTemplate>
-        <DataTemplate x:Key="DataTemplate4">
-            <ScrollViewer x:Name="resultViewer" RequestedTheme="Light">
-                <StackPanel>
-
-                    <TextBlock x:Name="pageTitle" Text="{Binding JpChar}" Style="{StaticResource HeaderTextBlockStyle}"
-                                  IsHitTestVisible="false" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20,30,30,0" FontWeight="Normal" Foreground="#FF00B294" FontSize="32" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
-                    <StackPanel Orientation="Vertical" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource boolToVisibility}}">
-                        <Button x:Name="Speak_Btn" Command="{Binding CommandSpeak,Source={StaticResource ResourceKey=DesignVM}}" CommandParameter="{Binding Kana}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="26.667" FontFamily="Microsoft JhengHei UI" Height="44" Background="#FF00B294" Foreground="White">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Kana}" FontSize="18.667" TextWrapping="Wrap"/>
-                                <SymbolIcon Symbol="Volume" Margin="10,0,0,0"/>
-                            </StackPanel>
-                        </Button>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Name="AddToNote_Btn" Click="AddToNote_Btn_Click" Tag="{Binding ElementName=RemoveFromNote_Btn}" Visibility="{Binding IsInUserDefDict,Converter={StaticResource negateConverter}}" Command="{Binding CommandAddToNotebook,Source={StaticResource ResourceKey=DesignVM}}" CommandParameter="{Binding ID}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="29.333" Height="44" Foreground="White" Background="#FF00B294">
-                                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="24"></TextBlock>
-                            </Button>
-                            <Button Name="RemoveFromNote_Btn" Click="RemoveFromNote_Btn_Click" Tag="{Binding ElementName=AddToNote_Btn}" Visibility="{Binding IsInUserDefDict,Converter={StaticResource boolToVisibility}}" Command="{Binding CommandRemoveFromNotebook,Source={StaticResource ResourceKey=DesignVM}}" CommandParameter="{Binding ID}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="29.333" Height="44" Foreground="White" Background="#FF00B294">
-                                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="24"></TextBlock>
-                            </Button>
-                        </StackPanel>
-
-                    </StackPanel>
-                    <TextBlock x:Name="explanationBox" Text="{Binding Explanation}" Margin="20,20,30,40" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
-                </StackPanel>
-
-            </ScrollViewer>
-        </DataTemplate>
+        <!-- online result template -->
         <DataTemplate x:Key="DataTemplate3">
             <ScrollViewer x:Name="resultViewer" RequestedTheme="Light">
                 <StackPanel>
                     <TextBlock x:Name="pageTitle" FontFamily="Yu Gothic UI" Text="{Binding JpChar}" Style="{StaticResource HeaderTextBlockStyle}"
                                   IsHitTestVisible="false" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20,30,30,0" FontWeight="Normal" Foreground="#FF00B294" FontSize="32" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
-                    <TextBlock x:Name="explanatioBox" Text="{Binding Explanation}" Margin="20,20,30,0" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
+                    <TextBlock x:Name="explanatioBox" Text="{Binding Explanation}" Margin="20,20,30,0" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"  FontFamily="DengXian" FontWeight="Normal"/>
                 </StackPanel>
             </ScrollViewer>
         </DataTemplate>
@@ -116,8 +94,9 @@
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
-                <FlipView ItemsSource="{Binding Results}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0">
+                <FlipView ItemsSource="{Binding Results}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFEEEEEE">
                 </FlipView>
+               
             </PivotItem>
             <PivotItem Margin="12,-8,0,0">
                 <PivotItem.Header>
@@ -305,7 +284,7 @@
                     <DataTemplate x:Key="DataTemplate1">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding JpChar}" FontFamily="Yu Gothic UI" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding PreviewExplanation}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PreviewExplanation}"  FontFamily="DengXian" FontWeight="Normal" Margin="10,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
                 </AutoSuggestBox.Resources>

@@ -35,9 +35,7 @@ namespace JapaneseDict.GUI
     /// </summary>
     public sealed partial class NotebookPage : MVVMPage
     {
-
-
-        
+        public static bool _needRefresh = false;
         public NotebookPage()
         {
 
@@ -84,22 +82,17 @@ namespace JapaneseDict.GUI
         {
             Frame rootFrame = Window.Current.Content as Frame;
             rootFrame.Navigate(typeof(ResultPage), Convert.ToInt32(((StackPanel)sender).Tag));
-            GC.Collect();
+            //GC.Collect();
         }
 
         private void noteItem_Holding(object sender, HoldingRoutedEventArgs e)
         {
-
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-
         }
 
         private void noteItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
-
     }
-   
-
 }

@@ -26,12 +26,15 @@
                         <FontIcon Glyph="" Width="25" Margin="0,0,5,0" Foreground="White"></FontIcon>
                         <StackPanel Height="48">
                             <TextBlock FontSize="24">更新</TextBlock>
-                            <TextBlock FontSize="8">こうしん</TextBlock>
+                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">こうしん</TextBlock>
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
                 <Grid>
-                    <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="24,12,0,0" Name="feedback_Btn" Content="现在更新" Background="#FF00B294" Foreground="White"/>
+                    <StackPanel>
+                        <TextBlock Text="本次更新包含词库更新，需要花费一段时间更新词库，在更新完成之前请不要关闭应用。" TextWrapping="WrapWholeWords" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="Gray" Margin="16,8,16,0"></TextBlock>
+                        <ProgressBar Name="Update_ProgressBar" Margin="16,48,16,0" Foreground="#00b294"></ProgressBar>
+                    </StackPanel>
                 </Grid>
             </PivotItem>
         </Pivot>

@@ -112,7 +112,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdmAuthentication.cs" />
+    <Compile Include="AuthenticationHelper.cs" />
     <Compile Include="AzureAuthToken.cs" />
     <Compile Include="Models\EverydaySentence.cs" />
     <Compile Include="Models\JPDictFeedbackItem.cs" />

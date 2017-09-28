@@ -25,6 +25,8 @@ using Windows.System;
 using Windows.System.Profile;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.ApplicationModel;
+using JapaneseDict.OnlineService;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,12 +37,8 @@ namespace JapaneseDict.GUI
     /// </summary>
     public sealed partial class SettingsPage : MVVMPage
     {
-
-
-
         public SettingsPage()
         {
-
             this.InitializeComponent();
             this.RegisterPropertyChangedCallback(ViewModelProperty, (_, __) =>
             {
@@ -48,7 +46,6 @@ namespace JapaneseDict.GUI
             });
             StrongTypeViewModel = this.ViewModel as SettingsPage_Model;
         }
-
 
         public SettingsPage_Model StrongTypeViewModel
         {
@@ -94,7 +91,7 @@ namespace JapaneseDict.GUI
 
         private async void privacypolicy_Btn_Click(object sender, RoutedEventArgs e)
         {
-            var uri = new Uri($"https://skylark-workshop.xyz/privacy-jpdict/");
+            var uri = new Uri($"https://skylark-workshop.xyz/privacy-jpdict");
             await Launcher.LaunchUriAsync(uri);
         }
 

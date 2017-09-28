@@ -18,6 +18,9 @@ using JapaneseDict.QueryEngine;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Popups;
+using System.IO;
+using Windows.UI.Core;
+using Windows.Storage;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -25,9 +28,7 @@ namespace JapaneseDict.GUI.ViewModels
     [DataContract]
     public class SettingsPage_Model : ViewModelBase<SettingsPage_Model>
     {
-        // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property。
-        // 如果您已经安装了 MVVMSidekick 代码片段，请用 propvm +tab +tab 输入属性
-        private readonly string[] scopes = new string[] { "onedrive.readwrite", "wl.offline_access", "wl.signin" };
+        // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property
         public String Title
         {
             get { return _TitleLocator(this).Value; }
@@ -39,47 +40,6 @@ namespace JapaneseDict.GUI.ViewModels
         static Func<BindableBase, String> _TitleDefaultValueFactory = m => m.GetType().Name;
         #endregion
 
-
-        public CommandModel<ReactiveCommand, String> CommandSyncNotebook
-        {
-            get { return _CommandSyncNotebookLocator(this).Value; }
-            set { _CommandSyncNotebookLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandSyncNotebook Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandSyncNotebook = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandSyncNotebookLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandSyncNotebookLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandSyncNotebook), model => model.Initialize(nameof(CommandSyncNotebook), ref model._CommandSyncNotebook, ref _CommandSyncNotebookLocator, _CommandSyncNotebookDefaultValueFactory));
-        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandSyncNotebookDefaultValueFactory =
-            model =>
-            {
-                var resource = nameof(CommandSyncNotebook);           // Command resource  
-                var commandId = nameof(CommandSyncNotebook);
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUIBusyTask(
-                        vm,
-                        async e =>
-                        {
-                            QueryEngine.QueryEngine.UserDefDictQueryEngine.SyncDb();
-                            await Task.Delay(500);
-                            //Todo: Add SyncNotebook logic here, or
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                            
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(resource);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
 
         PackageVersion pv = Package.Current.Id.Version;
         public string ApplicationVersion
@@ -145,6 +105,123 @@ namespace JapaneseDict.GUI.ViewModels
                     .DisposeWith(vm);
 
                 var cmdmdl = cmd.CreateCommandModel(resource);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+
+        public CommandModel<ReactiveCommand, String> CommandUploadNotebook
+        {
+            get { return _CommandUploadNotebookLocator(this).Value; }
+            set { _CommandUploadNotebookLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandUploadNotebook Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandUploadNotebook = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandUploadNotebookLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandUploadNotebookLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandUploadNotebook), model => model.Initialize(nameof(CommandUploadNotebook), ref model._CommandUploadNotebook, ref _CommandUploadNotebookLocator, _CommandUploadNotebookDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandUploadNotebookDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandUploadNotebook);           // Command state  
+                var commandId = nameof(CommandUploadNotebook);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            try
+                            {
+                                await Task.Run(async () =>
+                                {
+                                    if (await NoteSync.SignInCurrentUserAsync())
+                                    {
+                                        await NoteSync.UploadFileToOneDriveAsync();
+                                    }
+                                });
+                            }
+                            catch(Exception ex)
+                            {
+                                await new MessageDialog("备份过程中出现错误，请稍后重试。\n\n" + ex.ToString(), "出现错误").ShowAsync();
+                            }
+                            //Todo: Add UploadNotebook logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
+
+                cmdmdl.ListenToIsUIBusy(
+                    model: vm,
+                    canExecuteWhenBusy: false);
+                return cmdmdl;
+            };
+
+        #endregion
+
+        public CommandModel<ReactiveCommand, String> CommandDownloadNotebook
+        {
+            get { return _CommandDownloadNotebookLocator(this).Value; }
+            set { _CommandDownloadNotebookLocator(this).SetValueAndTryNotify(value); }
+        }
+        #region Property CommandModel<ReactiveCommand, String> CommandDownloadNotebook Setup        
+
+        protected Property<CommandModel<ReactiveCommand, String>> _CommandDownloadNotebook = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandDownloadNotebookLocator };
+        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandDownloadNotebookLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandDownloadNotebook), model => model.Initialize(nameof(CommandDownloadNotebook), ref model._CommandDownloadNotebook, ref _CommandDownloadNotebookLocator, _CommandDownloadNotebookDefaultValueFactory));
+        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandDownloadNotebookDefaultValueFactory =
+            model =>
+            {
+                var state = nameof(CommandDownloadNotebook);           // Command state  
+                var commandId = nameof(CommandDownloadNotebook);
+                var vm = CastToCurrentType(model);
+                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
+
+                cmd.DoExecuteUIBusyTask(
+                        vm,
+                        async e =>
+                        {
+                            try
+                            {
+                                await Task.Run(async () =>
+                                {
+                                    if (await NoteSync.SignInCurrentUserAsync())
+                                    {
+                                        var filestream = await NoteSync.DownloadFileFromOneDriveAsync("JPDict/cloudnote.db");
+                                        var file = await NoteSync._localFolder.TryGetItemAsync("cloudnote.db");
+                                        if (file == null)
+                                        {
+                                            file = await NoteSync._localFolder.CreateFileAsync("cloudnote.db", Windows.Storage.CreationCollisionOption.ReplaceExisting);
+                                        }
+                                        var writestream = await (file as StorageFile).OpenStreamForWriteAsync();
+                                        await filestream.CopyToAsync(writestream);
+                                        filestream.Dispose();
+                                        writestream.Dispose();
+                                        QueryEngine.QueryEngine.UserDefDictQueryEngine.CopyFromBackup();
+                                        NotebookPage._needRefresh = true;
+                                    }
+                                });
+                                
+                            }
+                            catch(Exception ex)
+                            {
+                                await new MessageDialog("恢复过程中出现错误，请稍后重试。\n\n" + ex.Message, "出现错误").ShowAsync();
+                            }
+                            //Todo: Add DownloadNotebook logic here, or
+                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
+                        })
+                    .DoNotifyDefaultEventRouter(vm, commandId)
+                    .Subscribe()
+                    .DisposeWith(vm);
+
+                var cmdmdl = cmd.CreateCommandModel(state);
 
                 cmdmdl.ListenToIsUIBusy(
                     model: vm,

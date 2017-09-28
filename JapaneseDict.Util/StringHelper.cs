@@ -21,5 +21,13 @@ namespace JapaneseDict.Util
             }
             return input;
         }
+        public static string PrepareVerbs(string input)
+        {
+            if(VerbConjugationHelper.IsNegative(input))
+            {
+                return VerbConjugationHelper.FromNegativeToOriginal(input);
+            }
+            return input;
+        }
     }
 }

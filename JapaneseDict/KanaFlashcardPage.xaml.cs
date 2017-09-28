@@ -66,24 +66,9 @@ namespace JapaneseDict.GUI
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            EnableBackButtonOnTitleBar((sender, args) =>
-            {
-                Frame rootFrame = Window.Current.Content as Frame;
-                if (rootFrame.CanGoBack)
-                {
-                    rootFrame.GoBack();
-
-                }
-                DisableBackButtonOnTitleBar();
-            });
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-            }
             if (e.Parameter != null)
             {
-                int index = 0;
-                bool result = Int32.TryParse(e.Parameter.ToString(), out index);
+                bool result = Int32.TryParse(e.Parameter.ToString(), out int index);
                 if (result)
                 {
                     this.mainPivot.SelectedIndex = index;
@@ -113,31 +98,6 @@ namespace JapaneseDict.GUI
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-
-            }
-        }
-        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            e.Handled = true;
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame.CanGoBack)
-            {
-                rootFrame.GoBack();
-            }
-        }
-        private void EnableBackButtonOnTitleBar(EventHandler<BackRequestedEventArgs> onBackRequested)
-        {
-            var currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            currentView.BackRequested += onBackRequested;
-        }
-        private void DisableBackButtonOnTitleBar()
-        {
-            var currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
         }
 
         private void showHiraSonant_item_Tapped(object sender, TappedRoutedEventArgs e)

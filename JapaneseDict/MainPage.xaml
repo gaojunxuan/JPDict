@@ -219,7 +219,7 @@
     <Grid Background="#FFEEEEEE"  DataContext="{StaticResource DesignVM}">
         <MediaElement Name="mediaEle" MediaEnded="mediaEle_MediaEnded"></MediaElement>
         <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
-        <Pivot Name="mainPivot" Margin="0,1,0,65" RequestedTheme="Dark">
+        <Pivot Name="mainPivot" Margin="0,1,0,65" RequestedTheme="Dark" SelectionChanged="mainPivot_SelectionChanged">
             <PivotItem>
                 <PivotItem.Header>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
@@ -275,7 +275,6 @@
                                         <TextBlock FontSize="24">NHK Radio News</TextBlock>
                                         <TextBlock FontSize="8" FontFamily="Yu Gothic UI">NHK ラジオニュース</TextBlock>
                                     </StackPanel>
-
                                     <StackPanel Margin="24,0,24,0" Orientation="Horizontal" HorizontalAlignment="Left">
                                         <HyperlinkButton x:Name="ShowFastListeningList_Btn" Foreground="#FF00C9A7" FontWeight="ExtraBold" Click="ShowFastListeningList_Btn_Click">
                                             <HyperlinkButton.Content>
@@ -532,7 +531,7 @@
                     <DataTemplate x:Key="DataTemplate1">
                         <StackPanel Name="autosuggestion_Listitem" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="{Binding JpChar}" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center" TextWrapping="NoWrap"></TextBlock>
-                            <TextBlock Text="{Binding PreviewExplanation}" Margin="10,0,0,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                            <TextBlock Text="{Binding PreviewExplanation}" Margin="10,0,0,0" FontFamily="DengXian" FontWeight="Normal" VerticalAlignment="Center" TextWrapping="NoWrap"/>
                         </StackPanel>
                     </DataTemplate>
                 </AutoSuggestBox.Resources>
