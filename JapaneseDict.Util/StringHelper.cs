@@ -27,7 +27,19 @@ namespace JapaneseDict.Util
             {
                 return VerbConjugationHelper.FromNegativeToOriginal(input);
             }
-            return input;
+            else if(VerbConjugationHelper.IsCausative(input))
+            {
+                return VerbConjugationHelper.FromCausativeToOriginal(input);
+            }
+            else if(VerbConjugationHelper.IsPassive(input))
+            {
+                return VerbConjugationHelper.FromPassiveToOriginal(input);
+            }
+            else if (VerbConjugationHelper.IsMasu(input))
+            {
+                return VerbConjugationHelper.FromMasuToOriginal(input);
+            }
+            return input.Length>=4?input.Substring(0,2):input;
         }
     }
 }

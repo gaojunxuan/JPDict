@@ -32,7 +32,7 @@
                 </PivotItem.Header>
                 <Grid>
                     <StackPanel>
-                        <TextBlock Text="本次更新包含词库更新，需要花费一段时间更新词库，在更新完成之前请不要关闭应用。" TextWrapping="WrapWholeWords" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="Gray" Margin="16,8,16,0"></TextBlock>
+                        <TextBlock Text="本次更新包含词库更新，需要花费一段时间更新词库，在更新完成之前请不要关闭应用。" TextWrapping="WrapWholeWords" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiLight" Foreground="Gray" Margin="16,8,16,0"></TextBlock>
                         <ProgressBar Name="Update_ProgressBar" Margin="16,48,16,0" Foreground="#00b294"></ProgressBar>
                     </StackPanel>
                 </Grid>

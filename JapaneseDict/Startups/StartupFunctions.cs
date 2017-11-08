@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Windows.UI;
 using Windows.UI.ViewManagement;
+using Windows.ApplicationModel.Core;
 
 namespace MVVMSidekick.Startups
 {
@@ -26,7 +27,6 @@ namespace MVVMSidekick.Startups
 		}
 		public static void RunAllConfig()
 		{
-
             SetTitleBar(Color.FromArgb(100, 0, 178, 148), Colors.White, Color.FromArgb(100, 0, 200, 166), Color.FromArgb(100, 0, 219, 182));
             SetStatusBar(Color.FromArgb(100, 0, 178, 148), Colors.White);
             if (AllConfig==null) return;

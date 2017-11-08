@@ -20,7 +20,7 @@ namespace JapaneseDict.QueryEngine
 
         public static class MainDictQueryEngine
         {
-            private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
+            public static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
             /// <summary>
             /// Query MainDict database using the given keyword
             /// </summary>

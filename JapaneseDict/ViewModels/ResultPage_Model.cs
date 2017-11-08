@@ -62,10 +62,11 @@ namespace JapaneseDict.GUI.ViewModels
             this.results = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(_keyword);
             if (results.Count != 0 && results.FirstOrDefault().Explanation == "没有本地释义")
             {
-                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(StringHelper.PrepareVerbs(_keyword));
+                string word = StringHelper.PrepareVerbs(_keyword);
+                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(word);
                 if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Explanation != "没有本地释义")
                 {
-                    results.First().SeeAlso = "TEST";
+                    results.First().SeeAlso = seealsoresults.First().JpChar;
                 }
             }
             this.Results = results;
@@ -340,6 +341,7 @@ namespace JapaneseDict.GUI.ViewModels
                         async e =>
                         {
                             Regex reg = new Regex("[\u4e00-\u9fa5]+");
+                            Regex en_reg = new Regex("[A-z\\s]+");
                             StringBuilder sbkey = new StringBuilder();
                             foreach (var i in vm.Results)
                             {
@@ -359,16 +361,18 @@ namespace JapaneseDict.GUI.ViewModels
                                         }
                                         if (string.IsNullOrWhiteSpace(lines[0]))
                                         {
-                                            if(!lines[1].Contains("["))
+                                            if (!lines[1].Contains("["))
                                             {
-                                                sbkey.Append(lines[1]);
+                                                if (!en_reg.IsMatch(lines[1]) && lines[1].Contains(")"))
+                                                        sbkey.Append(lines[1]);
                                             }
                                         }
                                         else
                                         {
                                             if (!lines[0].Contains("["))
                                             {
-                                                sbkey.Append(lines[0]);
+                                                if (!en_reg.IsMatch(lines[0]) && lines[0].Contains(")"))
+                                                    sbkey.Append(lines[0]);
                                             }
                                         }
                                     }

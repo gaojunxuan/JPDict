@@ -27,6 +27,7 @@ using Windows.Storage;
 using System.Threading.Tasks;
 using JapaneseDict.GUI.Helpers;
 using Windows.UI.Core;
+using JapaneseDict.Models;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -63,7 +64,7 @@ namespace JapaneseDict.GUI
 
 
 
-        private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db"));
+        //private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -73,19 +74,17 @@ namespace JapaneseDict.GUI
             await updatefile.CopyAsync(ApplicationData.Current.LocalFolder, "update.db", NameCollisionOption.ReplaceExisting);
             await Task.Run(async() =>
             {
-                _conn.CreateTable<UpdateDict>();
-                var data = _conn.Table<UpdateDict>();
-                var count = data.Count();
-                int i = 1;
-                foreach (var d in data)
-                {
-                    QueryEngine.QueryEngine.MainDictQueryEngine.Add(d.JpChar, d.Defination, d.Reading, d.AutoId);
-                    double percent = i++ / (double)count;
-                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => this.Update_ProgressBar.Value = percent * 100);
-                }
+                string updatepath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db");
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => this.Update_ProgressBar.Value = 25);
+                QueryEngine.QueryEngine.MainDictQueryEngine._conn.Execute($"ATTACH '{updatepath}' AS `tomerge` KEY ''");
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => this.Update_ProgressBar.Value = 35);
+                QueryEngine.QueryEngine.MainDictQueryEngine._conn.Execute("INSERT INTO Maindict(Id,JpChar,Kana,Explanation) SELECT AutoId,JpChar,Reading,Defination FROM tomerge.UpdateDict WHERE AutoId NOT IN (SELECT Id from MainDict);");
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => this.Update_ProgressBar.Value = 65);
+                QueryEngine.QueryEngine.MainDictQueryEngine._conn.Commit();
+
             }).ContinueWith(async t=> 
             {
-                _conn.Close();
+                //_conn.Close();
                 UpdatePromptHelper.StoreState();
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
                 {

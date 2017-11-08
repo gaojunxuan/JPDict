@@ -204,8 +204,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-
     </Page.Resources>
     <Page.Transitions>
         <TransitionCollection>
@@ -216,7 +214,7 @@
             </NavigationThemeTransition>
         </TransitionCollection>
     </Page.Transitions>
-    <Grid Background="#FFEEEEEE"  DataContext="{StaticResource DesignVM}">
+    <Grid Background="#FFEEEEEE" DataContext="{StaticResource DesignVM}">
         <MediaElement Name="mediaEle" MediaEnded="mediaEle_MediaEnded"></MediaElement>
         <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
         <Pivot Name="mainPivot" Margin="0,1,0,65" RequestedTheme="Dark" SelectionChanged="mainPivot_SelectionChanged">
@@ -429,8 +427,8 @@
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="あ" VerticalAlignment="Center" Foreground="#00b294" FontSize="46" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="平假名" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="ひらがな" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="平假名" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="ひらがな" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
                         <Interactivity:Interaction.Behaviors>
@@ -443,8 +441,8 @@
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="カ" VerticalAlignment="Center" Foreground="#00b294" FontSize="46" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="片假名" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="カタカナ" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="片假名" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="カタカナ" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
                         <Interactivity:Interaction.Behaviors>
@@ -457,8 +455,8 @@
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="磯" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N1 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT１" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="N1 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="JLPT１" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
                         <Interactivity:Interaction.Behaviors>
@@ -471,8 +469,8 @@
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="囲" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N2 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT２" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="N2 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="JLPT２" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
                         <Interactivity:Interaction.Behaviors>
@@ -485,8 +483,8 @@
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="夏" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N3 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT３" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="N3 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="JLPT３" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
                         <Interactivity:Interaction.Behaviors>
@@ -499,8 +497,8 @@
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="円" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
                             <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Meiryo UI" Text="N4 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="JLPT４" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="N4 汉字" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="JLPT４" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
                             </StackPanel>
                         </StackPanel>
                         <Interactivity:Interaction.Behaviors>
@@ -525,7 +523,6 @@
             </PivotItem>
         </Pivot>
         <StackPanel Background="#00b294" Height="65" VerticalAlignment="Bottom">
-
             <AutoSuggestBox Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="JpChar" Style="{StaticResource AutoSuggestBoxStyle1}" PlaceholderText="请输入要查询的词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen">
                 <AutoSuggestBox.Resources>
                     <DataTemplate x:Key="DataTemplate1">

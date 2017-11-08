@@ -57,7 +57,7 @@ namespace JapaneseDict.Util
             return false;
         }
         //いらっしゃる、ござる、くださる、なさる、おっしゃる
-        static bool IsRaHen(string word)
+        static bool IsSpecialKeigo(string word)
         {
             if (word == "いらっしゃる" | word == "ござる" | word == "御座る" | word == "なさる" | word == "為さる" | word == "くださる" | word == "下さる" | word == "おっしゃる" | word == "仰しゃる")
             {
@@ -68,6 +68,18 @@ namespace JapaneseDict.Util
         public static bool IsNegative(string word)
         {
             return word.Length>2&&word.EndsWith("ない");
+        }
+        public static bool IsCausative(string word)
+        {
+            return word.Length > 2 && word.EndsWith("せる");
+        }
+        public static bool IsPassive(string word)
+        {
+            return word.Length > 2 && word.EndsWith("れる");
+        }
+        public static bool IsMasu(string word)
+        {
+            return word.Length > 2 && word.EndsWith("ます");
         }
         #endregion
         #region phonetic changes
@@ -230,7 +242,7 @@ namespace JapaneseDict.Util
             }
             else
             {
-                if (IsRaHen(word))
+                if (IsSpecialKeigo(word))
                 {
                     return word.Substring(0, word.Length - 1) + "い";
                 }
@@ -296,7 +308,7 @@ namespace JapaneseDict.Util
             }
             else
             {
-                if (IsRaHen(word))
+                if (IsSpecialKeigo(word))
                 {
                     return word.Substring(0, word.Length - 1) + "いま";
                 }
@@ -331,6 +343,12 @@ namespace JapaneseDict.Util
         {
             string okuri = word.Substring(word.Length - 1);
             okuri = hira[hira.IndexOf(okuri) + 2];
+            return word.Substring(0, word.Length - 1) + okuri;
+        }
+        static string MoveFromIToU(string word)
+        {
+            string okuri = word.Substring(word.Length - 1);
+            okuri = hira[hira.IndexOf(okuri) + 1];
             return word.Substring(0, word.Length - 1) + okuri;
         }
         #endregion
@@ -401,7 +419,12 @@ namespace JapaneseDict.Util
         }
         public static string GetNegative(string word,string tag)
         {
-            return PrepNegative(word,tag) + "い";
+            if(word=="ある"||word=="有る")
+            {
+                return "ない";
+            }
+            else
+                return PrepNegative(word, tag) + "い";
         }
         public static string GetPastNegative(string word, string tag)
         {
@@ -428,6 +451,10 @@ namespace JapaneseDict.Util
         }
         public static string GetPotential(string word, string tag)
         {
+            if (word == "ある" || word == "有る")
+            {
+                return "あり得る";
+            }
             return PrepPotential(word, tag) + "る";
         }
         public static string GetNegativePotential(string word, string tag)
@@ -440,6 +467,10 @@ namespace JapaneseDict.Util
         }
         public static string GetNegativePassive(string word, string tag)
         {
+            if (word == "ある" || word == "有る")
+            {
+                return "あり得ない";
+            }
             return PrepPassive(word, tag) + "ない";
         }
         public static string GetCausative(string word, string tag)
@@ -513,6 +544,62 @@ namespace JapaneseDict.Util
             else
             {
                 return MoveFromAToU(wordroot);
+            }
+        }
+        public static string FromCausativeToOriginal(string word)
+        {
+            string wordroot = word.Substring(0, word.Length - 2);
+            string okurigana = wordroot.Substring(wordroot.Length - 2);
+            if (okurigana == "べさ" || okurigana == "めさ" || okurigana == "えさ" || okurigana == "へさ" || okurigana == "けさ" || okurigana == "ぺさ" || okurigana == "げさ" || okurigana == "せさ" || okurigana == "れさ")
+                return word.Substring(0, word.Length - 3) + "る";
+            else if (word == "こさせる" || word == "来させる")
+            {
+                return "くる";
+            }
+            else if (word.EndsWith("させる"))
+            {
+                return word.Substring(0, word.Length - 3);
+            }
+            else
+            {
+                return MoveFromAToU(wordroot);
+            }
+        }
+        public static string FromPassiveToOriginal(string word)
+        {
+            string wordroot = word.Substring(0, word.Length - 2);
+            string okurigana = wordroot.Substring(wordroot.Length - 2);
+            if (okurigana == "べら" || okurigana == "めら" || okurigana == "えら" || okurigana == "へら" || okurigana == "けら" || okurigana == "ぺら" || okurigana == "げら" || okurigana == "せら" || okurigana == "れら")
+                return word.Substring(0, word.Length - 3) + "る";
+            else if (word == "こられる" || word == "来られる")
+            {
+                return "くる";
+            }
+            else
+            {
+                return MoveFromAToU(wordroot);
+            }
+        }
+        public static string FromMasuToOriginal(string word)
+        {
+            string wordroot = word.Substring(0, word.Length - 2);
+            string okurigana = wordroot.Substring(wordroot.Length - 1);
+            if (okurigana == "べ" || okurigana == "め" || okurigana == "え" || okurigana == "へ" || okurigana == "け" || okurigana == "ぺら" || okurigana == "げ" || okurigana == "せ" || okurigana == "れ")
+                return word.Substring(0, word.Length - 2) + "る";
+            else if (word == "きます" || word == "来ます")
+            {
+                return "くる";
+            }
+            else if(word.EndsWith("します"))
+            {
+                if (word == "します")
+                    return "する";
+                else
+                    return word.Substring(0, word.Length - 4);
+            }
+            else
+            {
+                return MoveFromIToU(wordroot);
             }
         }
         #endregion

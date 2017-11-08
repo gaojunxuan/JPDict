@@ -172,5 +172,15 @@ namespace JapaneseDict.GUI
         {
             kanjinores_Tbx.Visibility = Visibility.Collapsed;
         }
+
+        private void SeeAlso_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame.CanGoBack)
+            {
+                rootFrame.GoBack();
+                rootFrame.Navigate(typeof(ResultPage), Util.StringHelper.ResolveReplicator((sender as Button).Content.ToString().Replace(" ", "").Replace(" ", "")));
+            }
+        }
     }
 }
