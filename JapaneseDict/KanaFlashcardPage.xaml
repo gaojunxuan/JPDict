@@ -55,7 +55,7 @@
                         </FlipView>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <ListView SelectionMode="None" Margin="0,-12,0,8">
+                        <ListView SelectionMode="None" Margin="0,-12,0,8" IsItemClickEnabled="True">
                             <ListViewItem x:Name="showHiraSonant_item" Tapped="showHiraSonant_item_Tapped" Margin="0,12,0,0">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="38" Width="40" Height="18" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">゛゜</TextBlock>
@@ -223,7 +223,7 @@
                         </FlipView>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <ListView SelectionMode="None" Margin="0,-12,0,8">
+                        <ListView SelectionMode="None" Margin="0,-12,0,8" IsItemClickEnabled="True">
                             <ListViewItem x:Name="showKataSonant_item" Tapped="showKataSonant_item_Tapped" Margin="0,12,0,0">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="38" Width="40" Height="18" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">゛゜</TextBlock>

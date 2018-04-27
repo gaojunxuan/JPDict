@@ -422,7 +422,7 @@
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
-                <GridView Margin="0" SelectionMode="None">
+                <GridView Margin="0" SelectionMode="None" IsItemClickEnabled="True">
                     <GridViewItem>
                         <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
                             <TextBlock FontFamily="Yu Gothic UI" Text="あ" VerticalAlignment="Center" Foreground="#00b294" FontSize="46" Margin="20,0,0,0"/>

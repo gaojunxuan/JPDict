@@ -51,7 +51,7 @@
                         </FlipView>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <ListView SelectionMode="None" Margin="0,-12,0,8">
+                        <ListView SelectionMode="None" Margin="0,-12,0,8" IsItemClickEnabled="True"> 
                             <ListViewItem x:Name="replayHira_item" Margin="0,12,0,0">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Foreground="#FF00B294" FontSize="32" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0" Height="35"></TextBlock>
