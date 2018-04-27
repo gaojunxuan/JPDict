@@ -71,16 +71,24 @@ namespace JapaneseDict.GUI
         PackageVersion pv = Package.Current.Id.Version;
         private async void feedback_Btn_Click(object sender, RoutedEventArgs e)
         {
-            string sv = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
-            ulong v = ulong.Parse(sv);
-            ulong v1 = (v & 0xFFFF000000000000L) >> 48;
-            ulong v2 = (v & 0x0000FFFF00000000L) >> 32;
-            ulong v3 = (v & 0x00000000FFFF0000L) >> 16;
-            ulong v4 = (v & 0x000000000000FFFFL);
-            string version = $"{v1}.{v2}.{v3}.{v4}";
-            EasClientDeviceInformation eas = new EasClientDeviceInformation();
-            var mailto = new Uri($"mailto:{"skylarkworkshop@gmail.com"}?subject={"Skylark JPDict 反馈"}&body={$"设备信息：%0ADeviceManufacturer: {eas.SystemManufacturer}%0ADeviceModel: {eas.SystemProductName}%0ADevice family: {AnalyticsInfo.VersionInfo.DeviceFamily}%0ADevice family version: {v.ToString()}%0AOS version: {version}%0AOS architecture: {Package.Current.Id.Architecture.ToString()}%0AApp version:{$"v{pv.Major}.{pv.Minor}.{pv.Build}.{pv.Revision}"}%0A%0A反馈:"}");
-            await Launcher.LaunchUriAsync(mailto);
+            if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
+            {
+                var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+                await launcher.LaunchAsync();
+            }
+            else
+            {
+                string sv = AnalyticsInfo.VersionInfo.DeviceFamilyVersion;
+                ulong v = ulong.Parse(sv);
+                ulong v1 = (v & 0xFFFF000000000000L) >> 48;
+                ulong v2 = (v & 0x0000FFFF00000000L) >> 32;
+                ulong v3 = (v & 0x00000000FFFF0000L) >> 16;
+                ulong v4 = (v & 0x000000000000FFFFL);
+                string version = $"{v1}.{v2}.{v3}.{v4}";
+                EasClientDeviceInformation eas = new EasClientDeviceInformation();
+                var mailto = new Uri($"mailto:{"skylarkworkshop@gmail.com"}?subject={"Skylark JPDict 反馈"}&body={$"设备信息：%0ADeviceManufacturer: {eas.SystemManufacturer}%0ADeviceModel: {eas.SystemProductName}%0ADevice family: {AnalyticsInfo.VersionInfo.DeviceFamily}%0ADevice family version: {v.ToString()}%0AOS version: {version}%0AOS architecture: {Package.Current.Id.Architecture.ToString()}%0AApp version:{$"v{pv.Major}.{pv.Minor}.{pv.Build}.{pv.Revision}"}%0A%0A反馈:"}");
+                await Launcher.LaunchUriAsync(mailto);
+            }
         }
 
         private async void oss_Btn_Click(object sender, RoutedEventArgs e)
