@@ -65,6 +65,15 @@ namespace JapaneseDict.Util
             }
             return false;
         }
+        //問う、訪う、請う、乞う
+        static bool IsUOnbin(string word)
+        {
+            if(word== "問う"|word== "訪う"|word== "請う" | word== "乞う" | word=="とう"|word=="こう")
+            {
+                return true;
+            }
+            return false;
+        }
         public static bool IsNegative(string word)
         {
             return word.Length>2&&word.EndsWith("ない");
@@ -88,8 +97,10 @@ namespace JapaneseDict.Util
             string newWord = word.Substring(0, word.Length - 1);
             if (word[word.Length - 1] == 'う' || word[word.Length - 1] == 'る' || word[word.Length - 1] == 'つ')
             {
-                //nasal sound change
-                newWord = newWord + "っ";
+                if (IsUOnbin(word))
+                    newWord = newWord + "う";
+                else   
+                    newWord = newWord + "っ";
             }
             else if (word[word.Length - 1] == 'ぬ' || word[word.Length - 1] == 'む' || word[word.Length - 1] == 'ぶ')
             {

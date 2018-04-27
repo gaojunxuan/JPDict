@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="JapaneseDict.App">
-      <uap:VisualElements DisplayName="Skylark JPDict - BETA" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="JapaneseDict" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Skylark JPDict" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="JapaneseDict" BackgroundColor="transparent">
         <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
         <uap:DefaultTile Square71x71Logo="Assets\Square71x71Logo.png">
           <uap:ShowNameOnTiles>

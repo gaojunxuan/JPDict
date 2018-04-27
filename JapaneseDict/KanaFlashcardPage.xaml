@@ -92,7 +92,7 @@
                                     <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="34" Width="40" Height="40" TextAlignment="Center">ゑ</TextBlock>
                                     <StackPanel Margin="20,0,0,0">
                                         <TextBlock Text="显示历史假名遣" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="歴史的仮名遣いの「ゐ」と「ゑ」を表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣での「ゐ」と「ゑ」を表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
                                 <Interactivity:Interaction.Behaviors>
@@ -109,7 +109,7 @@
                                     </Grid>
                                     <StackPanel Margin="20,0,0,0">
                                         <TextBlock Text="隐藏历史假名遣" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="歴史的仮名遣いの「ゐ」と「ゑ」を表示しない" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣での「ゐ」と「ゑ」を表示しない" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
                                 <Interactivity:Interaction.Behaviors>
@@ -260,7 +260,7 @@
                                     <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="34" Width="40" Height="40" TextAlignment="Center">ヱ</TextBlock>
                                     <StackPanel Margin="20,0,0,0">
                                         <TextBlock Text="显示历史假名遣" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="歴史的仮名遣い「ヰ」と「ヱ」を表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣での「ヰ」と「ヱ」を表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
                                 <Interactivity:Interaction.Behaviors>
@@ -277,7 +277,7 @@
                                     </Grid>
                                     <StackPanel Margin="20,0,0,0">
                                         <TextBlock Text="隐藏历史假名遣" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="歴史的仮名遣い「ヰ」と「ヱ」を表示しない" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        <TextBlock Text="歴史的仮名遣での「ヰ」と「ヱ」を表示しない" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
                                 <Interactivity:Interaction.Behaviors>
@@ -336,7 +336,7 @@
                                     <TextBlock Foreground="#FF00B294" FontSize="32" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0" Height="35"></TextBlock>
                                     <StackPanel Margin="20,0,0,0">
                                         <TextBlock Text="顺序浏览" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="順序で表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        <TextBlock Text="順番に表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
                                 <Interactivity:Interaction.Behaviors>

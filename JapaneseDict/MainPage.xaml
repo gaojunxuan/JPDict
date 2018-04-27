@@ -240,7 +240,7 @@
                                         <TextBlock FontSize="24">NHK 新闻</TextBlock>
                                         <TextBlock FontSize="8" FontFamily="Yu Gothic UI">NHK ニュース</TextBlock>
                                     </StackPanel>
-                                    <ListView SelectionMode="None" UseSystemFocusVisuals="False" Margin="4,8,0,0" ItemsSource="{Binding NHKNews}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
+                                    <ListView SelectionMode="None" UseSystemFocusVisuals="False" Margin="4,8,0,0" ItemsSource="{Binding NHKNews}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}" IsItemClickEnabled="True">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,0,24,0">
