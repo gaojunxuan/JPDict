@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
+using Windows.Web.Http;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
@@ -24,14 +24,10 @@ namespace JapaneseDict.OnlineService
             try
             {
                 var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(uri);
+                var response = await httpClient.GetAsync(new Uri(uri));
                 response.EnsureSuccessStatusCode();
                 var responseText = await response.Content.ReadAsStringAsync();
                 return responseText; 
-            }
-            catch(HttpRequestException)
-            {
-                return "";
             }
             catch
             {
@@ -51,34 +47,31 @@ namespace JapaneseDict.OnlineService
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 return jsonobj["trans_result"].GetArray().GetObjectAt(0).GetObject()["dst"].GetString(); 
             }
-            catch(HttpRequestException)
-            {
-                return "出现连接错误";
-            }
-            catch(Exception)
+            catch
             {
                 return "出现连接错误";
             }
         }
-        public static async Task<EverydaySentence> GetEverydaySentence(DateTime date,int index)
-        {
-            try
-            {
-                string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/EverydayJapanese?datestr=" + date.ToString("yyyyMMdd"));
-                JsonObject resultobj = JsonObject.Parse(jsonStr);
-                return new EverydaySentence() { JpText= resultobj["sentence"].GetString(), CnText= resultobj["trans"].GetString(), AudioUri=new Uri(resultobj["audio"].GetString()),NotesOnText= resultobj["sentencePoint"].GetString(), Author= resultobj["creator"].GetString(),BackgroundImage=new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg",UriKind.RelativeOrAbsolute)) };
-            }
-            catch(Exception)
-            {
-                return new EverydaySentence() { JpText = "出现错误", CnText = "请确认您是否已连接到互联网", BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
-            }
+        //public static async Task<EverydaySentence> GetEverydaySentence(DateTime date,int index)
+        //{
+        //    try
+        //    {
+        //        string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/EverydayJapanese?datestr=" + date.ToString("yyyyMMdd"));
+        //        JsonObject resultobj = JsonObject.Parse(jsonStr);
+        //        return new EverydaySentence() { JpText= resultobj["sentence"].GetString(), CnText= resultobj["trans"].GetString(), AudioUri=new Uri(resultobj["audio"].GetString()),NotesOnText= resultobj["sentencePoint"].GetString(), Author= resultobj["creator"].GetString(),BackgroundImage=new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg",UriKind.RelativeOrAbsolute)) };
+        //    }
+        //    catch(Exception)
+        //    {
+        //        return new EverydaySentence() { JpText = "出现错误", CnText = "请确认您是否已连接到互联网", BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
+        //    }
             
-        }
+        //}
         public static async Task<EverydaySentence> GetEverydaySentence(int index)
         {
             try
             {
-                string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/EverydayJapanese?index=" +index);
+                //string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/EverydayJapanese?index=" +index);
+                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetDailySentence?code=/BiWp6KIaa4DJ5fP5n4CfG6KxD9DRHqc2Wwosiw2tKAoPADvDtizEw==&index=" + index);
                 JsonObject resultobj = JsonObject.Parse(jsonStr);
                 return new EverydaySentence() { JpText = resultobj["sentence"].GetString(), CnText = resultobj["trans"].GetString(), AudioUri = new Uri(resultobj["audio"].GetString()), NotesOnText = resultobj["sentencePoint"].GetString(), Author = resultobj["creator"].GetString(), BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
             }
@@ -91,26 +84,22 @@ namespace JapaneseDict.OnlineService
         {
             try
             {
-                string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/NHKNews");
+                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=G6TCeDVc9HGW8TU7C6pGEv2Ivfuoxy/aY22TSaLNa/9LF/y9WfLJrQ==");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 var resultarritem = jsonobj["data"].GetObject()["item"].GetArray()[index];
                 NHKNews res = new NHKNews() {Title=resultarritem.GetObject()["title"].GetString(),Link= new Uri(resultarritem.GetObject()["link"].GetString()),IconPath=new Uri(resultarritem.GetObject()["iconPath"].GetString()),VideoPath=new Uri(resultarritem.GetObject()["videoPath"].GetString()) };
                 return res;
             }
-            catch (HttpRequestException)
-            {
-                return new NHKNews() { Title = "出现连接错误",IconPath=new Uri("ms-appx:///Assets/connectionerr.png",UriKind.RelativeOrAbsolute)};
-            }
             catch (Exception)
             {
-                return new NHKNews() { Title = "出现连接错误",IconPath=new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) };
+                return new NHKNews() { Title = "出现连接错误",IconPath=new Uri("ms-appx:///Assets/connectionerr.png",UriKind.RelativeOrAbsolute)};
             }
         }
         public static async Task<List<NHKNews>> GetNHKNews()
         {
             try
             {
-                string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/NHKNews");
+                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=G6TCeDVc9HGW8TU7C6pGEv2Ivfuoxy/aY22TSaLNa/9LF/y9WfLJrQ==");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 var resultarritem = jsonobj["data"].GetObject()["item"].GetArray();
                 List<NHKNews> res = new List<NHKNews>();
@@ -120,21 +109,12 @@ namespace JapaneseDict.OnlineService
                 }
                 return res;
             }
-            catch (HttpRequestException)
+            catch
             {
                 var err = new List<NHKNews>();
                 for(int i=0;i<10;i++)
                 {
-                    err.Add(new NHKNews() { Title = "出现连接错误", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
-                }
-                return err;
-            }
-            catch (Exception)
-            {
-                var err = new List<NHKNews>();
-                for (int i = 0; i < 10; i++)
-                {
-                    err.Add(new NHKNews() { Title = "出现连接错误", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
+                    err.Add(new NHKNews() { Title = "出现错误", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
                 }
                 return err;
             }
@@ -143,16 +123,12 @@ namespace JapaneseDict.OnlineService
         {
             try
             {
-                string jsonStr = await GetJsonString($"http://skylarkwsp-services.azurewebsites.net/api/NHKListening?speed={speed}&index={index}");
+                string jsonStr = await GetJsonString($"http://api.skylark-workshop.xyz/api/GetNHKRadio?code=Lwgwi3BFqmOzq/C7SIAaN1kK/GpiDtppAfr0X3MXklpp057unrBmHQ==&speed={speed}&index={index}");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 NHKRadios res = new NHKRadios() { Title = jsonobj["title"].GetString(), StartDate = jsonobj["startdate"].GetString(), EndDate = jsonobj["enddate"].GetString(), SoundUrl = new Uri(jsonobj["soundurl"].GetString()) };
                 return res;
             }
-            catch (HttpRequestException)
-            {
-                return new NHKRadios() { Title = "出现连接错误", StartDate = "请确认您是否已连接到互联网" };
-            }
-            catch (Exception)
+            catch
             {
                 return new NHKRadios() { Title = "出现连接错误", StartDate = "请确认您是否已连接到互联网" };
             }
@@ -161,7 +137,7 @@ namespace JapaneseDict.OnlineService
         {
             try
             {
-                return Int32.Parse(await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/NHKListening?getItemsCount=true"));
+                return Int32.Parse(await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKRadio?code=Lwgwi3BFqmOzq/C7SIAaN1kK/GpiDtppAfr0X3MXklpp057unrBmHQ==&getItemsCount=true"));
 
             }
             catch

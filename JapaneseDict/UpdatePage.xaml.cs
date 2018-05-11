@@ -22,7 +22,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using JapaneseDict.OnlineService;
-using SQLite.Net;
 using Windows.Storage;
 using System.Threading.Tasks;
 using JapaneseDict.GUI.Helpers;

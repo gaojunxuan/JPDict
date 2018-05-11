@@ -2,7 +2,6 @@
 using JapaneseDict.GUI;
 using Microsoft.ApplicationInsights;
 using Microsoft.WindowsAzure.MobileServices;
-using SQLite.Net;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,6 +29,9 @@ using JapaneseDict.OnlineService;
 using Windows.UI.Core;
 using Windows.Phone.UI.Input;
 using JapaneseDict.GUI.Helpers;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 
@@ -71,7 +73,7 @@ namespace JapaneseDict
             }
         }
 
-        private async void InitNotificationsAsync()
+        private async void InitOnlineServiceAsync()
         {
             try
             {
@@ -86,6 +88,7 @@ namespace JapaneseDict
                 var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
                 var hub = new NotificationHub("jpdictHub", "Endpoint=sb://jpdictnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=b7P3q6gSzqgLDiCIFOv8q62J7EUft7RQr3F6TEIfXMg=");
                 var result = await hub.RegisterNativeAsync(channel.Uri);
+                AppCenter.Start("de248288-41ba-4ca6-b857-4bfaa6758c63", typeof(Analytics),typeof(Push));
             }
             catch
             {
@@ -123,7 +126,7 @@ namespace JapaneseDict
 #endif
             
             CopyMainDb();
-            InitNotificationsAsync();
+            InitOnlineServiceAsync();
             //StoreServicesEngagementManager mgr=StoreServicesEngagementManager.GetDefault();
             //await mgr.RegisterNotificationChannelAsync();
             //Init MVVM-Sidekick Navigations:
@@ -176,7 +179,7 @@ namespace JapaneseDict
                 Frame rootFrame = Window.Current.Content as Frame;
 
                 CopyMainDb();
-                InitNotificationsAsync();
+                InitOnlineServiceAsync();
                 InitNavigationConfigurationInThisAssembly();
                 // Do not repeat app initialization when the Window already has content,
                 // just ensure that the window is active

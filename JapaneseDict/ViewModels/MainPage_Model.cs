@@ -10,6 +10,7 @@ using JapaneseDict.Models;
 using JapaneseDict.OnlineService;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -34,6 +35,7 @@ namespace JapaneseDict.GUI.ViewModels
             for (int i = 0; i < 3; i++)
             {
                 this.EverdaySentenceList.Add((await JapaneseDict.OnlineService.JsonHelper.GetEverydaySentence(i)));
+                await Task.Delay(100);
             }
         }
         async void GetNHKNews()

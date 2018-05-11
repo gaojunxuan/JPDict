@@ -7,15 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using JapaneseDict.QueryEngine;
 using static JapaneseDict.QueryEngine.QueryEngine;
-using SQLite.Net;
 using System.IO;
 using Windows.Storage;
+using SQLite;
 
 namespace JapaneseDict.OnlineService
 {
     public class OnlineUpdate
     {
-        private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db"));
+        private static SQLiteConnection _conn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db"));
 
         private static async Task<string> GetJsonString(string uri)
         {
