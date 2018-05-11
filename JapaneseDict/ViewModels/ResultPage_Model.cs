@@ -431,60 +431,6 @@ namespace JapaneseDict.GUI.ViewModels
             };
         #endregion
 
-        #region Obsoleted Code
-        //public string JpChar
-        //{
-        //    get { return _JpCharLocator(this).Value; }
-        //    set { _JpCharLocator(this).SetValueAndTryNotify(value); }
-        //}
-        //#region Property string JpChar Setup        
-        //protected Property<string> _JpChar = new Property<string> { LocatorFunc = _JpCharLocator };
-        //static Func<BindableBase, ValueContainer<string>> _JpCharLocator = RegisterContainerLocator<string>(nameof(JpChar), model => model.Initialize(nameof(JpChar), ref model._JpChar, ref _JpCharLocator, _JpCharDefaultValueFactory));
-        //static Func<BindableBase, string> _JpCharDefaultValueFactory =
-        //    model =>
-        //    {
-        //        var vm = CastToCurrentType(model);
-        //        //TODO: Add the logic that produce default value from vm current status.
-        //        return default(string);
-        //    };
-        //#endregion
-
-
-        //public string Kana
-        //{
-        //    get { return _KanaLocator(this).Value; }
-        //    set { _KanaLocator(this).SetValueAndTryNotify(value); }
-        //}
-        //#region Property string Kana Setup        
-        //protected Property<string> _Kana = new Property<string> { LocatorFunc = _KanaLocator };
-        //static Func<BindableBase, ValueContainer<string>> _KanaLocator = RegisterContainerLocator<string>(nameof(Kana), model => model.Initialize(nameof(Kana), ref model._Kana, ref _KanaLocator, _KanaDefaultValueFactory));
-        //static Func<BindableBase, string> _KanaDefaultValueFactory =
-        //    model =>
-        //    {
-        //        var vm = CastToCurrentType(model);
-        //        //TODO: Add the logic that produce default value from vm current status.
-        //        return default(string);
-        //    };
-        //#endregion
-
-
-        //public string Explanation
-        //{
-        //    get { return _ExplanationLocator(this).Value; }
-        //    set { _ExplanationLocator(this).SetValueAndTryNotify(value); }
-        //}
-        //#region Property string Explanation Setup        
-        //protected Property<string> _Explanation = new Property<string> { LocatorFunc = _ExplanationLocator };
-        //static Func<BindableBase, ValueContainer<string>> _ExplanationLocator = RegisterContainerLocator<string>(nameof(Explanation), model => model.Initialize(nameof(Explanation), ref model._Explanation, ref _ExplanationLocator, _ExplanationDefaultValueFactory));
-        //static Func<BindableBase, string> _ExplanationDefaultValueFactory =
-        //    model =>
-        //    {
-        //        var vm = CastToCurrentType(model);
-        //        //TODO: Add the logic that produce default value from vm current status.
-        //        return default(string);
-        //    };
-        //#endregion
-        #endregion
         public CommandModel<ReactiveCommand, String> CommandSpeak
         {
             get { return _CommandSpeakLocator(this).Value; }
@@ -506,13 +452,7 @@ namespace JapaneseDict.GUI.ViewModels
                         vm,
                         async e =>
                         {
-                            ///obsoleted: azure marketplace secret
-                            //const string CLIENT_ID = "skylark_jpdict";
-                            //const string CLIENT_SECRET = "uzHa5qUm4+GehYnL2pMIw8XtNox8sbqGNq7S+UiM6bk=";
-                            //const string CLIENT_ID = "skylarkjpdict";
                             const string CLIENT_SECRET = "80d5b0ade63946efb57fd09d1d1db6fb";
-                            //0bbdd2908cba434696291ae3c68d1ff6
-                            //const string CLIENT_SECRET = "b155421d3d7746ebbfcb2e7922b60a87";
                             try
                             {
                                 SpeechSynthesizer speech = new SpeechSynthesizer(CLIENT_SECRET);

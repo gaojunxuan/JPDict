@@ -27,6 +27,7 @@
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxBundle>Always</AppxBundle>
     <RuntimeIdentifiers>win10-arm;win10-arm-aot;win10-x86;win10-x86-aot;win10-x64;win10-x64-aot</RuntimeIdentifiers>
+    <HockeyAppResourceId>4d0ddb67a4144b2ca638f5adf7a09801</HockeyAppResourceId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -133,6 +134,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Connected Services\HockeyApp\ConnectedService.json" />
     <None Include="JapaneseDict.GUI_StoreKey.pfx" />
     <None Include="JapaneseDict.GUI_TemporaryKey.pfx" />
     <None Include="JapaneseDict_StoreKey.pfx" />
@@ -161,9 +163,6 @@
       <DependentUpon>KanjiFlashcardPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\GroupedNoteItem.cs" />
-    <Compile Include="FeedbackPage.xaml.cs">
-      <DependentUpon>FeedbackPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Helpers\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\BooleanToVisibilityNegateConverter.cs" />
     <Compile Include="Helpers\StringEquationToBoolConverter.cs" />
@@ -191,7 +190,6 @@
     <Compile Include="UpdatePage.xaml.cs">
       <DependentUpon>UpdatePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\FeedbackPage_Model.cs" />
     <Compile Include="ViewModels\HiraganaRecitePage_Model.cs" />
     <Compile Include="ViewModels\KanaFlashcardPage_Model.cs" />
     <Compile Include="ViewModels\KanjiFlashcardPage_Model.cs" />
@@ -224,10 +222,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="FeedbackPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="KanaFlashcardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -293,6 +287,9 @@
     <PackageReference Include="CommonServiceLocator">
       <Version>1.3.0</Version>
     </PackageReference>
+    <PackageReference Include="HockeySDK.UWP">
+      <Version>4.1.3</Version>
+    </PackageReference>
     <PackageReference Include="JYAdControl">
       <Version>2.3.6</Version>
     </PackageReference>
@@ -356,6 +353,9 @@
     <PackageReference Include="WindowsAzure.Messaging.Managed">
       <Version>0.1.7.9</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

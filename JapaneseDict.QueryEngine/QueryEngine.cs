@@ -73,45 +73,6 @@ namespace JapaneseDict.QueryEngine
                 });
 
             }
-            //public static async Task<ObservableCollection<MainDict>> QueryCn2JpForUIAsync(string key)
-            //{
-            //    return await Task.Run(() =>
-            //    {
-            //        if (!(string.IsNullOrEmpty(key)))
-            //        {
-            //            //@"\[[^\]]+\]" Regex pat for removing [XXX]
-            //            //@"[\（][\s\S]*[\）]" Regex pat for removing （XXX）
-            //            var queryres = _conn.Table<MainDict>().Select(s => s).Where(w =>
-            //            {
-            //                string a = Regex.Replace(Regex.Replace(w.PreviewExplanation, @"\[[^\]]+\]", ""), @"[\（][\s\S]*[\）]", "");
-            //                if (a.Contains(key + "；") || a.Contains(key + "，") || w.PreviewExplanation.EndsWith("] " + key + " ..."))
-            //                {
-            //                    return true;
-            //                }
-            //                return false;
-            //            });
-            //            var result = new ObservableCollection<MainDict>(queryres);
-
-            //            if (result.Count != 0)
-            //            {
-            //                return result;
-            //            }
-            //            else
-            //            {
-            //                var err = new ObservableCollection<MainDict>
-            //                {
-            //                    new MainDict() { JpChar = key, Explanation = "没有本地释义" }
-            //                };
-            //                return err;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            return new ObservableCollection<MainDict>();
-            //        }
-            //    });
-
-            //}
             /// <summary>
             /// Query MainDict database using given index and return the result in ObservableCollection type
             /// </summary>
@@ -164,10 +125,6 @@ namespace JapaneseDict.QueryEngine
                         return new ObservableCollection<MainDict>();
                     }
                 });
-            }
-            public static ObservableCollection<MainDict> GetTable()
-            {
-                return new ObservableCollection<MainDict>(_conn.Table<MainDict>());
             }
             private static void CloseConnection()
             {
