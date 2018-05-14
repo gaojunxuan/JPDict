@@ -176,7 +176,6 @@
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Startups\FeedbackPage.cs" />
     <Compile Include="Startups\KanaFlashcardPage.cs" />
     <Compile Include="Startups\KanjiFlashcardPage.cs" />
     <Compile Include="Startups\NotebookPage.cs" />

@@ -63,8 +63,8 @@
                     <TextBlock Text="词库完善计划" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
                     <StackPanel Orientation="Horizontal">
-                        <Button Name="update_Btn" Content="更新词库" Background="#FF00B294" Foreground="White" FontSize="18" Command="{Binding CommandUpdateDict}" Margin="0,12,0,0"></Button>
-                        <ProgressRing Margin="20,12,0,0" IsActive="{Binding ElementName=update_Btn,Path=IsEnabled,Converter={StaticResource boolnegConverter}}" Foreground="#00b294"/>
+                        <Button Name="update_Btn" Content="更新词库" Background="#FF00B294" Foreground="White" FontSize="18" Command="{Binding CommandUpdateDict}" Margin="0,0,0,0"></Button>
+                        <ProgressRing Margin="20,0,0,0" IsActive="{Binding ElementName=update_Btn,Path=IsEnabled,Converter={StaticResource boolnegConverter}}" Foreground="#00b294"/>
                     </StackPanel>
                     <TextBlock Margin="0,12,0,24" Text="由于可供使用的日语离线词库仍然很少，本应用中的离线词库仍不完善。如果您发现哪个词的释义有问题，或没有在词库中查找到您所需的词，请及时告知我们，我们会在今后的版本中逐渐完善离线词库。谢谢！" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
                 </StackPanel>

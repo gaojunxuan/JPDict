@@ -564,49 +564,7 @@ namespace JapaneseDict.GUI.ViewModels
             };
 
         #endregion
-
-        public CommandModel<ReactiveCommand, String> CommandSendFeedback
-        {
-            get { return _CommandSendFeedbackLocator(this).Value; }
-            set { _CommandSendFeedbackLocator(this).SetValueAndTryNotify(value); }
-        }
-        #region Property CommandModel<ReactiveCommand, String> CommandSendFeedback Setup        
-
-        protected Property<CommandModel<ReactiveCommand, String>> _CommandSendFeedback = new Property<CommandModel<ReactiveCommand, String>> { LocatorFunc = _CommandSendFeedbackLocator };
-        static Func<BindableBase, ValueContainer<CommandModel<ReactiveCommand, String>>> _CommandSendFeedbackLocator = RegisterContainerLocator<CommandModel<ReactiveCommand, String>>(nameof(CommandSendFeedback), model => model.Initialize(nameof(CommandSendFeedback), ref model._CommandSendFeedback, ref _CommandSendFeedbackLocator, _CommandSendFeedbackDefaultValueFactory));
-        static Func<BindableBase, CommandModel<ReactiveCommand, String>> _CommandSendFeedbackDefaultValueFactory =
-            model =>
-            {
-                var resource = nameof(CommandSendFeedback);           // Command resource  
-                var commandId = nameof(CommandSendFeedback);
-                var vm = CastToCurrentType(model);
-                var cmd = new ReactiveCommand(canExecute: true) { ViewModel = model }; //New Command Core
-
-                cmd.DoExecuteUIBusyTask(
-                        vm,
-                        async e =>
-                        {
-                            if(!string.IsNullOrWhiteSpace(e.EventArgs.Parameter.ToString()))
-                            {
-                                (Window.Current.Content as Frame).Navigate(typeof(FeedbackPage), e.EventArgs.Parameter.ToString());
-                            }
-                            //Todo: Add SendFeedback logic here, or
-                            await MVVMSidekick.Utilities.TaskExHelper.Yield();
-                        })
-                    .DoNotifyDefaultEventRouter(vm, commandId)
-                    .Subscribe()
-                    .DisposeWith(vm);
-
-                var cmdmdl = cmd.CreateCommandModel(resource);
-
-                cmdmdl.ListenToIsUIBusy(
-                    model: vm,
-                    canExecuteWhenBusy: false);
-                return cmdmdl;
-            };
-
-        #endregion
-
+ 
         public ObservableCollection<OnlineDict> OnlineResult
         {
             get { return _OnlineResultLocator(this).Value; }
