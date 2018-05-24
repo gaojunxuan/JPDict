@@ -120,6 +120,7 @@
     <Compile Include="Models\NHKRadios.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="NoteSync.cs" />
+    <Compile Include="OAuthBase.cs" />
     <Compile Include="OnlineQuery.cs" />
     <Compile Include="OnlineUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

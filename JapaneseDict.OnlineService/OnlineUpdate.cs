@@ -10,12 +10,13 @@ using static JapaneseDict.QueryEngine.QueryEngine;
 using System.IO;
 using Windows.Storage;
 using SQLite;
+using SQLite.Net;
 
 namespace JapaneseDict.OnlineService
 {
     public class OnlineUpdate
     {
-        private static SQLiteConnection _conn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db"));
+        private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db"));
 
         private static async Task<string> GetJsonString(string uri)
         {

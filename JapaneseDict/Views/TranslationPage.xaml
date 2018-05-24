@@ -1,0 +1,143 @@
+﻿<Page 
+    x:Name="pageRoot"
+    x:Class="JapaneseDict.GUI.TranslationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:JapaneseDict.GUI"   
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:converter="using:JapaneseDict.GUI.Helpers"
+    DataContext="{Binding TranslationViewModel, Source={StaticResource Locator}}">
+
+    <Page.Resources>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
+        <converter:StringEquationToBoolConverter x:Key="strEquationConverter"/>
+    </Page.Resources>
+    
+    <Grid RequestedTheme="Light">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="SizeStateGroup">
+                <VisualState x:Name="Widest1200State">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="resultTbx.Width" Value="550" />
+                        <Setter Target="originTbx.Width" Value="550" />
+                        <Setter Target="resultTbx.Height" Value="700" />
+                        <Setter Target="originTbx.Height" Value="700" />
+                        <Setter Target="resultTbx.Margin" Value="20,0,0,0" />
+                        <Setter Target="resultTbx.(RelativePanel.RightOf)" Value="originTbx" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Wide1000State">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="resultTbx.Width" Value="470" />
+                        <Setter Target="originTbx.Width" Value="470" />
+                        <Setter Target="resultTbx.Height" Value="500" />
+                        <Setter Target="originTbx.Height" Value="500" />
+                        <Setter Target="resultTbx.Margin" Value="20,0,0,0" />
+                        <Setter Target="resultTbx.(RelativePanel.RightOf)" Value="originTbx" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Medium800State">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="resultTbx.Width" Value="370" />
+                        <Setter Target="originTbx.Width" Value="370" />
+                        <Setter Target="resultTbx.Height" Value="500" />
+                        <Setter Target="originTbx.Height" Value="500" />
+                        <Setter Target="resultTbx.Margin" Value="20,0,0,0" />
+                        <Setter Target="resultTbx.(RelativePanel.RightOf)" Value="originTbx" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow600State">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="resultTbx.Width" Value="270" />
+                        <Setter Target="originTbx.Width" Value="270" />
+                        <Setter Target="resultTbx.Height" Value="500" />
+                        <Setter Target="originTbx.Height" Value="500" />
+                        <Setter Target="resultTbx.Margin" Value="20,0,0,0" />
+                        <Setter Target="resultTbx.(RelativePanel.RightOf)" Value="originTbx" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow590State">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="590" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="resultTbx.Width" Value="550" />
+                        <Setter Target="originTbx.Width" Value="550" />
+                        <Setter Target="resultTbx.Height" Value="350" />
+                        <Setter Target="originTbx.Height" Value="350" />
+                        <Setter Target="resultTbx.Margin" Value="0,20,0,0" />
+                        <Setter Target="resultTbx.(RelativePanel.Below)" Value="originTbx" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow400State">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="400" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="resultTbx.Width" Value="380" />
+                        <Setter Target="originTbx.Width" Value="380" />
+                        <Setter Target="resultTbx.Height" Value="350" />
+                        <Setter Target="originTbx.Height" Value="350" />
+                        <Setter Target="resultTbx.Margin" Value="0,20,0,0" />
+                        <Setter Target="resultTbx.(RelativePanel.Below)" Value="originTbx" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrowest0State">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="resultTbx.Width" Value="250" />
+                        <Setter Target="originTbx.Width" Value="250" />
+                        <Setter Target="resultTbx.Height" Value="350" />
+                        <Setter Target="originTbx.Height" Value="350" />
+                        <Setter Target="resultTbx.Margin" Value="0,20,0,0" />
+                        <Setter Target="resultTbx.(RelativePanel.Below)" Value="originTbx" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <ScrollViewer>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                    <RadioButton x:Name="Jp2CnTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=jp}" Content="日→汉" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black"></RadioButton>
+                    <RadioButton x:Name="Cn2JpTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=zh}" Content="汉→日" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black"></RadioButton>
+
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                    <Button x:Name="Trans_Btn"  Margin="0,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Command="{Binding TranslateCommand}" CommandParameter="{Binding ElementName=originTbx,Path=Text}">翻译</Button>
+                    <Button x:Name="ClearTrans_Btn"  Margin="10,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Click="ClearTrans_Btn_Click">清空</Button>
+                    <Button x:Name="CopyTransResult_Btn"  Margin="10.1,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Click="CopyTransResult_Btn_Click">复制结果</Button>
+                </StackPanel>
+
+                <RelativePanel Margin="10,20,20,20" Width="1418" HorizontalAlignment="Left">
+
+                    <TextBox FontFamily="Yu Gothic UI" x:Name="originTbx"  Height="400"  Header="原文"  PlaceholderText="请键入原文" TextWrapping="Wrap" AcceptsReturn="True" Margin="0" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294"></TextBox>
+                    <TextBox x:Name="resultTbx" Height="400" Width="300" Header="结果" PlaceholderText="结果啊 QAQ" TextWrapping="Wrap" Text="{Binding TranslationResult}" Style="{StaticResource TranslateTextBoxStyle}" IsReadOnly="True" SelectionHighlightColor="#FF00B294"></TextBox>
+
+                </RelativePanel>
+            </StackPanel>
+
+        </ScrollViewer>
+    </Grid>
+</Page>

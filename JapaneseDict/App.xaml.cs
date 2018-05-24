@@ -1,8 +1,5 @@
-﻿using JapaneseDict.Models;
-using JapaneseDict.GUI;
-using Microsoft.ApplicationInsights;
+﻿using Microsoft.ApplicationInsights;
 using Microsoft.HockeyApp;
-using Microsoft.WindowsAzure.MobileServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,18 +26,25 @@ using Windows.UI.Notifications;
 using JapaneseDict.OnlineService;
 using Windows.UI.Core;
 using Windows.Phone.UI.Input;
-using JapaneseDict.GUI.Helpers;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+using JapaneseDict.GUI.Services;
+using Microsoft.AppCenter.Push;
+using Microsoft.AppCenter.Crashes;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
-namespace JapaneseDict
+namespace JapaneseDict.GUI
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application
     {
+        private Lazy<ActivationService> _activationService;
+        private ActivationService ActivationService
+        {
+            get { return _activationService.Value; }
+        }
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -50,6 +54,7 @@ namespace JapaneseDict
             Microsoft.HockeyApp.HockeyClient.Current.Configure("4d0ddb67a4144b2ca638f5adf7a09801");
             WindowsAppInitializer.InitializeAsync();
             this.InitializeComponent();
+            _activationService = new Lazy<ActivationService>(CreateActivationService);
             this.Suspending += OnSuspending;
         }
 
@@ -75,7 +80,7 @@ namespace JapaneseDict
             }
         }
 
-        private async void InitOnlineServiceAsync()
+        private void InitOnlineServiceAsync()
         {
             try
             {
@@ -88,10 +93,11 @@ namespace JapaneseDict
                     tileUpdater.RemoveFromSchedule(plannedUpdated[i]);
                 }
 
-                var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-                var hub = new NotificationHub("jpdictHub", "Endpoint=sb://jpdictnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=b7P3q6gSzqgLDiCIFOv8q62J7EUft7RQr3F6TEIfXMg=");
-                var result = await hub.RegisterNativeAsync(channel.Uri);
-                AppCenter.Start("de248288-41ba-4ca6-b857-4bfaa6758c63", typeof(Analytics), typeof(Push));
+                //var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+                //var hub = new NotificationHub("jpdictHub", "Endpoint=sb://jpdictnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=b7P3q6gSzqgLDiCIFOv8q62J7EUft7RQr3F6TEIfXMg=");
+                //var result = await hub.RegisterNativeAsync(channel.Uri);
+                //AppCenter.Configure("de248288-41ba-4ca6-b857-4bfaa6758c63");
+                AppCenter.Start("de248288-41ba-4ca6-b857-4bfaa6758c63", typeof(Analytics), typeof(Crashes), typeof(Push));
             }
             catch
             {
@@ -106,18 +112,12 @@ namespace JapaneseDict
         //}
         }
 
-        public static void InitNavigationConfigurationInThisAssembly()
-        {
-            MVVMSidekick.Startups.StartupFunctions.RunAllConfig();
-        }
-
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name = "e">Details about the launch request and process.</param>
-        public static MobileServiceClient MobileService = new MobileServiceClient("https://skylarkjpdict.azurewebsites.net");
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -128,54 +128,28 @@ namespace JapaneseDict
 #endif
             CopyMainDb();
             InitOnlineServiceAsync();
-            //StoreServicesEngagementManager mgr=StoreServicesEngagementManager.GetDefault();
-            //await mgr.RegisterNotificationChannelAsync();
-            //Init MVVM-Sidekick Navigations:
-            InitNavigationConfigurationInThisAssembly();
-            Frame rootFrame = Window.Current.Content as Frame;
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
+            Helpers.ThemeHelper.SetThemeForJPDict();
+            if (!e.PrelaunchActivated)
             {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
-                rootFrame.NavigationFailed += OnNavigationFailed;
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                //TODO: Load state from previously suspended application
-                }
-
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
+                await ActivationService.ActivateAsync(e);
             }
-
-            if (rootFrame.Content == null)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                UpdatePromptHelper.LoadState();
-                if (UpdatePromptHelper.Updated)
-                    rootFrame.Navigate(typeof(UpdatePage));
-                else
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-            }
-
-            rootFrame.Navigated += OnNavigated;
-            // Ensure the current window is active
-            Window.Current.Activate();
         }
 
-        protected override void OnActivated(IActivatedEventArgs args)
+        private ActivationService CreateActivationService()
+        {
+            return new ActivationService(this, typeof(ViewModels.MainViewModel));
+        }
+        protected override async void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
+            await ActivationService.ActivateAsync(args);
             if (args is ToastNotificationActivatedEventArgs)
             {
                 var toastActivationArgs = args as ToastNotificationActivatedEventArgs;
                 Frame rootFrame = Window.Current.Content as Frame;
                 CopyMainDb();
                 InitOnlineServiceAsync();
-                InitNavigationConfigurationInThisAssembly();
+                Helpers.ThemeHelper.SetThemeForJPDict();
                 // Do not repeat app initialization when the Window already has content,
                 // just ensure that the window is active
                 if (rootFrame == null)

@@ -45,7 +45,9 @@ namespace JapaneseDict.Util
             }
             else
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 request.FailWithDisplayText("出现错误，请稍后重试");
+#pragma warning restore CS0618 // Type or member is obsolete
             }
             return succeeded;
         }
