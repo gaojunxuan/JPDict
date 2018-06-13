@@ -26,7 +26,8 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.Foundation;
-using System.Net.Http;
+using Windows.Web.Http;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace JapaneseDict.OnlineService
 {
@@ -230,133 +231,141 @@ namespace JapaneseDict.OnlineService
         /// </remarks>    
         public IAsyncOperation<IEnumerable<string>> GetLanguagesAsync()
         {
-            return this.GetLanguagesAsyncHelper().AsAsyncOperation();
+            return GetLanguagesAsyncHelper().AsAsyncOperation();
         }
 
         private async Task<IEnumerable<string>> GetLanguagesAsyncHelper()
         {
             // Check if it is necessary to obtain/update access token.
-            await this.UpdateToken();
+            await UpdateToken();
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(BASE_URL);
             client.DefaultRequestHeaders.Add(AUTHORIZATION_HEADER, headerValue);
-            using (Stream stream = await client.GetStreamAsync(LANGUAGES_URI))
+            var reqResult= await client.GetAsync(new Uri(BASE_URL + LANGUAGES_URI));
+            if(reqResult.IsSuccessStatusCode)
             {
-                DataContractSerializer dcs = new DataContractSerializer(typeof(string[]));
-                string[] results = (string[])dcs.ReadObject(stream);
-
-                return results.AsEnumerable();
+                var inputSream = await reqResult.Content.ReadAsInputStreamAsync();
+                using (Stream stream = inputSream.AsStreamForRead())
+                {
+                    DataContractSerializer dcs = new DataContractSerializer(typeof(string[]));
+                    string[] results = (string[])dcs.ReadObject(stream);
+                    return results.AsEnumerable();
+                }
             }
+            else
+            {
+                return new List<string>() { "ERROR" };
+            }
+            
         }
 
         #endregion
 
         #region Translate
 
-        /// <summary>
-        /// Translates a text string into the language specified in the <seealso cref="Language"/> property.
-        /// </summary>
-        /// <returns>A string representing the translated text.</returns>
-        /// <param name="text">A string representing the text to translate.</param>
-        /// <exception cref="ArgumentException">
-        /// <list type="bullet">
-        /// <term>The <see cref="ClientID"/> or <see cref="ClientSecret"/> properties haven't been set.</term>
-        /// <term>The <paramref name="text"/> parameter is longer than 1000 characters.</term>
-        /// </list>
-        /// </exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="text"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) or empty.</exception>
-        /// <remarks><para>This method perform a non-blocking request for translation.</para>
-        /// <para>For more information, go to http://msdn.microsoft.com/en-us/library/ff512421.aspx.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="Language"/>   
-        public IAsyncOperation<string> TranslateAsync(string text)
-        {
-            return this.TranslateAsyncHelper(text).AsAsyncOperation();
-        }
+        ///// <summary>
+        ///// Translates a text string into the language specified in the <seealso cref="Language"/> property.
+        ///// </summary>
+        ///// <returns>A string representing the translated text.</returns>
+        ///// <param name="text">A string representing the text to translate.</param>
+        ///// <exception cref="ArgumentException">
+        ///// <list type="bullet">
+        ///// <term>The <see cref="ClientID"/> or <see cref="ClientSecret"/> properties haven't been set.</term>
+        ///// <term>The <paramref name="text"/> parameter is longer than 1000 characters.</term>
+        ///// </list>
+        ///// </exception>
+        ///// <exception cref="ArgumentNullException">The <paramref name="text"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) or empty.</exception>
+        ///// <remarks><para>This method perform a non-blocking request for translation.</para>
+        ///// <para>For more information, go to http://msdn.microsoft.com/en-us/library/ff512421.aspx.
+        ///// </para>
+        ///// </remarks>
+        ///// <seealso cref="Language"/>   
+        //public IAsyncOperation<string> TranslateAsync(string text)
+        //{
+        //    return this.TranslateAsyncHelper(text).AsAsyncOperation();
+        //}
 
-        private async Task<string> TranslateAsyncHelper(string text)
-        {
-            return await this.TranslateAsync(text, Language);
-        }
+        //private async Task<string> TranslateAsyncHelper(string text)
+        //{
+        //    return await this.TranslateAsync(text, Language);
+        //}
 
-        /// <summary>
-        /// Translates a text string into the specified language.
-        /// </summary>
-        /// <returns>A string representing the translated text.</returns>
-        /// <param name="text">A string representing the text to translate.</param>
-        /// <param name="to">A string representing the language code to translate the text into. The code must be present in the list of codes returned from the <see cref="GetLanguagesAsync"/> method.</param>
-        /// <exception cref="ArgumentException">
-        /// <list type="bullet">
-        /// <term>The <see cref="ClientID"/> or <see cref="ClientSecret"/> properties haven't been set.</term>
-        /// <term>The <paramref name="text"/> parameter is longer than 1000 characters.</term>
-        /// </list>
-        /// </exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="text"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) or empty.</exception>
-        /// <remarks><para>This method perform a non-blocking request for translation.</para>
-        /// <para>For more information, go to http://msdn.microsoft.com/en-us/library/ff512421.aspx.
-        /// </para>
-        /// </remarks>
-        /// <seealso cref="Language"/>  
-        public IAsyncOperation<string> TranslateAsync(string text, string to)
-        {
-            return this.TranslateAsyncHelper(text, to).AsAsyncOperation();
-        }
+        ///// <summary>
+        ///// Translates a text string into the specified language.
+        ///// </summary>
+        ///// <returns>A string representing the translated text.</returns>
+        ///// <param name="text">A string representing the text to translate.</param>
+        ///// <param name="to">A string representing the language code to translate the text into. The code must be present in the list of codes returned from the <see cref="GetLanguagesAsync"/> method.</param>
+        ///// <exception cref="ArgumentException">
+        ///// <list type="bullet">
+        ///// <term>The <see cref="ClientID"/> or <see cref="ClientSecret"/> properties haven't been set.</term>
+        ///// <term>The <paramref name="text"/> parameter is longer than 1000 characters.</term>
+        ///// </list>
+        ///// </exception>
+        ///// <exception cref="ArgumentNullException">The <paramref name="text"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) or empty.</exception>
+        ///// <remarks><para>This method perform a non-blocking request for translation.</para>
+        ///// <para>For more information, go to http://msdn.microsoft.com/en-us/library/ff512421.aspx.
+        ///// </para>
+        ///// </remarks>
+        ///// <seealso cref="Language"/>  
+        //public IAsyncOperation<string> TranslateAsync(string text, string to)
+        //{
+        //    return this.TranslateAsyncHelper(text, to).AsAsyncOperation();
+        //}
 
-        private async Task<string> TranslateAsyncHelper(string text, string to)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                throw new ArgumentNullException("text");
+        //private async Task<string> TranslateAsyncHelper(string text, string to)
+        //{
+        //    if (string.IsNullOrWhiteSpace(text))
+        //        throw new ArgumentNullException("text");
 
-            if (text.Length > MAX_TEXT_LENGTH)
-                throw new ArgumentException("text parameter cannot be longer than " + MAX_TEXT_LENGTH + " characters");
+        //    if (text.Length > MAX_TEXT_LENGTH)
+        //        throw new ArgumentException("text parameter cannot be longer than " + MAX_TEXT_LENGTH + " characters");
 
-            // Check if it is necessary to obtain/update access token.
-            await this.UpdateToken();
+        //    // Check if it is necessary to obtain/update access token.
+        //    await this.UpdateToken();
 
-            if (string.IsNullOrEmpty(to))
-                to = Language;
+        //    if (string.IsNullOrEmpty(to))
+        //        to = Language;
 
-            string uri = string.Format(TRANSLATE_URI, Uri.EscapeDataString(text), to);
+        //    string uri = string.Format(TRANSLATE_URI, Uri.EscapeDataString(text), to);
 
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(BASE_URL);
-            client.DefaultRequestHeaders.Add(AUTHORIZATION_HEADER, headerValue);
+        //    HttpClient client = new HttpClient();
+        //    client.BaseAddress = new Uri(BASE_URL);
+        //    client.DefaultRequestHeaders.Add(AUTHORIZATION_HEADER, headerValue);
 
-            using (Stream stream = await client.GetStreamAsync(uri))
-            {
-                DataContractSerializer dcs = new DataContractSerializer(typeof(string));
-                string results = (string)dcs.ReadObject(stream);
+        //    using (Stream stream = await client.GetStreamAsync(uri))
+        //    {
+        //        DataContractSerializer dcs = new DataContractSerializer(typeof(string));
+        //        string results = (string)dcs.ReadObject(stream);
 
-                return results;
-            }
-        }
+        //        return results;
+        //    }
+        //}
 
         #endregion
 
         #region Detect Language
 
-        /// <summary>
-        /// Detects the language of a text. 
-        /// </summary>
-        /// <param name="text">A string represeting the text whose language must be detected.</param>
-        /// <returns>A string containing a two-character Language code for the given text.</returns>
-        /// <exception cref="ArgumentException">
-        /// <list type="bullet">
-        /// <term>The <see cref="ClientID"/> or <see cref="ClientSecret"/> properties haven't been set.</term>
-        /// <term>The <paramref name="text"/> parameter is longer than 1000 characters.</term>
-        /// </list>
-        /// </exception>
-        /// <exception cref="ArgumentNullException">The <paramref name="text"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) or empty.</exception>
-        /// <remarks><para>This method perform a non-blocking request for language code.</para>
-        /// <para>For more information, go to http://msdn.microsoft.com/en-us/library/ff512427.aspx.
-        /// </para></remarks>
-        /// <seealso cref="GetLanguagesAsync"/>
-        /// <seealso cref="Language"/> 
-        public IAsyncOperation<string> DetectLanguageAsync(string text)
-        {
-            return this.DetectLanguageAsyncHelper(text).AsAsyncOperation();
-        }
+        ///// <summary>
+        ///// Detects the language of a text. 
+        ///// </summary>
+        ///// <param name="text">A string represeting the text whose language must be detected.</param>
+        ///// <returns>A string containing a two-character Language code for the given text.</returns>
+        ///// <exception cref="ArgumentException">
+        ///// <list type="bullet">
+        ///// <term>The <see cref="ClientID"/> or <see cref="ClientSecret"/> properties haven't been set.</term>
+        ///// <term>The <paramref name="text"/> parameter is longer than 1000 characters.</term>
+        ///// </list>
+        ///// </exception>
+        ///// <exception cref="ArgumentNullException">The <paramref name="text"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) or empty.</exception>
+        ///// <remarks><para>This method perform a non-blocking request for language code.</para>
+        ///// <para>For more information, go to http://msdn.microsoft.com/en-us/library/ff512427.aspx.
+        ///// </para></remarks>
+        ///// <seealso cref="GetLanguagesAsync"/>
+        ///// <seealso cref="Language"/> 
+        //public IAsyncOperation<string> DetectLanguageAsync(string text)
+        //{
+        //    return this.DetectLanguageAsyncHelper(text).AsAsyncOperation();
+        //}
 
         private async Task<string> DetectLanguageAsyncHelper(string text)
         {
@@ -366,15 +375,17 @@ namespace JapaneseDict.OnlineService
             text = text.Substring(0, Math.Min(text.Length, MAX_TEXT_LENGTH_FOR_AUTODETECTION));
 
             // Check if it is necessary to obtain/update access token.
-            await this.UpdateToken();
+            await UpdateToken();
 
             string uri = string.Format(DETECT_URI, Uri.EscapeDataString(text));
 
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(BASE_URL);
+            
             client.DefaultRequestHeaders.Add(AUTHORIZATION_HEADER, headerValue);
+            var reqResult = await client.GetAsync(new Uri(BASE_URL + uri));
+            var inputStream = await reqResult.Content.ReadAsInputStreamAsync();
 
-            using (Stream stream = await client.GetStreamAsync(uri))
+            using (Stream stream = inputStream.AsStreamForRead())
             {
                 DataContractSerializer dcs = new DataContractSerializer(typeof(string));
                 string results = (string)dcs.ReadObject(stream);
@@ -405,15 +416,15 @@ namespace JapaneseDict.OnlineService
         /// <see cref="AutoDetectLanguage"/>
         /// <see cref="DetectLanguageAsync"/>
         /// <seealso cref="Language"/>       
-        public IAsyncOperation<IList<byte>> GetSpeakBytesAsync(string text)
-        {
-            return this.GetSpeakBytesAsyncHelper(text).AsAsyncOperation();
-        }
+        //public IAsyncOperation<IList<byte>> GetSpeakBytesAsync(string text)
+        //{
+        //    return this.GetSpeakBytesAsyncHelper(text).AsAsyncOperation();
+        //}
 
-        private async Task<IList<byte>> GetSpeakBytesAsyncHelper(string text)
-        {
-            return await this.GetSpeakBytesAsync(text, null);
-        }
+        //private async Task<IList<byte>> GetSpeakBytesAsyncHelper(string text)
+        //{
+        //    return await this.GetSpeakBytesAsync(text, null);
+        //}
 
         /// <summary>
         /// Returns a byte array containing a file speaking the passed-in text in the desired language. If <paramref name="language"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) and the <see cref="AutoDetectLanguage"/> property is set to <strong>true</strong>, the <see cref="DetectLanguageAsync"/> method is used to detect the language of the speech stream. Otherwise, the language specified in the <see cref="Language"/> property is used.
@@ -433,10 +444,10 @@ namespace JapaneseDict.OnlineService
         /// </para></remarks>
         /// <seealso cref="Language"/>
         /// <seealso cref="GetLanguagesAsync"/>  
-        public IAsyncOperation<IList<byte>> GetSpeakBytesAsync(string text, string language)
-        {
-            return this.GetSpeakBytesAsyncHelper(text, language).AsAsyncOperation();
-        }
+        //public IAsyncOperation<IList<byte>> GetSpeakBytesAsync(string text, string language)
+        //{
+        //    return this.GetSpeakBytesAsyncHelper(text, language).AsAsyncOperation();
+        //}
 
         private async Task<IList<byte>> GetSpeakBytesAsyncHelper(string text, string language)
         {
@@ -446,13 +457,13 @@ namespace JapaneseDict.OnlineService
             if (text.Length > MAX_TEXT_LENGTH)
                 throw new ArgumentException("text parameter cannot be longer than " + MAX_TEXT_LENGTH + " characters");
 
-            bool languageDetected = false;
+            //bool languageDetected = false;
             if (string.IsNullOrEmpty(language))
             {
                 if (AutoDetectLanguage)
                 {
-                    language = await this.DetectLanguageAsync(text);
-                    languageDetected = true;
+                    language = await DetectLanguageAsyncHelper(text);
+                    //languageDetected = true;
                 }
                 else
                 {
@@ -460,21 +471,22 @@ namespace JapaneseDict.OnlineService
                 }
             }
 
-            if (AutomaticTranslation && !languageDetected)
-                text = await this.TranslateAsync(text, language);
+            //if (AutomaticTranslation && !languageDetected)
+            //    text = await this.TranslateAsync(text, language);
 
             // Check if it is necessary to obtain/update access token.
-            await this.UpdateToken();
+            await UpdateToken();
 
             string audioFormat = (AudioFormat == SpeakStreamFormat.Wave ? "audio/wav" : "audio/mp3");
             string audioQuality = (AudioQuality == SpeakStreamQuality.MinSize ? "MinSize" : "MaxQuality");
             string uri = string.Format(SPEAK_URI, Uri.EscapeDataString(text), language, Uri.EscapeDataString(audioFormat), audioQuality);
 
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(BASE_URL);
+            
             client.DefaultRequestHeaders.Add(AUTHORIZATION_HEADER, headerValue);
-
-            var bytes = await client.GetByteArrayAsync(uri);
+            var reqResult = await client.GetAsync(new Uri(BASE_URL + uri));
+            var buffer = await reqResult.Content.ReadAsBufferAsync();
+            var bytes = buffer.ToArray();
             return bytes.ToList();
         }
 
@@ -500,15 +512,15 @@ namespace JapaneseDict.OnlineService
         /// <see cref="AutoDetectLanguage"/>
         /// <see cref="DetectLanguageAsync"/>
         /// <seealso cref="Language"/>   
-        public IAsyncOperation<IRandomAccessStream> GetSpeakStreamAsync(string text)
-        {
-            return this.GetSpeakStreamAsyncHelper(text).AsAsyncOperation();
-        }
+        //public IAsyncOperation<IRandomAccessStream> GetSpeakStreamAsync(string text)
+        //{
+        //    return this.GetSpeakStreamAsyncHelper(text).AsAsyncOperation();
+        //}
 
-        private async Task<IRandomAccessStream> GetSpeakStreamAsyncHelper(string text)
-        {
-            return await this.GetSpeakStreamAsync(text, null);
-        }
+        //private async Task<IRandomAccessStream> GetSpeakStreamAsyncHelper(string text)
+        //{
+        //    return await this.GetSpeakStreamAsyncHelper(text, null);
+        //}
 
         /// <summary>
         /// Returns <see cref="Windows.Storage.Streams.IRandomAccessStream">stream</see> of a file speaking the passed-in text in the desired language. If <paramref name="language"/> parameter is <strong>null</strong> (<strong>Nothing</strong> in Visual Basic) and the <see cref="AutoDetectLanguage"/> property is set to <strong>true</strong>, the <see cref="DetectLanguageAsync"/> method is used to detect the language of the speech stream. Otherwise, the language specified in the <see cref="Language"/> property is used.
@@ -528,14 +540,14 @@ namespace JapaneseDict.OnlineService
         /// </para></remarks>
         /// <seealso cref="Language"/>
         /// <seealso cref="GetLanguagesAsync"/> 
-        public IAsyncOperation<IRandomAccessStream> GetSpeakStreamAsync(string text, string language)
+        public Task<IRandomAccessStream> GetSpeakStreamAsync(string text, string language)
         {
-            return this.GetSpeakStreamAsyncHelper(text, language).AsAsyncOperation();
+            return GetSpeakStreamAsyncHelper(text, language);
         }
 
-        private async Task<IRandomAccessStream> GetSpeakStreamAsyncHelper(string text, string language)
+        public async Task<IRandomAccessStream> GetSpeakStreamAsyncHelper(string text, string language)
         {
-            var bytes = await this.GetSpeakBytesAsync(text, language);
+            var bytes = await GetSpeakBytesAsyncHelper(text, language);
 
             InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
             DataWriter writer = new DataWriter(ms.GetOutputStreamAt(0));
@@ -552,7 +564,7 @@ namespace JapaneseDict.OnlineService
             //if (string.IsNullOrWhiteSpace(ClientID))
             //    throw new ArgumentException("Invalid Client ID. Go to Azure Marketplace and sign up for Microsoft Translator: https://datamarket.azure.com/developer/applications");
 
-            this.headerValue= await AuthToken.GetAccessTokenAsync();
+            headerValue = await AuthToken.GetAccessTokenAsync();
         }
     }
 }

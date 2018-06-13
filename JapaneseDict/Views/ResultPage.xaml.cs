@@ -5,8 +5,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
@@ -22,6 +20,17 @@ using Windows.Phone.UI.Input;
 using JapaneseDict.Models;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Composition;
+using Windows.UI.Xaml.Hosting;
+using Windows.Foundation.Metadata;
+using JapaneseDict.GUI.Extensions;
+using Microsoft.Toolkit.Uwp.UI.Animations;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Windows.UI;
+using Microsoft.Graphics.Canvas;
+using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Shapes;
+using JapaneseDict.GUI.Helpers;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,7 +44,7 @@ namespace JapaneseDict.GUI
         string _keyword;
         public ResultPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             //{
             //    HardwareButtons.BackPressed += HardwareButtons_BackPressed;
@@ -61,15 +70,13 @@ namespace JapaneseDict.GUI
                 _keyword = e.Parameter.ToString();
                 if (_keyword != null)
                 {
-                    this.DataContext = new ResultViewModel(this._keyword);
+                    DataContext = new ResultViewModel(_keyword);
                 }
             }
             else
             {
-                this.DataContext = new ResultViewModel(Convert.ToInt32(e.Parameter.ToString()));
-                
+                DataContext = new ResultViewModel(Convert.ToInt32(e.Parameter.ToString()));
             }
-            
         }
         private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
@@ -91,21 +98,23 @@ namespace JapaneseDict.GUI
         }
         private void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
-            Observable.FromEventPattern<AutoSuggestBoxTextChangedEventArgs>(this.QueryBox, "TextChanged").Throttle(TimeSpan.FromMilliseconds(900)).Subscribe(async x =>
-                            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            Observable.FromEventPattern<AutoSuggestBoxTextChangedEventArgs>(QueryBox, "TextChanged").Throttle(TimeSpan.FromMilliseconds(900)).Subscribe(async x =>
+                            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                             {
-                                this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(Util.StringHelper.ResolveReplicator(QueryBox.Text));
+                                QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(StringHelper.ResolveReplicator(QueryBox.Text));
                             }));
         }
 
         private void AddToNote_Btn_Click(object sender, RoutedEventArgs e)
         {
+            mainPivot.Focus(FocusState.Programmatic);
             ((Button)sender).Visibility = Visibility.Collapsed;
             ((Button)((Button)sender).Tag).Visibility = Visibility.Visible;
         }
 
         private void RemoveFromNote_Btn_Click(object sender, RoutedEventArgs e)
         {
+            mainPivot.Focus(FocusState.Programmatic);
             ((Button)sender).Visibility = Visibility.Collapsed;
             ((Button)((Button)sender).Tag).Visibility = Visibility.Visible;
         }
@@ -136,7 +145,7 @@ namespace JapaneseDict.GUI
             {
                 if (!(_content.Contains("五 ]") | _content.Contains("一 ]") | _content.Contains("サ ]") | _content.Contains("カ ]") | content.Contains("動詞")))
                 {
-                    this.mainPivot.Items.Remove(mainPivot.Items[3]);
+                    mainPivot.Items.Remove(mainPivot.Items[3]);
                 }
             }
         }
@@ -151,8 +160,73 @@ namespace JapaneseDict.GUI
             if (rootFrame.CanGoBack)
             {
                 rootFrame.GoBack();
-                rootFrame.Navigate(typeof(ResultPage), Util.StringHelper.ResolveReplicator((sender as Button).Content.ToString().Replace(" ", "").Replace(" ", "")));
+                rootFrame.Navigate(typeof(ResultPage), StringHelper.ResolveReplicator((sender as Button).Content.ToString().Replace(" ", "").Replace(" ", "")));
             }
+        }
+
+        private void Kanji_GridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (ApiInformation.IsTypePresent(
+            typeof(ImplicitAnimationCollection).FullName))
+            {
+                var elementVisual = ElementCompositionPreview.GetElementVisual(args.ItemContainer);
+                if (args.InRecycleQueue)
+                {
+                    elementVisual.ImplicitAnimations = null;
+                }
+                else
+                {
+                    EnsureImplicitAnimations();
+                    elementVisual.ImplicitAnimations = _implicitAnimations;
+                }
+            }
+        }
+        ImplicitAnimationCollection _implicitAnimations;
+        private void EnsureImplicitAnimations()
+        {
+            if (_implicitAnimations == null)
+            {
+                var compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+
+                var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
+                offsetAnimation.Target = nameof(Visual.Offset);
+                offsetAnimation.InsertExpressionKeyFrame(1.0f, "this.FinalValue");
+                offsetAnimation.Duration = TimeSpan.FromMilliseconds(400);
+
+                var animationGroup = compositor.CreateAnimationGroup();
+                animationGroup.Add(offsetAnimation);
+
+                _implicitAnimations = compositor.CreateImplicitAnimationCollection();
+                _implicitAnimations[nameof(Visual.Offset)] = animationGroup;
+            }
+        }
+        
+        private void KanjiItem_Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1.005", Duration = TimeSpan.FromMilliseconds(300) };
+            animation.StartAnimation(sender as UIElement);
+            var shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(300) };
+            opacityAnimation.StartAnimation(shadowPanel);
+        }
+
+        private void KanjiItem_Grid_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(600) };
+            animation.StartAnimation(sender as UIElement);
+            var shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(600) };
+            opacityAnimation.StartAnimation(shadowPanel);
+        }
+
+        private void Path_Loaded(object sender, RoutedEventArgs e)
+        {
+            var geometry = (Geometry)XamlReader.Load("<Geometry xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'>"+ (sender as Path).Tag.ToString() + "</Geometry>");
+            var transform = new ScaleTransform();
+            transform.ScaleX = 0.4;
+            transform.ScaleY = 0.4;
+            geometry.Transform = transform;
+            (sender as Path).Data = geometry;
         }
     }
 }

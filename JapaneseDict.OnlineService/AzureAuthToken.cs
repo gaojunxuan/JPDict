@@ -44,8 +44,8 @@ namespace JapaneseDict.OnlineService
                 throw new ArgumentNullException("key", "A subscription key is required");
             }
 
-            this.SubscriptionKey = key;
-            this.RequestStatusCode = HttpStatusCode.InternalServerError;
+            SubscriptionKey = key;
+            RequestStatusCode = HttpStatusCode.InternalServerError;
         }
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace JapaneseDict.OnlineService
                 request.Method = HttpMethod.Post;
                 request.RequestUri = ServiceUrl;
                 request.Content = new StringContent(string.Empty);
-                request.Headers.TryAddWithoutValidation(OcpApimSubscriptionKeyHeader, this.SubscriptionKey);
+                request.Headers.TryAddWithoutValidation(OcpApimSubscriptionKeyHeader, SubscriptionKey);
                 client.Timeout = TimeSpan.FromSeconds(2);
                 var response = await client.SendAsync(request);
-                this.RequestStatusCode = response.StatusCode;
+                RequestStatusCode = response.StatusCode;
                 response.EnsureSuccessStatusCode();
                 var token = await response.Content.ReadAsStringAsync();
                 storedTokenTime = DateTime.Now;

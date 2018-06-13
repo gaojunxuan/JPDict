@@ -22,6 +22,9 @@ using JapaneseDict.Models;
 using Windows.Phone.UI.Input;
 using Windows.UI.Core;
 using JapaneseDict.GUI.Extensions;
+using Windows.UI.Composition;
+using Windows.UI.Xaml.Hosting;
+using Windows.Foundation.Metadata;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -34,7 +37,7 @@ namespace JapaneseDict.GUI
     {
         public KanjiFlashcardPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -47,7 +50,7 @@ namespace JapaneseDict.GUI
                 {
                     var kanjires = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryAsync(jlpt);
                     kanjires.Shuffle();
-                    this.DataContext = new KanjiFlashcardViewModel() { Kanji = new ObservableCollection<Kanjidict>(kanjires) };
+                    DataContext = new KanjiFlashcardViewModel() { Kanji = new ObservableCollection<Kanjidict>(kanjires) };
                 }
             }
             
@@ -67,6 +70,43 @@ namespace JapaneseDict.GUI
         {
             (sender as UIElement).Visibility = Visibility.Collapsed;
             showReading_item.Visibility = Visibility.Visible;
+        }
+
+        ImplicitAnimationCollection _implicitAnimations;
+        private void EnsureImplicitAnimations()
+        {
+            if (_implicitAnimations == null)
+            {
+                var compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+
+                var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
+                offsetAnimation.Target = nameof(Visual.Offset);
+                offsetAnimation.InsertExpressionKeyFrame(1.0f, "this.FinalValue");
+                offsetAnimation.Duration = TimeSpan.FromMilliseconds(400);
+
+                var animationGroup = compositor.CreateAnimationGroup();
+                animationGroup.Add(offsetAnimation);
+
+                _implicitAnimations = compositor.CreateImplicitAnimationCollection();
+                _implicitAnimations[nameof(Visual.Offset)] = animationGroup;
+            }
+        }
+        private void MenuGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (ApiInformation.IsTypePresent(
+            typeof(ImplicitAnimationCollection).FullName))
+            {
+                var elementVisual = ElementCompositionPreview.GetElementVisual(args.ItemContainer);
+                if (args.InRecycleQueue)
+                {
+                    elementVisual.ImplicitAnimations = null;
+                }
+                else
+                {
+                    EnsureImplicitAnimations();
+                    elementVisual.ImplicitAnimations = _implicitAnimations;
+                }
+            }
         }
     }
 }

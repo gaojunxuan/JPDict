@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JapaneseDict.Models
+namespace JapaneseDict.GUI.Models
 {
     public class Verb
     {

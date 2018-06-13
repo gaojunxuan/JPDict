@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Diagnostics;
 using Windows.UI.Popups;
 using JapaneseDict.GUI.Helpers;
+using JapaneseDict.OnlineService.Helpers;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -19,7 +20,7 @@ namespace JapaneseDict.GUI.ViewModels
     {
         public TranslationViewModel()
         {
-            this.SourceLang = "jp";
+            SourceLang = "jp";
         }
 
         private string translationResult;
@@ -46,7 +47,7 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_translateCommand = new RelayCommand<string>(
                     async(x) =>
                     {
-                        string sourcelang = this.SourceLang;
+                        string sourcelang = SourceLang;
                         if (x != null)
                         {
                             try
@@ -59,22 +60,22 @@ namespace JapaneseDict.GUI.ViewModels
                                     {
                                         if (useTexTra)
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetJpToCnTranslationResult(x.ToString().Substring(0,2000));
+                                            TranslationResult = await JsonHelper.GetJpToCnTranslationResult(x.ToString().Substring(0,2000));
                                         }
                                         else
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetTranslateResult(x.ToString().Substring(0,2000), "jp", "zh");
+                                            TranslationResult = await JsonHelper.GetTranslateResult(x.ToString().Substring(0,2000), "jp", "zh");
                                         }
                                     }
                                     else
                                     {
                                         if (useTexTra)
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetCnToJpTranslationResult(x.ToString().Substring(0, 2000));
+                                            TranslationResult = await JsonHelper.GetCnToJpTranslationResult(x.ToString().Substring(0, 2000));
                                         }
                                         else
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetTranslateResult(x.ToString().Substring(0, 2000), "zh", "jp");
+                                            TranslationResult = await JsonHelper.GetTranslateResult(x.ToString().Substring(0, 2000), "zh", "jp");
                                         }
                                     }
                                 }
@@ -84,22 +85,22 @@ namespace JapaneseDict.GUI.ViewModels
                                     {
                                         if (useTexTra)
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetJpToCnTranslationResult(x.ToString());
+                                            TranslationResult = await JsonHelper.GetJpToCnTranslationResult(x.ToString());
                                         }
                                         else
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetTranslateResult(x.ToString(), "jp", "zh");
+                                            TranslationResult = await JsonHelper.GetTranslateResult(x.ToString(), "jp", "zh");
                                         }
                                     }
                                     else
                                     {
                                         if (useTexTra)
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetCnToJpTranslationResult(x.ToString());
+                                            TranslationResult = await JsonHelper.GetCnToJpTranslationResult(x.ToString());
                                         }
                                         else
                                         {
-                                            this.TranslationResult = await OnlineService.JsonHelper.GetTranslateResult(x.ToString(), "zh", "jp");
+                                            TranslationResult = await JsonHelper.GetTranslateResult(x.ToString(), "zh", "jp");
                                         }
                                     }
                                 }

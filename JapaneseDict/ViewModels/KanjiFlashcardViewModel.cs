@@ -11,6 +11,8 @@ using JapaneseDict.Models;
 using JapaneseDict.GUI.Extensions;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using System.ComponentModel;
+using System.Collections.Specialized;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -39,11 +41,11 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_replayCommand = new RelayCommand(
                     () =>
                     {
-                        if (this.Kanji.Count != 0)
+                        if (Kanji.Count != 0)
                         {
-                            var res = this.Kanji.ToList();
+                            var res = Kanji.ToList();
                             res.Shuffle();
-                            this.Kanji = new ObservableCollection<Kanjidict>(res);
+                            Kanji = new ObservableCollection<Kanjidict>(res);
                         }
                     }));
             }
@@ -61,12 +63,12 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_showReadingCommand = new RelayCommand(
                     () =>
                     {
-                        var res = new ObservableCollection<Kanjidict>(this.Kanji);
-                        foreach (var i in res)
+                        //var res = new ObservableCollection<Kanjidict>(this.Kanji);
+                        foreach (var i in Kanji)
                         {
                             i.ShowReading = Windows.UI.Xaml.Visibility.Visible;
                         }
-                        this.Kanji = res;
+                        //this.Kanji = res;
                     }));
             }
         }
@@ -83,15 +85,15 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_hideReadingCommand = new RelayCommand(
                     () =>
                     {
-                        var res = new ObservableCollection<Kanjidict>(this.Kanji);
-                        foreach (var i in res)
+                        //var res = new ObservableCollection<Kanjidict>(this.Kanji);
+                        foreach (var i in Kanji)
                         {
                             i.ShowReading = Windows.UI.Xaml.Visibility.Collapsed;
                         }
-                        this.Kanji = res;
+                        //this.Kanji = res;
                     }));
             }
-        }                
+        }
     }
 }
 

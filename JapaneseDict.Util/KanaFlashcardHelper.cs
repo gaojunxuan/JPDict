@@ -9,13 +9,6 @@ namespace JapaneseDict.Util
 {
     public class KanaFlashcardHelper
     {
-        public class Kana
-        {
-            public string Content { get; set; }
-            public string Romaji { get; set; }
-            public bool IsHistory { get; set; }
-            public Visibility ShowRomaji { get; set; } = Visibility.Visible;
-        }
         public static List<Kana> hiragana = new List<Kana>()
         {
             new Kana() {Content="あ",Romaji="a" },

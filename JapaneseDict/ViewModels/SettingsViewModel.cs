@@ -32,9 +32,22 @@ namespace JapaneseDict.GUI.ViewModels
         {
             get
             {
-                return $"v{this.pv.Major}.{this.pv.Minor}.{this.pv.Build}.{this.pv.Revision}";
+                return $"v{pv.Major}.{pv.Minor}.{pv.Build}.{pv.Revision}";
             }
         }
+
+        private bool isBusy;
+
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                isBusy = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         private RelayCommand _updateDictCommand;
         /// <summary>
@@ -48,6 +61,7 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_updateDictCommand = new RelayCommand(
                     async() =>
                     {
+                        IsBusy = true;
                         try
                         {
                             await Task.Run(async () =>
@@ -55,43 +69,52 @@ namespace JapaneseDict.GUI.ViewModels
                                 var updates = await OnlineService.OnlineUpdate.GetAllUpdates();
                                 await OnlineUpdate.ApplyUpdate(updates);
                             });
-
-                            await new MessageDialog("已经成功升级了您的词库", "升级成功").ShowAsync();
+                            await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() => 
+                            {
+                                await new MessageDialog("已经成功更新了您的词库", "成功").ShowAsync();
+                            });
                         }
                         catch
                         {
-                            await new MessageDialog("升级失败，请检查您的网络连接", "升级失败").ShowAsync();
-
+                            await new MessageDialog("更新失败，请检查您的网络连接", "失败").ShowAsync();
                         }
+                        IsBusy = true;
                     }));
             }
         }
 
-        private RelayCommand _updateNotebookCommand;
+        private RelayCommand _uploadNotebookCommand;
         /// <summary>
         /// Gets the UpdateNotebookCommand.
         /// </summary>
-        public RelayCommand UpdateNotebookCommand
+        public RelayCommand UploadNotebookCommand
         {
             get
             {
-                return _updateNotebookCommand
-                    ?? (_updateNotebookCommand = new RelayCommand(
+                return _uploadNotebookCommand
+                    ?? (_uploadNotebookCommand = new RelayCommand(
                     async() =>
                     {
                         try
                         {
+                            IsBusy = true;
                             await Task.Run(async () =>
-                            {
+                            { 
                                 if (await NoteSync.SignInCurrentUserAsync())
                                 {
                                     await NoteSync.UploadFileToOneDriveAsync();
                                 }
                             });
+                            await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                            {
+                                await new MessageDialog("已经成功备份了您的生词本", "成功").ShowAsync();
+                                IsBusy = false;
+                            });
                         }
                         catch (Exception ex)
                         {
-                            await new MessageDialog("备份过程中出现错误，请稍后重试。\n\n" + ex.ToString(), "出现错误").ShowAsync();
+                            await new MessageDialog("备份过程中出现错误，请稍后重试。\n\n" + ex.ToString(), "失败").ShowAsync();
+                            IsBusy = false;
                         }
                     }));
             }
@@ -109,10 +132,11 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_downloadNotebookCommand = new RelayCommand(
                     async() =>
                     {
+                        IsBusy = true;
                         try
                         {
                             await Task.Run(async () =>
-                            {
+                            {       
                                 if (await NoteSync.SignInCurrentUserAsync())
                                 {
                                     var filestream = await NoteSync.DownloadFileFromOneDriveAsync("JPDict/cloudnote.db");
@@ -129,12 +153,12 @@ namespace JapaneseDict.GUI.ViewModels
                                     NotebookPage._needRefresh = true;
                                 }
                             });
-
                         }
                         catch (Exception ex)
                         {
                             await new MessageDialog("恢复过程中出现错误，请稍后重试。\n\n" + ex.Message, "出现错误").ShowAsync();
                         }
+                        IsBusy = false;
                     }));
             }
         }

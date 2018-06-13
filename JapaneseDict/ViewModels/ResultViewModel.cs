@@ -8,8 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using Windows.Phone.UI.Input;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using System.Diagnostics;
@@ -21,9 +19,9 @@ using Windows.UI.Popups;
 using System.Net.Http;
 using Windows.Storage.Streams;
 using System.Text.RegularExpressions;
-using JapaneseDict.Util;
-using JapaneseDict.GUI;
+using JapaneseDict.GUI.Models;
 using GalaSoft.MvvmLight.Ioc;
+using JapaneseDict.GUI.Helpers;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -40,7 +38,7 @@ namespace JapaneseDict.GUI.ViewModels
             QueryWord();
             if(IsInDesignMode)
             {
-                this._keyword = "あ";
+                _keyword = "あ";
             }
             
         }
@@ -50,7 +48,7 @@ namespace JapaneseDict.GUI.ViewModels
             QueryWord(id);
             if (IsInDesignMode)
             {
-                this._keyword = "あ";
+                _keyword = "あ";
             }
 
         }
@@ -59,35 +57,40 @@ namespace JapaneseDict.GUI.ViewModels
         {
             if (IsInDesignMode)
             {
-                this._keyword = "あ";
+                _keyword = "あ";
             }
         }
         
         private async void QueryWord()
         {
-            this.result = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(_keyword);
+            result = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(_keyword);
             if (result.Count != 0 && result.FirstOrDefault().Explanation == "没有本地释义")
             {
                 string word = StringHelper.PrepareVerbs(_keyword);
                 var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(word);
                 if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Explanation != "没有本地释义")
                 {
-                    this.result.First().SeeAlso = seealsoresults.First().JpChar;
+                    result.First().SeeAlso = seealsoresults.First().JpChar;
                 }
+                Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Word not found", new Dictionary<string, string>
+                {
+                    { "Keyword", _keyword },
+                    { "Version", Windows.ApplicationModel.Package.Current.Id.Version.ToString() }
+                });
             }
-            this.Result = this.result;
-            foreach (var i in this.result)
+            Result = result;
+            foreach (var i in result)
             {
                 var content = i.Explanation;
             }
         }
         private async void QueryWord(int id)
         {
-            this.result = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(id);
-            this.Result = this.result;
-            if(this.result!=null&&this.result.Count!=0)
+            result = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(id);
+            Result = result;
+            if(result != null && result.Count!=0)
             {
-                this._keyword = this.result.First().JpChar;
+                _keyword = result.First().JpChar;
             }
         }
 
@@ -143,7 +146,7 @@ namespace JapaneseDict.GUI.ViewModels
                             if (rootFrame.CanGoBack)
                             {
                                 rootFrame.GoBack();
-                                rootFrame.Navigate(typeof(ResultPage), Util.StringHelper.ResolveReplicator(x.ToString().Replace(" ", "").Replace(" ", "")));
+                                rootFrame.Navigate(typeof(ResultPage), StringHelper.ResolveReplicator(x.ToString().Replace(" ", "").Replace(" ", "")));
                             }
                         }
                     }));
@@ -162,9 +165,9 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_queryOnlineCommand = new RelayCommand(
                     async() =>
                     {
-                        this.IsOnlineQueryBusy = true;
-                        this.OnlineResult = await OnlineQueryEngine.Query(this.result.First().JpChar);
-                        this.IsOnlineQueryBusy = false;
+                        IsOnlineQueryBusy = true;
+                        OnlineResult = await OnlineQueryEngine.Query(result.First().JpChar);
+                        IsOnlineQueryBusy = false;
                     }));
             }
         }
@@ -182,7 +185,7 @@ namespace JapaneseDict.GUI.ViewModels
                     () =>
                     {
                         var vbres = new ObservableCollection<Verb>();
-                        foreach (var i in this.Result)
+                        foreach (var i in Result)
                         {
 
                             var content = i.Explanation;
@@ -242,7 +245,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 //vm.IsVerbQueryEnabled = Visibility.Collapsed;
                             }
                         }
-                        this.VerbResult = vbres;
+                        VerbResult = vbres;
                     }));
             }
         }
@@ -262,7 +265,7 @@ namespace JapaneseDict.GUI.ViewModels
                         Regex reg = new Regex("[\u4e00-\u9fa5]+");
                         Regex en_reg = new Regex("[A-z\\s]+");
                         StringBuilder sbkey = new StringBuilder();
-                        foreach (var i in this.Result)
+                        foreach (var i in Result)
                         {
                             sbkey.Append(i.JpChar);
                             if (reg.Matches(i.JpChar).Count == 0)
@@ -299,11 +302,11 @@ namespace JapaneseDict.GUI.ViewModels
                             }
                         }
                         var matches = reg.Matches(sbkey.ToString());
-                        this.KanjiResult = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(matches);
-
+                        KanjiResult = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(matches);
                     }));
             }
         }
+
 
         private bool isOnlineQueryBusy;
         public bool IsOnlineQueryBusy
@@ -346,7 +349,7 @@ namespace JapaneseDict.GUI.ViewModels
                             string text = x.ToString();
                             string language = "ja";
                             // Gets the audio stream.
-                            var stream = await speech.GetSpeakStreamAsync(text, language);
+                            var stream = await speech.GetSpeakStreamAsyncHelper(text, language);
                             MediaElement mediaEle = new MediaElement();
                             // Reproduces the audio stream using a MediaElement.
                             mediaEle.SetSource(stream, speech.MimeContentType);

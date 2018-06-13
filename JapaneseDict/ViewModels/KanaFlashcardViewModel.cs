@@ -9,7 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
-using static JapaneseDict.Util.KanaFlashcardHelper;
+using JapaneseDict.Models;
+using JapaneseDict.GUI.Helpers;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -50,15 +51,15 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_showVoicedHiraganaCommand = new RelayCommand(
                     () =>
                     {
-                        List<Kana> res = GetRandomHiraganaWithVoicedConsonants().ToList();
+                        List<Kana> res = KanaFlashcardHelper.GetRandomHiraganaWithVoicedConsonants().ToList();
 
-                        if (this.Hiragana.Where(k => k.IsHistory == true).Count() == 0)
+                        if (Hiragana.Where(k => k.IsHistory == true).Count() == 0)
                         {
                             res.Remove(res.Where(k => k.Content == "ゐ").First());
                             res.Remove(res.Where(k => k.Content == "ゑ").First());
                         }
 
-                        if (this.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -72,7 +73,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Hiragana = new ObservableCollection<Kana>(res);
+                        Hiragana = new ObservableCollection<Kana>(res);
                     }));
             }
         }
@@ -90,14 +91,14 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_hideVoicedHiraganaCommand = new RelayCommand(
                     () =>
                     {
-                        List<Kana> res = GetRandomHiragana().ToList();
+                        List<Kana> res = KanaFlashcardHelper.GetRandomHiragana().ToList();
 
-                        if (this.Hiragana.Where(k => k.IsHistory == true).Count() == 0)
+                        if (Hiragana.Where(k => k.IsHistory == true).Count() == 0)
                         {
                             res.Remove(res.Where(k => k.Content == "ゐ").First());
                             res.Remove(res.Where(k => k.Content == "ゑ").First());
                         }
-                        if (this.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -111,7 +112,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Hiragana = new ObservableCollection<Kana>(res);
+                        Hiragana = new ObservableCollection<Kana>(res);
                     }));
             }
         }
@@ -132,13 +133,13 @@ namespace JapaneseDict.GUI.ViewModels
                         Random rand = new Random(DateTime.Now.Millisecond);
                         var wyi = new Kana() { Content = "ゐ", Romaji = "wyi", IsHistory = true };
                         var wye = new Kana() { Content = "ゑ", Romaji = "wye", IsHistory = true };
-                        if (this.Hiragana.Where(k => k.IsHistory == true).Count() == 0)
+                        if (Hiragana.Where(k => k.IsHistory == true).Count() == 0)
                         {
-                            this.Hiragana.Insert(rand.Next(0, this.Hiragana.Count - 1), wyi);
-                            this.Hiragana.Insert(rand.Next(0, this.Hiragana.Count - 1), wye);
+                            Hiragana.Insert(rand.Next(0, Hiragana.Count - 1), wyi);
+                            Hiragana.Insert(rand.Next(0, Hiragana.Count - 1), wye);
                         }
-                        var res = new ObservableCollection<Kana>(this.Hiragana);
-                        if (this.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        var res = new ObservableCollection<Kana>(Hiragana);
+                        if (Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -152,7 +153,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Hiragana = res;
+                        Hiragana = res;
                     }));
             }
         }
@@ -170,10 +171,10 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_hideHistoricalHiraganaCommand = new RelayCommand(
                     () =>
                     {
-                        if (this.Hiragana.Where(k => k.IsHistory == true).Count() != 0)
+                        if (Hiragana.Where(k => k.IsHistory == true).Count() != 0)
                         {
-                            this.Hiragana.Remove(this.Hiragana.Where(k => k.Content == "ゐ").First());
-                            this.Hiragana.Remove(this.Hiragana.Where(k => k.Content == "ゑ").First());
+                            Hiragana.Remove(Hiragana.Where(k => k.Content == "ゐ").First());
+                            Hiragana.Remove(Hiragana.Where(k => k.Content == "ゑ").First());
                         }
                     }));
             }
@@ -193,21 +194,21 @@ namespace JapaneseDict.GUI.ViewModels
                     () =>
                     {
                         ObservableCollection<Kana> res;
-                        if (this.Hiragana.Where(k => k.Content == "ば").Count() != 0)
+                        if (Hiragana.Where(k => k.Content == "ば").Count() != 0)
                         {
-                            res = new ObservableCollection<Kana>(GetRandomHiraganaWithVoicedConsonants());
+                            res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetRandomHiraganaWithVoicedConsonants());
                         }
                         else
                         {
-                            res = new ObservableCollection<Kana>(GetRandomHiragana());
+                            res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetRandomHiragana());
                         }
 
-                        if (this.Hiragana.Where(k => k.IsHistory == true).Count() == 0)
+                        if (Hiragana.Where(k => k.IsHistory == true).Count() == 0)
                         {
                             res.Remove(res.Where(k => k.Content == "ゐ").First());
                             res.Remove(res.Where(k => k.Content == "ゑ").First());
                         }
-                        if (this.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -221,7 +222,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Hiragana = res;
+                        Hiragana = res;
                     }));
             }
         }
@@ -239,12 +240,10 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_hideHiraganaRomajiCommand = new RelayCommand(
                     () =>
                     {
-                        ObservableCollection<Kana> res = new ObservableCollection<Kana>(this.Hiragana);
-                        foreach (var i in res)
+                        foreach (var i in Hiragana)
                         {
                             i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
                         }
-                        this.Hiragana = res;
                     }));
             }
         }
@@ -262,12 +261,10 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_showHiraganaRomajiCommand = new RelayCommand(
                     () =>
                     {
-                        ObservableCollection<Kana> res = new ObservableCollection<Kana>(this.Hiragana);
-                        foreach (var i in res)
+                        foreach (var i in Hiragana)
                         {
                             i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                         }
-                        this.Hiragana = res;
                     }));
             }
         }
@@ -286,11 +283,11 @@ namespace JapaneseDict.GUI.ViewModels
                     () =>
                     {
                         ObservableCollection<Kana> res;
-                        res = new ObservableCollection<Kana>(GetOrderHiraganaWithVoicedConsonants());
+                        res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetOrderHiraganaWithVoicedConsonants());
                         res.Remove(res.Where(k => k.Content == "ゐ").First());
                         res.Remove(res.Where(k => k.Content == "ゑ").First());
 
-                        if (this.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -304,7 +301,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Hiragana = res;
+                        Hiragana = res;
                     }));
             }
         }
@@ -322,8 +319,8 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_getDisorderedHiraganaCommand = new RelayCommand(
                     () =>
                     {
-                        var res = new ObservableCollection<Kana>(GetRandomHiragana());
-                        if (this.Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        var res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetRandomHiragana());
+                        if (Hiragana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -337,7 +334,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Hiragana = res;
+                        Hiragana = res;
                     }));
             }
         }
@@ -355,15 +352,15 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_showVoicedKatakanaCommand = new RelayCommand(
                     () =>
                     {
-                        List<Kana> res = GetRandomKatakanaWithVoicedConsonants().ToList();
+                        List<Kana> res = KanaFlashcardHelper.GetRandomKatakanaWithVoicedConsonants().ToList();
 
-                        if (this.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                        if (Katakana.Where(k => k.IsHistory == true).Count() == 0)
                         {
-                            res.Remove(res.Where(k => k.Content == "ゐ").First());
-                            res.Remove(res.Where(k => k.Content == "ゑ").First());
+                            res.Remove(res.Where(k => k.Content == "ヰ").First());
+                            res.Remove(res.Where(k => k.Content == "ヱ").First());
                         }
 
-                        if (this.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -377,7 +374,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Katakana = new ObservableCollection<Kana>(res);
+                        Katakana = new ObservableCollection<Kana>(res);
                     }));
             }
         }
@@ -395,14 +392,14 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_hideVoicedKatakanaCommand = new RelayCommand(
                     () =>
                     {
-                        List<Kana> res = GetRandomKatakana().ToList();
+                        List<Kana> res = KanaFlashcardHelper.GetRandomKatakana().ToList();
 
-                        if (this.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                        if (Katakana.Where(k => k.IsHistory == true).Count() == 0)
                         {
-                            res.Remove(res.Where(k => k.Content == "ゐ").First());
-                            res.Remove(res.Where(k => k.Content == "ゑ").First());
+                            res.Remove(res.Where(k => k.Content == "ヰ").First());
+                            res.Remove(res.Where(k => k.Content == "ヱ").First());
                         }
-                        if (this.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -416,7 +413,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Katakana = new ObservableCollection<Kana>(res);
+                        Katakana = new ObservableCollection<Kana>(res);
                     }));
             }
         }
@@ -435,15 +432,15 @@ namespace JapaneseDict.GUI.ViewModels
                     () =>
                     {
                         Random rand = new Random(DateTime.Now.Millisecond);
-                        var wyi = new Kana() { Content = "ゐ", Romaji = "wyi", IsHistory = true };
-                        var wye = new Kana() { Content = "ゑ", Romaji = "wye", IsHistory = true };
-                        if (this.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                        var wyi = new Kana() { Content = "ヰ", Romaji = "wyi", IsHistory = true };
+                        var wye = new Kana() { Content = "ヱ", Romaji = "wye", IsHistory = true };
+                        if (Katakana.Where(k => k.IsHistory == true).Count() == 0)
                         {
-                            this.Katakana.Insert(rand.Next(0, this.Katakana.Count - 1), wyi);
-                            this.Katakana.Insert(rand.Next(0, this.Katakana.Count - 1), wye);
+                            Katakana.Insert(rand.Next(0, Katakana.Count - 1), wyi);
+                            Katakana.Insert(rand.Next(0, Katakana.Count - 1), wye);
                         }
-                        var res = new ObservableCollection<Kana>(this.Katakana);
-                        if (this.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        var res = new ObservableCollection<Kana>(Katakana);
+                        if (Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -457,7 +454,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Katakana = res;
+                        Katakana = res;
                     }));
             }
         }
@@ -475,10 +472,10 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_hideHistoricalKatakanaCommand = new RelayCommand(
                     () =>
                     {
-                        if (this.Katakana.Where(k => k.IsHistory == true).Count() != 0)
+                        if (Katakana.Where(k => k.IsHistory == true).Count() != 0)
                         {
-                            this.Katakana.Remove(this.Katakana.Where(k => k.Content == "ゐ").First());
-                            this.Katakana.Remove(this.Katakana.Where(k => k.Content == "ゑ").First());
+                            Katakana.Remove(Katakana.Where(k => k.Content == "ヰ").First());
+                            Katakana.Remove(Katakana.Where(k => k.Content == "ヱ").First());
                         }
                     }));
             }
@@ -498,21 +495,21 @@ namespace JapaneseDict.GUI.ViewModels
                     () =>
                     {
                         ObservableCollection<Kana> res;
-                        if (this.Katakana.Where(k => k.Content == "ば").Count() != 0)
+                        if (Katakana.Where(k => k.Content == "バ").Count() != 0)
                         {
-                            res = new ObservableCollection<Kana>(GetRandomKatakanaWithVoicedConsonants());
+                            res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetRandomKatakanaWithVoicedConsonants());
                         }
                         else
                         {
-                            res = new ObservableCollection<Kana>(GetRandomKatakana());
+                            res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetRandomKatakana());
                         }
 
-                        if (this.Katakana.Where(k => k.IsHistory == true).Count() == 0)
+                        if (Katakana.Where(k => k.IsHistory == true).Count() == 0)
                         {
-                            res.Remove(res.Where(k => k.Content == "ゐ").First());
-                            res.Remove(res.Where(k => k.Content == "ゑ").First());
+                            res.Remove(res.Where(k => k.Content == "ヰ").First());
+                            res.Remove(res.Where(k => k.Content == "ヱ").First());
                         }
-                        if (this.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -526,7 +523,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Katakana = res;
+                        Katakana = res;
                     }));
             }
         }
@@ -544,12 +541,10 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_hideKatakanaRomajiCommand = new RelayCommand(
                     () =>
                     {
-                        ObservableCollection<Kana> res = new ObservableCollection<Kana>(this.Katakana);
-                        foreach (var i in res)
+                        foreach (var i in Katakana)
                         {
                             i.ShowRomaji = Windows.UI.Xaml.Visibility.Collapsed;
                         }
-                        this.Katakana = res;
                     }));
             }
         }
@@ -567,12 +562,10 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_showKatakanaRomajiCommand = new RelayCommand(
                     () =>
                     {
-                        ObservableCollection<Kana> res = new ObservableCollection<Kana>(this.Katakana);
-                        foreach (var i in res)
+                        foreach (var i in Katakana)
                         {
                             i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                         }
-                        this.Katakana = res;
                     }));
             }
         }
@@ -591,11 +584,11 @@ namespace JapaneseDict.GUI.ViewModels
                     () =>
                     {
                         ObservableCollection<Kana> res;
-                        res = new ObservableCollection<Kana>(GetOrderKatakanaWithVoicedConsonants());
-                        res.Remove(res.Where(k => k.Content == "ゐ").First());
-                        res.Remove(res.Where(k => k.Content == "ゑ").First());
+                        res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetOrderKatakanaWithVoicedConsonants());
+                        res.Remove(res.Where(k => k.Content == "ヰ").First());
+                        res.Remove(res.Where(k => k.Content == "ヱ").First());
 
-                        if (this.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        if (Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -609,7 +602,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Katakana = res;
+                        Katakana = res;
                     }));
             }
         }
@@ -627,8 +620,8 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_getDisorderedKatakanaCommand = new RelayCommand(
                     () =>
                     {
-                        var res = new ObservableCollection<Kana>(GetRandomKatakana());
-                        if (this.Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
+                        var res = new ObservableCollection<Kana>(KanaFlashcardHelper.GetRandomKatakana());
+                        if (Katakana.Where(k => k.ShowRomaji == Windows.UI.Xaml.Visibility.Collapsed).Count() != 0)
                         {
                             foreach (var i in res)
                             {
@@ -642,7 +635,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 i.ShowRomaji = Windows.UI.Xaml.Visibility.Visible;
                             }
                         }
-                        this.Katakana = res;
+                        Katakana = res;
                     }));
             }
         }

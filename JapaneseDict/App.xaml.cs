@@ -18,12 +18,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Services.Store.Engagement;
 using Windows.Networking.PushNotifications;
-using Microsoft.WindowsAzure.Messaging;
 using System.Diagnostics;
 using Windows.UI.Notifications;
-using JapaneseDict.OnlineService;
 using Windows.UI.Core;
 using Windows.Phone.UI.Input;
 using Microsoft.AppCenter;
@@ -31,6 +28,8 @@ using Microsoft.AppCenter.Analytics;
 using JapaneseDict.GUI.Services;
 using Microsoft.AppCenter.Push;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Services.Store.Engagement;
+using JapaneseDict.GUI.Helpers;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 namespace JapaneseDict.GUI
@@ -53,9 +52,9 @@ namespace JapaneseDict.GUI
         {
             Microsoft.HockeyApp.HockeyClient.Current.Configure("4d0ddb67a4144b2ca638f5adf7a09801");
             WindowsAppInitializer.InitializeAsync();
-            this.InitializeComponent();
+            InitializeComponent();
             _activationService = new Lazy<ActivationService>(CreateActivationService);
-            this.Suspending += OnSuspending;
+            Suspending += OnSuspending;
         }
 
         private async void CopyMainDb()
@@ -72,6 +71,11 @@ namespace JapaneseDict.GUI
                 var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanji.db"));
                 await kanjifile.CopyAsync(storageFolder, "kanji.db", NameCollisionOption.ReplaceExisting);
             }
+            if (await storageFolder.TryGetItemAsync("kanjirad.db") == null)
+            {
+                var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanjirad.db"));
+                await kanjifile.CopyAsync(storageFolder, "kanjirad.db", NameCollisionOption.ReplaceExisting);
+            }
 
             if (await storageFolder.TryGetItemAsync("synclog.log") == null)
             {
@@ -80,7 +84,7 @@ namespace JapaneseDict.GUI
             }
         }
 
-        private void InitOnlineServiceAsync()
+        private async void InitOnlineServiceAsync()
         {
             try
             {
@@ -97,6 +101,8 @@ namespace JapaneseDict.GUI
                 //var hub = new NotificationHub("jpdictHub", "Endpoint=sb://jpdictnamespace.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=b7P3q6gSzqgLDiCIFOv8q62J7EUft7RQr3F6TEIfXMg=");
                 //var result = await hub.RegisterNativeAsync(channel.Uri);
                 //AppCenter.Configure("de248288-41ba-4ca6-b857-4bfaa6758c63");
+                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+                await engagementManager.RegisterNotificationChannelAsync();
                 AppCenter.Start("de248288-41ba-4ca6-b857-4bfaa6758c63", typeof(Analytics), typeof(Crashes), typeof(Push));
             }
             catch
@@ -122,7 +128,7 @@ namespace JapaneseDict.GUI
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                DebugSettings.EnableFrameRateCounter = true;
             }
 
 #endif
@@ -137,7 +143,15 @@ namespace JapaneseDict.GUI
 
         private ActivationService CreateActivationService()
         {
-            return new ActivationService(this, typeof(ViewModels.MainViewModel));
+            UpdatePromptHelper.LoadState();
+            if (UpdatePromptHelper.Updated)
+            {
+                return new ActivationService(this, typeof(ViewModels.UpdateViewModel));
+            }
+            else
+            {
+                return new ActivationService(this, typeof(ViewModels.MainViewModel));
+            }
         }
         protected override async void OnActivated(IActivatedEventArgs args)
         {
@@ -166,13 +180,24 @@ namespace JapaneseDict.GUI
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), "update");
+                    UpdatePromptHelper.LoadState();
+                    if(UpdatePromptHelper.Updated)
+                    {
+                        rootFrame.Navigate(typeof(UpdatePage));
+                    }
+                    else
+                    {
+                        rootFrame.Navigate(typeof(MainPage));
+                    }
                 }
 
                 // Ensure the current window is active
                 Window.Current.Activate();
-            // Use the originalArgs variable to access the original arguments
-            // that were passed to the app.
+                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+                string originalArgs = engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
+
+                // Use the originalArgs variable to access the original arguments
+                // that were passed to the app.
             }
         }
 

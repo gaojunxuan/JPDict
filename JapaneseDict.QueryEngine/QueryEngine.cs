@@ -156,6 +156,7 @@ namespace JapaneseDict.QueryEngine
         public static class KanjiDictQueryEngine
         {
             private static SQLiteConnection _kanjiconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "kanji.db"));
+            private static SQLiteConnection _radconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "kanjirad.db"));
             /// <summary>
             /// Query the database with the specifed kanji
             /// </summary>
@@ -277,6 +278,13 @@ namespace JapaneseDict.QueryEngine
                         {
                             foreach (var r in _kanjiconn.Query<Kanjidict>("SELECT * FROM Kanjidict WHERE Kanji = ?", s.ToString()))
                             {
+                                r.KanjiRad = new ObservableCollection<KanjiRadical>();
+                                var radResult = _radconn.Query<KanjiRadical>("SELECT * FROM KanjiRadical WHERE Kanji = ?", s.ToString());
+                                foreach (var x in radResult)
+                                {
+                                    r.KanjiRad.Add(x);                                   
+                                }
+                                
                                 result.Add(r);
                             }
                         }

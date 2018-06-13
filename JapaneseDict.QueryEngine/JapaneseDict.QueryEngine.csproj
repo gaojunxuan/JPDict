@@ -120,6 +120,7 @@
     <Compile Include="Models\IDictItem.cs" />
     <Compile Include="Models\IKanji.cs" />
     <Compile Include="Models\Kanjidict.cs" />
+    <Compile Include="Models\KanjiRadical.cs" />
     <Compile Include="Models\MainDict.cs" />
     <Compile Include="Models\OnlineDict.cs" />
     <Compile Include="Models\UserDefDict.cs" />

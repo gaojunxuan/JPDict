@@ -1,7 +1,9 @@
-﻿using JapaneseDict.Models;
+﻿using GalaSoft.MvvmLight;
+using JapaneseDict.Models;
 using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +11,7 @@ using Windows.UI.Xaml;
 
 namespace JapaneseDict.Models
 {
-    public class Kanjidict : IKanji
+    public class Kanjidict : ViewModelBase, IKanji
     {
         public string Grade
         {
@@ -40,7 +42,23 @@ namespace JapaneseDict.Models
         {
             get; set;
         }
+        Visibility _showReading = Visibility.Visible;
         [Ignore]
-        public Visibility ShowReading { get; set; } = Visibility.Visible;
+        public Visibility ShowReading
+        {
+            get
+            {
+                return _showReading;
+            }
+            set
+            {
+                _showReading = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [Ignore]
+        public ObservableCollection<KanjiRadical> KanjiRad { get; set; }
+
     }
 }

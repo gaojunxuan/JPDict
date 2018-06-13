@@ -17,7 +17,7 @@ namespace JapaneseDict.Models
         public string Author { get; set; }
         public string NotesOnText { get; set; }
         public Uri AudioUri { get; set; }
-        public string ContentToShare { get { return $"原文：{this.JpText}\n\n翻译：{this.CnText}"; } }
+        public string ContentToShare { get { return $"原文：{JpText}\n\n翻译：{CnText}"; } }
         public ImageSource BackgroundImage { get; set; }
     }
 }

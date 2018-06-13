@@ -114,11 +114,12 @@
   <ItemGroup>
     <Compile Include="AuthenticationHelper.cs" />
     <Compile Include="AzureAuthToken.cs" />
+    <Compile Include="Helpers\Md5Helper.cs" />
     <Compile Include="Models\EverydaySentence.cs" />
     <Compile Include="Models\JPDictFeedbackItem.cs" />
     <Compile Include="Models\NHKNews.cs" />
     <Compile Include="Models\NHKRadios.cs" />
-    <Compile Include="JsonHelper.cs" />
+    <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="NoteSync.cs" />
     <Compile Include="OAuthBase.cs" />
     <Compile Include="OnlineQuery.cs" />
@@ -130,10 +131,6 @@
     <ProjectReference Include="..\JapaneseDict.QueryEngine\JapaneseDict.QueryEngine.csproj">
       <Project>{0272506c-9fe7-4ccd-99a6-b7219294dbd2}</Project>
       <Name>JapaneseDict.QueryEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JapaneseDict.Util\JapaneseDict.Util.csproj">
-      <Project>{304ad510-3ed5-4b70-93a3-5d86df49cdb7}</Project>
-      <Name>JapaneseDict.Util</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

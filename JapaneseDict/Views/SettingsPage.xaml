@@ -25,58 +25,62 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <ScrollViewer>
-            <StackPanel>
-                <StackPanel Name="syncSettingsPanel" Margin="8">
-                    <TextBlock Text="生词本备份" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
-                    <Button x:Name="Upload_Btn" Content="备份至 OneDrive" Background="#FF00B294" Foreground="White" FontSize="18" Command="{Binding UploadNotebookCommand}"></Button>
-                    <Button x:Name="Download_Btn" Content="恢复备份" Background="#FF00B294" Foreground="White" FontSize="18" Margin="0,12,0,0" Command="{Binding DownloadNotebookCommand}"></Button>
-                    <!--<TextBlock Margin="0,12,0,0" Text="此功能将在下个版本提供，敬请期待" Foreground="Gray"></TextBlock>-->
-                    <ProgressBar Margin="0,12,0,0" IsIndeterminate="True" Visibility="{Binding ElementName=Upload_Btn,Path=IsEnabled,Converter={StaticResource negateConverter}}" Foreground="#00b294"></ProgressBar>
-                </StackPanel>
-                <StackPanel Name="aboutPanel" Margin="8">
-                    <TextBlock Text="关于" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
-                    <StackPanel>
+            <Grid>
+                <StackPanel>
+                    <StackPanel Name="syncSettingsPanel" Margin="8">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="ms-appx:///Assets/logo.png" Width="80" Height="80" Stretch="Uniform" VerticalAlignment="Top"></Image>
-                            <StackPanel Margin="16,-8,0,0">
-                                <TextBlock Text="Skylark JPDict" Style="{StaticResource HeaderTextBlockStyle}" FontSize="36"></TextBlock>
-                                <TextBlock Text="by Skylark Workshop" Foreground="Gray"></TextBlock>
-                                <TextBlock Text="{Binding ApplicationVersion}" Foreground="Gray"></TextBlock>
-                            </StackPanel>
+                            <TextBlock Text="生词本备份" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                             TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
+                            <ProgressRing IsActive="{Binding IsBusy}" Foreground="#00b294" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,0,20"></ProgressRing>
                         </StackPanel>
-                        <StackPanel Margin="0,0,0,0">
-                            <StackPanel Orientation="Horizontal">
-                                <Button Name="privacypolicy_Btn" Margin="0,12,0,0" Content="隐私协议" Background="#FF00B294" Foreground="White" Click="privacypolicy_Btn_Click"></Button>
-                                <Button x:Name="oss_Btn" Margin="12,12,0,0" Content="开源软件协议" Background="#FF00B294" Foreground="White" Click="oss_Btn_Click"></Button>
-                            </StackPanel>
-                            <Button Margin="0,12,0,0" Name="feedback_Btn" Content="反馈" Background="#FF00B294" Foreground="White" Click="feedback_Btn_Click"></Button>
-                        </StackPanel>
+                        <Button x:Name="Upload_Btn" Content="备份至 OneDrive" Background="#FF00B294" Foreground="White" FontSize="18" Command="{Binding UploadNotebookCommand}" IsEnabled="{Binding IsBusy,Converter={StaticResource boolnegConverter}}" IsEnabledChanged="Upload_Btn_IsEnabledChanged"/>
+                        <Button x:Name="Download_Btn" Content="恢复备份" Background="#FF00B294" Foreground="White" FontSize="18" Margin="0,12,0,0" Command="{Binding DownloadNotebookCommand}" IsEnabled="{Binding IsBusy,Converter={StaticResource boolnegConverter}}" IsEnabledChanged="Download_Btn_IsEnabledChanged"/>
+                        <!--<TextBlock Margin="0,12,0,0" Text="此功能将在下个版本提供，敬请期待" Foreground="Gray"></TextBlock>-->
+                    </StackPanel>
+                    <StackPanel Name="aboutPanel" Margin="8">
+                        <TextBlock Text="关于" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                         TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
                         <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="ms-appx:///Assets/logo.png" Width="80" Height="80" Stretch="Uniform" VerticalAlignment="Top"></Image>
+                                <StackPanel Margin="16,-8,0,0">
+                                    <TextBlock Text="Skylark JPDict" Style="{StaticResource HeaderTextBlockStyle}" FontSize="36"></TextBlock>
+                                    <TextBlock Text="by Skylark Workshop" Foreground="Gray"></TextBlock>
+                                    <TextBlock Text="{Binding ApplicationVersion}" Foreground="Gray"></TextBlock>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Name="privacypolicy_Btn" Margin="0,12,0,0" Content="隐私协议" Background="#FF00B294" Foreground="White" Click="privacypolicy_Btn_Click"></Button>
+                                    <Button x:Name="oss_Btn" Margin="12,12,0,0" Content="开源软件协议" Background="#FF00B294" Foreground="White" Click="oss_Btn_Click"></Button>
+                                </StackPanel>
+                                <Button Margin="0,12,0,0" Name="feedback_Btn" Content="反馈" Background="#FF00B294" Foreground="White" Click="feedback_Btn_Click"></Button>
+                            </StackPanel>
+                            <StackPanel>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
-                </StackPanel>
-                <StackPanel Name="feedbackSettingsPanel" Margin="8">
-                    <TextBlock Text="词库完善计划" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Name="update_Btn" Content="更新词库" Background="#FF00B294" Foreground="White" FontSize="18" Command="{Binding UpdateDictCommand}" Margin="0,0,0,0"></Button>
-                        <ProgressRing Margin="20,0,0,0" IsActive="{Binding ElementName=update_Btn,Path=IsEnabled,Converter={StaticResource boolnegConverter}}" Foreground="#00b294"/>
+                    <StackPanel Name="feedbackSettingsPanel" Margin="8">
+                        <TextBlock Text="词库完善计划" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                         TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Name="update_Btn" Content="更新词库" Background="#FF00B294" Foreground="White" FontSize="18" Command="{Binding UpdateDictCommand}" Margin="0,0,0,0" IsEnabled="{Binding IsBusy,Converter={StaticResource boolnegConverter}}" IsEnabledChanged="update_Btn_IsEnabledChanged"/>
+                            <ProgressRing Margin="20,0,0,0" IsActive="{Binding ElementName=update_Btn,Path=IsEnabled,Converter={StaticResource boolnegConverter}}" Foreground="#00b294"/>
+                        </StackPanel>
+                        <TextBlock Margin="0,12,0,24" Text="由于可供使用的日语离线词库仍然很少，本应用中的离线词库仍不完善。如果您发现哪个词的释义有问题，或没有在词库中查找到您所需的词，请及时告知我们，我们会在今后的版本中逐渐完善离线词库。谢谢！" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
                     </StackPanel>
-                    <TextBlock Margin="0,12,0,24" Text="由于可供使用的日语离线词库仍然很少，本应用中的离线词库仍不完善。如果您发现哪个词的释义有问题，或没有在词库中查找到您所需的词，请及时告知我们，我们会在今后的版本中逐渐完善离线词库。谢谢！" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
-                </StackPanel>
-                <StackPanel Name="betaFeaturesPanel" Margin="8">
-                    <TextBlock Text="实验性功能" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
-                    <StackPanel Orientation="Horizontal">
-                        <ToggleSwitch Header="使用 TextTra® 进行翻译" Style="{StaticResource ToggleSwitchStyle1}" IsOn="{Binding UseTexTra,Mode=TwoWay}"/>
+                    <StackPanel Name="betaFeaturesPanel" Margin="8">
+                        <TextBlock Text="实验性功能" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                         TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,0,20" FontSize="24"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ToggleSwitch Header="使用 TextTra® 进行翻译" Style="{StaticResource ToggleSwitchStyle1}" IsOn="{Binding UseTexTra,Mode=TwoWay}"/>
+                        </StackPanel>
+                        <TextBlock Margin="0,12,0,0" Text="使用由 NICT (国立研究開発法人情報通信研究機構) 开发并提供的 TextTra® 进行翻译，在使用过程中可能会出现个别语句的翻译不准确等问题。如果遇到问题，欢迎向我们提供反馈。" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
+                        <TextBlock Margin="0,4,0,0" Text="详细内容请参见 http://h-bank.nict.go.jp/" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
+                        <TextBlock Margin="0,4,0,24" Text="使用协议 https://mt-auto-minhon-mlt.ucri.jgn-x.jp/content/policy/" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
                     </StackPanel>
-                    <TextBlock Margin="0,12,0,0" Text="使用由 NICT (国立研究開発法人情報通信研究機構) 开发并提供的 TextTra® 进行翻译，在使用过程中可能会出现个别语句的翻译不准确等问题。如果遇到问题，欢迎向我们提供反馈。" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
-                    <TextBlock Margin="0,4,0,0" Text="详细内容请参见 http://h-bank.nict.go.jp/" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
-                    <TextBlock Margin="0,4,0,24" Text="使用协议 https://mt-auto-minhon-mlt.ucri.jgn-x.jp/content/policy/" TextWrapping="WrapWholeWords" Foreground="Gray"></TextBlock>
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Page>

@@ -117,12 +117,11 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <ScrollViewer>
+        <ScrollViewer Loaded="ScrollViewer_Loaded">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
-                    <RadioButton x:Name="Jp2CnTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=jp}" Content="日→汉" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black"></RadioButton>
-                    <RadioButton x:Name="Cn2JpTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=zh}" Content="汉→日" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black"></RadioButton>
-
+                    <RadioButton x:Name="Jp2CnTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=jp}" Content="日→汉" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black" Checked="Jp2CnTransRdBtn_Checked"></RadioButton>
+                    <RadioButton x:Name="Cn2JpTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=zh}" Content="汉→日" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black" Checked="Cn2JpTransRdBtn_Checked"></RadioButton>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                     <Button x:Name="Trans_Btn"  Margin="0,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Command="{Binding TranslateCommand}" CommandParameter="{Binding ElementName=originTbx,Path=Text}">翻译</Button>
@@ -133,7 +132,7 @@
                 <RelativePanel Margin="10,20,20,20" Width="1418" HorizontalAlignment="Left">
 
                     <TextBox FontFamily="Yu Gothic UI" x:Name="originTbx"  Height="400"  Header="原文"  PlaceholderText="请键入原文" TextWrapping="Wrap" AcceptsReturn="True" Margin="0" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294"></TextBox>
-                    <TextBox x:Name="resultTbx" Height="400" Width="300" Header="结果" PlaceholderText="结果啊 QAQ" TextWrapping="Wrap" Text="{Binding TranslationResult}" Style="{StaticResource TranslateTextBoxStyle}" IsReadOnly="True" SelectionHighlightColor="#FF00B294"></TextBox>
+                    <TextBox x:Name="resultTbx" Height="400" Width="300" Header="结果" PlaceholderText="结果啊 QAQ" TextWrapping="Wrap" Text="{Binding TranslationResult,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TranslateTextBoxStyle}" IsReadOnly="True" SelectionHighlightColor="#FF00B294" FontFamily="Microsoft YaHei UI"></TextBox>
 
                 </RelativePanel>
             </StackPanel>

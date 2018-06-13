@@ -22,31 +22,31 @@ namespace JapaneseDict.GUI.ViewModels
     {
         public NotebookViewModel()
         {
-            this.IsBusy = false;
-            this.GroupedNoteList = new ObservableCollection<GroupedNoteItem>();
+            IsBusy = false;
+            GroupedNoteList = new ObservableCollection<GroupedNoteItem>();
         }
         // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property
         public async void LoadData()
         {
-            this.IsBusy = true;
+            IsBusy = true;
             try
             {
                 var a = QueryEngine.QueryEngine.UserDefDictQueryEngine.Get();
                 Func<ObservableCollection<GroupedNoteItem>> func = (() => { return new ObservableCollection<GroupedNoteItem>((from item in QueryEngine.QueryEngine.UserDefDictQueryEngine.Get() orderby item.GroupingKey group item by item.GroupingKey into newItems select new GroupedNoteItem { Key = newItems.Key, ItemContent = newItems.ToList() }).ToList()); });
-                this.GroupedNoteList = await Task.Run(func);
-                if (this.GroupedNoteList.Count == 0)
+                GroupedNoteList = await Task.Run(func);
+                if (GroupedNoteList.Count == 0)
                 {
-                    this.IsNotebookEmpty = true;
+                    IsNotebookEmpty = true;
                 }
                 else
                 {
-                    this.IsNotebookEmpty = false;
+                    IsNotebookEmpty = false;
                 }
-                this.IsBusy = false;
+                IsBusy = false;
             }
             catch
             {
-                this.IsBusy = false;
+                IsBusy = false;
             }
            
         }
@@ -75,7 +75,7 @@ namespace JapaneseDict.GUI.ViewModels
                     (x) =>
                     {
                         QueryEngine.QueryEngine.UserDefDictQueryEngine.Remove(x);
-                        this.LoadData();
+                        LoadData();
                     }));
             }
         }

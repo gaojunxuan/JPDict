@@ -12,6 +12,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JapaneseDict.GUI;
+using Windows.UI.Xaml.Media.Animation;
+using JapaneseDict.GUI.Models;
+using JapaneseDict.OnlineService.Helpers;
+using JapaneseDict.GUI.Helpers;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -30,28 +34,28 @@ namespace JapaneseDict.GUI.ViewModels
         }
         async Task GetEverydaySentence()
         {
-            this.DailySentence = new ObservableCollection<EverydaySentence>();
+            DailySentence = new ObservableCollection<EverydaySentence>();
             for (int i = 0; i < 3; i++)
             {
-                this.DailySentence.Add((await JapaneseDict.OnlineService.JsonHelper.GetEverydaySentence(i)));
+                DailySentence.Add((await JsonHelper.GetEverydaySentence(i)));
                 //await Task.Delay(100);
             }
         }
         async Task GetNHKNews()
         {
-            var res = await JapaneseDict.OnlineService.JsonHelper.GetNHKNews();
-            this.NHKNews = new ObservableCollection<NHKNews>(res.Take(4));
+            var res = await JsonHelper.GetNHKNews();
+            NHKNews = new ObservableCollection<NHKNews>(res.Take(4));
         }
         async Task GetListening()
         {
-            this.NHKListeningSlow = new ObservableCollection<NHKRadios>();
-            this.NHKListeningNormal = new ObservableCollection<NHKRadios>();
-            this.NHKListeningFast = new ObservableCollection<NHKRadios>();
-            for (int i = 0; i < await OnlineService.JsonHelper.GetNHKRadiosItemsCount()-1; i++)
+            NHKListeningSlow = new ObservableCollection<NHKRadios>();
+            NHKListeningNormal = new ObservableCollection<NHKRadios>();
+            NHKListeningFast = new ObservableCollection<NHKRadios>();
+            for (int i = 0; i < await JsonHelper.GetNHKRadiosItemsCount()-1; i++)
             {
-                this.NHKListeningSlow.Add(await JsonHelper.GetNHKRadios(i, "slow"));
-                this.NHKListeningNormal.Add(await JsonHelper.GetNHKRadios(i, "normal"));
-                this.NHKListeningFast.Add(await JsonHelper.GetNHKRadios(i, "fast"));
+                NHKListeningSlow.Add(await JsonHelper.GetNHKRadios(i, "slow"));
+                NHKListeningNormal.Add(await JsonHelper.GetNHKRadios(i, "normal"));
+                NHKListeningFast.Add(await JsonHelper.GetNHKRadios(i, "fast"));
             }
         }
         const string CLIENT_ID = "skylark_jpdict";
@@ -73,49 +77,47 @@ namespace JapaneseDict.GUI.ViewModels
                         if (!string.IsNullOrWhiteSpace(x) && (x != "Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs"))
                         {
                             Frame rootFrame = Window.Current.Content as Frame;
-                            rootFrame.Navigate(typeof(ResultPage), Util.StringHelper.ResolveReplicator(x.ToString().Replace(" ", "").Replace(" ", "")));
+                            rootFrame.Navigate(typeof(ResultPage), StringHelper.ResolveReplicator(x.ToString().Replace(" ", "").Replace(" ", "")));
                         }
                     }));
             }
         }
 
-        private RelayCommand<string> _navToKanjiFlashcardPageCommand;
-        /// <summary>
-        /// Gets the NavToKanjiFlashcardPage.
-        /// </summary>
-        public RelayCommand<string> NavToKanjiFlashcardPageCommand
+        public ObservableCollection<PageInfo> FlashcardPageInfo
         {
             get
             {
-                return _navToKanjiFlashcardPageCommand
-                    ?? (_navToKanjiFlashcardPageCommand = new RelayCommand<string>(
-                    (x) =>
-                    {
-                        bool result = Int32.TryParse(x, out int jlpt);
-                        if (result)
-                        {
-                            (Window.Current.Content as Frame).Navigate(typeof(KanjiFlashcardPage), jlpt);
-                        }
-                    }));
+                return new ObservableCollection<PageInfo>()
+                {
+                    new PageInfo(){ Name="平假名", Description="ひらがな", Icon="あ", TargetPageType=typeof(KanaFlashcardPage), Parameter="0" },
+                    new PageInfo(){ Name="片假名", Description="カタカナ", Icon="カ", TargetPageType=typeof(KanaFlashcardPage), Parameter="1" },
+                    new PageInfo(){ Name="N1 汉字", Description="JLPT 1", Icon="磯", TargetPageType=typeof(KanjiFlashcardPage), Parameter="1" },
+                    new PageInfo(){ Name="N2 汉字", Description="JLPT 2", Icon="囲", TargetPageType=typeof(KanjiFlashcardPage), Parameter="2" },
+                    new PageInfo(){ Name="N3 汉字", Description="JLPT 3", Icon="夏", TargetPageType=typeof(KanjiFlashcardPage), Parameter="3" },
+                    new PageInfo(){ Name="N4 汉字", Description="JLPT 4", Icon="円", TargetPageType=typeof(KanjiFlashcardPage), Parameter="4" }
+                };
             }
         }
 
-        private RelayCommand<string> _navToKanaFlashcardPageCommand;
+        private RelayCommand<(Type, object)> _navToFlashcardPageCommand;
         /// <summary>
         /// Gets the NavToKanjiFlashcardPage.
         /// </summary>
-        public RelayCommand<string> NavToKanaFlashcardPageCommand
+        public RelayCommand<(Type,object)> NavToFlashcardPageCommand
         {
             get
             {
-                return _navToKanaFlashcardPageCommand
-                    ?? (_navToKanaFlashcardPageCommand = new RelayCommand<string>(
+                return _navToFlashcardPageCommand
+                    ?? (_navToFlashcardPageCommand = new RelayCommand<(Type, object)>(
                     (x) =>
                     {
-                        bool result = Int32.TryParse(x, out int index);
-                        if (result)
+                        if(x.Item1==typeof(KanjiFlashcardPage))
                         {
-                            (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage), index);
+                            (Window.Current.Content as Frame).Navigate(typeof(KanjiFlashcardPage), x.Item2);
+                        }
+                        else if(x.Item1==typeof(KanaFlashcardPage))
+                        {
+                            (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage), x.Item2);
                         }
                     }));
             }

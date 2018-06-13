@@ -1,4 +1,5 @@
 ﻿using JapaneseDict.Models;
+using JapaneseDict.OnlineService.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,13 +19,13 @@ namespace JapaneseDict.OnlineService
         public static async Task<ObservableCollection<OnlineDict>> Query(string keyword)
         {
             var res = new ObservableCollection<OnlineDict>();
-            res.Add(new OnlineDict() { JpChar = keyword, Explanation = await OnlineService.JsonHelper.GetTranslateResult(keyword, "jp", "zh") });
+            res.Add(new OnlineDict() { JpChar = keyword, Explanation = await JsonHelper.GetTranslateResult(keyword, "jp", "zh") });
             return res;
         }
         public static async Task<ObservableCollection<OnlineDict>> Query(string keyword, string originLang, string targetLang)
         {
             var res = new ObservableCollection<OnlineDict>();
-            res.Add(new OnlineDict() { JpChar = keyword, Explanation = await OnlineService.JsonHelper.GetTranslateResult(keyword, originLang, targetLang) });
+            res.Add(new OnlineDict() { JpChar = keyword, Explanation = await JsonHelper.GetTranslateResult(keyword, originLang, targetLang) });
             return res;
         }
     }

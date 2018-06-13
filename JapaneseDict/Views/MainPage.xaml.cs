@@ -15,6 +15,14 @@ using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.Media;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Composition;
+using Windows.UI.Xaml.Hosting;
+using Windows.Foundation.Metadata;
+using Microsoft.Toolkit.Uwp.UI.Animations;
+using JapaneseDict.GUI.Extensions;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using JapaneseDict.GUI.Helpers;
 
 
 
@@ -29,8 +37,9 @@ namespace JapaneseDict.GUI
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             systemControls = SystemMediaTransportControls.GetForCurrentView();
+            systemControls.ButtonPressed += SystemControls_ButtonPressed;
         }
 
         private async void SystemControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -41,10 +50,21 @@ namespace JapaneseDict.GUI
                  {
                      case SystemMediaTransportControlsButton.Play:
                          if (mediaEle.Source != null)
+                         {
                              mediaEle.Play();
+                             StopNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
+                             mainPivot.Focus(FocusState.Programmatic);
+                             ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
+                         }
                          break;
                      case SystemMediaTransportControlsButton.Pause:
-                         mediaEle.Pause();
+                         if (mediaEle.Source != null)
+                         {
+                             mediaEle.Pause();
+                             mainPivot.Focus(FocusState.Programmatic);
+                             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
+                             ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
+                         }
                          break;
                      default:
                          break;
@@ -56,7 +76,7 @@ namespace JapaneseDict.GUI
 
         private void shareEverydaySentence_Btn_Click(object sender, RoutedEventArgs e)
         {
-            JapaneseDict.Util.SharingHelper.ShowShareUI("每日一句分享", ((Button)sender).Tag.ToString());
+            SharingHelper.ShowShareUI("每日一句分享", ((Button)sender).Tag.ToString());
         }
 
         private async void showNotesEverydaySentence_Btn_Click(object sender, RoutedEventArgs e)
@@ -72,6 +92,7 @@ namespace JapaneseDict.GUI
         {
             try
             {
+                mainPivot.Focus(FocusState.Programmatic);
                 StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
                 listeningPosition_Slider.Visibility = Visibility.Collapsed;
                 ((Button)sender).IsEnabled = false;
@@ -92,10 +113,10 @@ namespace JapaneseDict.GUI
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Observable.FromEventPattern<AutoSuggestBoxTextChangedEventArgs>(this.QueryBox, "TextChanged").Throttle(TimeSpan.FromMilliseconds(900)).Subscribe(async x =>
-                            await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            Observable.FromEventPattern<AutoSuggestBoxTextChangedEventArgs>(QueryBox, "TextChanged").Throttle(TimeSpan.FromMilliseconds(900)).Subscribe(async x =>
+                            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                             {
-                                this.QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(Util.StringHelper.ResolveReplicator(QueryBox.Text));
+                                QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(StringHelper.ResolveReplicator(QueryBox.Text));
                                 //await Task.Delay(500);
                             }));
 
@@ -114,16 +135,17 @@ namespace JapaneseDict.GUI
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            this.mediaEle.Source = null;
-            this.mediaEle.Stop();
+            mediaEle.Source = null;
+            mediaEle.Stop();
+            mainPivot.Focus(FocusState.Programmatic);
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
-            this.listeningPosition_Slider.Visibility = Visibility.Collapsed;
+            listeningPosition_Slider.Visibility = Visibility.Collapsed;
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.mediaEle.Stop();
+            mediaEle.Stop();
             systemControls.IsEnabled = true;
             systemControls.IsPlayEnabled = true;
             systemControls.IsPauseEnabled = true;
@@ -131,7 +153,7 @@ namespace JapaneseDict.GUI
             if (e.Parameter!=null)
             {
                 if(e.Parameter.ToString() == "update")
-                    this.mainPivot.SelectedIndex = 4;
+                    mainPivot.SelectedIndex = 4;
             }
         }
 
@@ -166,6 +188,7 @@ namespace JapaneseDict.GUI
         {
             try
             {
+                mainPivot.Focus(FocusState.Programmatic);
                 ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
                 mediaEle.Stop();
                 var currentBtn = ((Button)sender);
@@ -192,39 +215,10 @@ namespace JapaneseDict.GUI
             translate_frame.Navigate(typeof(TranslationPage));
         }
 
-        private void ShowFastListeningList_Btn_Click(object sender, RoutedEventArgs e)
-        {
-            ((HyperlinkButton)sender).SetValue(HyperlinkButton.FontWeightProperty, FontWeights.ExtraBold);
-            ShowSlowListeningList_Btn.FontWeight = FontWeights.Light;
-            ShowNormalListeningList_Btn.FontWeight = FontWeights.Light;
-            listeningFast_List.Visibility = Visibility.Visible;
-            listeningNormal_List.Visibility = Visibility.Collapsed;
-            listeningSlow_List.Visibility = Visibility.Collapsed;
-        }
-
-        private void ShowNormalListeningList_Btn_Click(object sender, RoutedEventArgs e)
-        {
-            ((HyperlinkButton)sender).SetValue(HyperlinkButton.FontWeightProperty, FontWeights.ExtraBold);
-            ShowSlowListeningList_Btn.FontWeight = FontWeights.Light;
-            ShowFastListeningList_Btn.FontWeight = FontWeights.Light;
-            listeningFast_List.Visibility = Visibility.Collapsed;
-            listeningNormal_List.Visibility = Visibility.Visible;
-            listeningSlow_List.Visibility = Visibility.Collapsed;
-        }
-
-        private void ShowSlowListeningList_Btn_Click(object sender, RoutedEventArgs e)
-        {
-            ((HyperlinkButton)sender).SetValue(HyperlinkButton.FontWeightProperty, FontWeights.ExtraBold);
-            ShowNormalListeningList_Btn.FontWeight = FontWeights.Light;
-            ShowFastListeningList_Btn.FontWeight = FontWeights.Light;
-            listeningFast_List.Visibility = Visibility.Collapsed;
-            listeningNormal_List.Visibility = Visibility.Visible;
-            listeningSlow_List.Visibility = Visibility.Collapsed;
-        }
-
         private void StopNHKRadiosPlay_Btn_Click(object sender, RoutedEventArgs e)
         {
             mediaEle.Pause();
+            mainPivot.Focus(FocusState.Programmatic);
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
         }
@@ -247,12 +241,14 @@ namespace JapaneseDict.GUI
 
         private void mediaEle_MediaEnded(object sender, RoutedEventArgs e)
         {
+            mainPivot.Focus(FocusState.Programmatic);
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             listeningPosition_Slider.Visibility = Visibility.Collapsed;
         }
         private void ResumeNHKRadiosPlay_Btn_Click(object sender, RoutedEventArgs e)
         {
             mediaEle.Play();
+            mainPivot.Focus(FocusState.Programmatic);
             (sender as HyperlinkButton).Visibility = Visibility.Collapsed;
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
         }
@@ -270,6 +266,60 @@ namespace JapaneseDict.GUI
                     NotebookPage._needRefresh = false;
                 }
             }
+        }
+        ImplicitAnimationCollection _implicitAnimations;
+        private void EnsureImplicitAnimations()
+        {
+            if (_implicitAnimations == null)
+            {
+                var compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+
+                var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
+                offsetAnimation.Target = nameof(Visual.Offset);
+                offsetAnimation.InsertExpressionKeyFrame(1.0f, "this.FinalValue");
+                offsetAnimation.Duration = TimeSpan.FromMilliseconds(400);
+
+                var animationGroup = compositor.CreateAnimationGroup();
+                animationGroup.Add(offsetAnimation);
+
+                _implicitAnimations = compositor.CreateImplicitAnimationCollection();
+                _implicitAnimations[nameof(Visual.Offset)] = animationGroup;
+            }
+        }
+        private void FlashcardGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (ApiInformation.IsTypePresent(
+            typeof(ImplicitAnimationCollection).FullName))
+            {
+                var elementVisual = ElementCompositionPreview.GetElementVisual(args.ItemContainer);
+                if (args.InRecycleQueue)
+                {
+                    elementVisual.ImplicitAnimations = null;
+                }
+                else
+                {
+                    EnsureImplicitAnimations();
+                    elementVisual.ImplicitAnimations = _implicitAnimations;
+                }
+            }
+        }
+
+        private void FlashcardItem_Grid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1.005", Duration = TimeSpan.FromMilliseconds(300) };
+            animation.StartAnimation(sender as UIElement);
+            var shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(300) };
+            opacityAnimation.StartAnimation(shadowPanel);
+        }
+
+        private void FlashcardItem_Grid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(600) };
+            animation.StartAnimation(sender as UIElement);
+            var shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(600) };
+            opacityAnimation.StartAnimation(shadowPanel);
         }
     }
 }

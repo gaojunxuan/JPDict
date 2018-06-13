@@ -17,17 +17,17 @@ namespace JapaneseDict.Models
         }
         public UserDefDict(MainDict source)
         {
-            this.Comment = source.Comment;
-            this.Explanation = source.Explanation;
-            this.Kana = source.Kana;
-            this.JpChar = source.JpChar;
+            Comment = source.Comment;
+            Explanation = source.Explanation;
+            Kana = source.Kana;
+            JpChar = source.JpChar;
             
         }
         public UserDefDict(UserDefDict data)
         {
-            this.Comment = data.Comment;
-            this.Explanation = data.Explanation;
-            this.JpChar = data.JpChar;
+            Comment = data.Comment;
+            Explanation = data.Explanation;
+            JpChar = data.JpChar;
             
         }
         public string Comment
@@ -65,7 +65,7 @@ namespace JapaneseDict.Models
         {
             get
             {
-                return this.Explanation.Replace("\r", " ").Substring(0, ((Explanation.Length >= 31) ? (30) : (Explanation.Length))) + " ...";
+                return Explanation.Replace("\r", " ").Substring(0, ((Explanation.Length >= 31) ? (30) : (Explanation.Length))).Trim() + " ...";
             }
         }
     }

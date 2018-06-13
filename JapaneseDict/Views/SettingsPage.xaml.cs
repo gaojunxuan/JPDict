@@ -18,7 +18,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using JapaneseDict.Util;
 using Windows.System;
 using Windows.System.Profile;
 using Windows.Security.ExchangeActiveSyncProvisioning;
@@ -37,7 +36,7 @@ namespace JapaneseDict.GUI
     {
         public SettingsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -82,6 +81,36 @@ namespace JapaneseDict.GUI
         {
             var uri = new Uri($"https://skylark-workshop.xyz/privacy-jpdict");
             await Launcher.LaunchUriAsync(uri);
+        }
+
+        private void Upload_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            pageRoot.Focus(FocusState.Programmatic);
+        }
+
+        private void Download_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            pageRoot.Focus(FocusState.Programmatic);
+        }
+
+        private void update_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            pageRoot.Focus(FocusState.Programmatic);
+        }
+
+        private void update_Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            pageRoot.Focus(FocusState.Programmatic);
+        }
+
+        private void Upload_Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            pageRoot.Focus(FocusState.Programmatic);
+        }
+
+        private void Download_Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            pageRoot.Focus(FocusState.Programmatic);
         }
     }
 }

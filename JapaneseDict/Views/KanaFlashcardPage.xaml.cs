@@ -1,4 +1,5 @@
 ﻿using JapaneseDict.GUI.ViewModels;
+using JapaneseDict.GUI.Helpers;
 using System.Reactive;
 using System.Reactive.Linq;
 using GalaSoft.MvvmLight;
@@ -18,11 +19,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using JapaneseDict.Util;
 using System.Collections.ObjectModel;
-using static JapaneseDict.Util.KanaFlashcardHelper;
 using Windows.Phone.UI.Input;
 using Windows.UI.Core;
+using JapaneseDict.Models;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,7 +35,7 @@ namespace JapaneseDict.GUI
     {
         public KanaFlashcardPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -46,7 +46,7 @@ namespace JapaneseDict.GUI
                 bool result = Int32.TryParse(e.Parameter.ToString(), out int index);
                 if (result)
                 {
-                    this.mainPivot.SelectedIndex = index;
+                    mainPivot.SelectedIndex = index;
                 }
             }
             KanaFlashcardViewModel vm = new KanaFlashcardViewModel();
@@ -67,7 +67,7 @@ namespace JapaneseDict.GUI
             vm.Katakana = new ObservableCollection<Kana>(katares);
             vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヰ").First());
             vm.Katakana.Remove(vm.Katakana.Where(k => k.Content == "ヱ").First());
-            this.DataContext = vm;
+            DataContext = vm;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

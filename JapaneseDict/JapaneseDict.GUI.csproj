@@ -11,8 +11,8 @@
     <AssemblyName>JapaneseDict.GUI</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -141,6 +141,9 @@
     <Content Include="kanji.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="kanjirad.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Package.StoreAssociation.xml">
       <SubType>Designer</SubType>
     </None>
@@ -154,13 +157,23 @@
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
+    <Compile Include="CompositionShadow.xaml.cs">
+      <DependentUpon>CompositionShadow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\ListExtension.cs" />
+    <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
     <Compile Include="Helpers\BoolNegativeConverter.cs" />
+    <Compile Include="Helpers\KanaFlashcardHelper.cs" />
     <Compile Include="Helpers\MediaPositionConverter.cs" />
+    <Compile Include="Helpers\SharingHelper.cs" />
     <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\UpdatePromptHelper.cs" />
+    <Compile Include="Helpers\VerbConjugationHelper.cs" />
+    <Compile Include="Models\Kana.cs" />
+    <Compile Include="Models\PageInfo.cs" />
     <Compile Include="Views\KanaFlashcardPage.xaml.cs">
       <DependentUpon>KanaFlashcardPage.xaml</DependentUpon>
     </Compile>
@@ -220,6 +233,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="CompositionShadow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\KanaFlashcardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -254,6 +271,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="Microsoft.Advertising.Xaml, Version=10.0">
+      <Name>Microsoft Advertising SDK for XAML</Name>
+    </SDKReference>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>
     </SDKReference>
@@ -263,7 +283,7 @@
     <SDKReference Include="Microsoft.VCLibs.120, Version=14.0">
       <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Universal</Name>
     </SDKReference>
-    <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
+    <SDKReference Include="WindowsMobile, Version=10.0.16299.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
@@ -276,10 +296,6 @@
       <Project>{0272506c-9fe7-4ccd-99a6-b7219294dbd2}</Project>
       <Name>JapaneseDict.QueryEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JapaneseDict.Util\JapaneseDict.Util.csproj">
-      <Project>{304ad510-3ed5-4b70-93a3-5d86df49cdb7}</Project>
-      <Name>JapaneseDict.Util</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommonServiceLocator">
@@ -288,8 +304,8 @@
     <PackageReference Include="HockeySDK.UWP">
       <Version>4.1.3</Version>
     </PackageReference>
-    <PackageReference Include="JYAdControl">
-      <Version>2.3.6</Version>
+    <PackageReference Include="Microsoft.Advertising.XAML">
+      <Version>10.1805.7001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>1.6.0</Version>
@@ -325,10 +341,16 @@
       <Version>6.1.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
-      <Version>10.1711.28001</Version>
+      <Version>10.1706.16001</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
+      <Version>2.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>2.2.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>2.0.0</Version>
+      <Version>1.1.0</Version>
     </PackageReference>
     <PackageReference Include="MvvmLight">
       <Version>5.4.1</Version>
@@ -353,6 +375,9 @@
     </PackageReference>
     <PackageReference Include="SQLite.Net-PCL">
       <Version>3.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="WindowsAzure.Messaging.Managed">
       <Version>0.1.7.9</Version>
