@@ -10,6 +10,6 @@ namespace JapaneseDict.GUI.Models
     public class GroupedNoteItem
     {
         public string Key { get; set; }
-        public List<UserDefDict> ItemContent { get; set; }
+        public List<Note> ItemContent { get; set; }
     }
 }

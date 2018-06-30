@@ -25,19 +25,19 @@ namespace JapaneseDict.QueryEngine
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            public static IEnumerable<MainDict> Query(string key)
+            public static IEnumerable<Dict> Query(string key)
             {
-                return _conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar = ?", key);
+                return _conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword = ?", key);
             }
             /// <summary>
             /// Fuzzy query MainDict database using the given keyword
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            public static IEnumerable<MainDict> FuzzyQuery(string key)
+            public static IEnumerable<Dict> FuzzyQuery(string key)
             {
 
-                return _conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar LIKE ?", key + "%");
+                return _conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword LIKE ?", key + "%");
 
             }
             /// <summary>
@@ -45,29 +45,29 @@ namespace JapaneseDict.QueryEngine
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            public static async Task<ObservableCollection<MainDict>> QueryForUIAsync(string key)
+            public static async Task<ObservableCollection<Dict>> QueryForUIAsync(string key)
             {
                 return await Task.Run(() =>
                 {
                     if (!(string.IsNullOrEmpty(key)))
                     {
-                        var result = new ObservableCollection<MainDict>(_conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar = ?", key.Replace(" ", "").Replace("　", "")));
+                        var result = new ObservableCollection<Dict>(_conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword = ?", key.Replace(" ", "").Replace("　", "")));
                         if (result.Count != 0)
                         {
                             return result;
                         }
                         else
                         {
-                            var err = new ObservableCollection<MainDict>
+                            var err = new ObservableCollection<Dict>
                             {
-                                new MainDict() { JpChar = key, Explanation = "没有本地释义" }
+                                new Dict() { Keyword = key, Definition = "没有本地释义" }
                             };
                             return err;
                         }
                     }
                     else
                     {
-                        return new ObservableCollection<MainDict>();
+                        return new ObservableCollection<Dict>();
                     }
                 });
 
@@ -77,21 +77,21 @@ namespace JapaneseDict.QueryEngine
             /// </summary>
             /// <param name="id"></param>
             /// <returns></returns>
-            public static async Task<ObservableCollection<MainDict>> QueryForUIAsync(int id)
+            public static async Task<ObservableCollection<Dict>> QueryForUIAsync(int id)
             {
                 return await Task.Run(() =>
                 {
 
-                    var result = new ObservableCollection<MainDict>(_conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", id));
+                    var result = new ObservableCollection<Dict>(_conn.Query<Dict>("SELECT * FROM Dict WHERE ItemId = ?", id));
                     if (result.Count != 0)
                     {
                         return result;
                     }
                     else
                     {
-                        var err = new ObservableCollection<MainDict>
+                        var err = new ObservableCollection<Dict>
                         {
-                            new MainDict() { JpChar = "没有本地释义", Explanation = "请查看网络释义" }
+                            //new Dict() { Keyword = "没有本地释义", Definition = "请查看网络释义" }
                         };
                         return err;
                     }
@@ -99,29 +99,29 @@ namespace JapaneseDict.QueryEngine
                 });
 
             }
-            public static async Task<ObservableCollection<MainDict>> FuzzyQueryForUIAsync(string key)
+            public static async Task<ObservableCollection<Dict>> FuzzyQueryForUIAsync(string key)
             {
                 return await Task.Run(() =>
                 {
                     if (!(string.IsNullOrEmpty(key)))
                     {
-                        var result = new ObservableCollection<MainDict>(_conn.Query<MainDict>("SELECT * FROM MainDict WHERE JpChar LIKE ?", key.Replace(" ", "").Replace("　", "") + "%").Take(5));
+                        var result = new ObservableCollection<Dict>(_conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword LIKE ?", key.Replace(" ", "").Replace("　", "") + "%").Take(5));
                         if (result.Count != 0)
                         {
                             return result;
                         }
                         else
                         {
-                            var err = new ObservableCollection<MainDict>
+                            var err = new ObservableCollection<Dict>
                             {
-                                new MainDict() { JpChar = key, Explanation = "没有本地释义" }
+                                new Dict() { Keyword = key, Definition = "没有本地释义" }
                             };
                             return err;
                         }
                     }
                     else
                     {
-                        return new ObservableCollection<MainDict>();
+                        return new ObservableCollection<Dict>();
                     }
                 });
             }
@@ -136,18 +136,18 @@ namespace JapaneseDict.QueryEngine
             /// <summary>
             /// Insert an item into Maindict db
             /// </summary>
-            /// <param name="jpchar"></param>
-            /// <param name="explanation"></param>
-            /// <param name="Kana"></param>
-            public static void Add(string jpchar, string explanation, string Kana, int id)
+            /// <param name="keyword"></param>
+            /// <param name="definition"></param>
+            /// <param name="reading"></param>
+            public static void Add(string keyword, string definition, string reading, int id)
             {
-                _conn.CreateTable<MainDict>();
-                var maxid = _conn.ExecuteScalar<int>("SELECT MAX( ID ) FROM MainDict ;");
+                _conn.CreateTable<Dict>();
+                var maxid = _conn.ExecuteScalar<int>("SELECT MAX( ID ) FROM Dict ;");
                 _conn.Execute($"UPDATE SQLITE_SEQUENCE SET seq = {maxid}  WHERE name = 'MainDict'");
-                var entries = _conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", id);
+                var entries = _conn.Query<Dict>("SELECT * FROM Dict WHERE ID = ?", id);
                 if (entries.Count == 0)
                 {
-                    _conn.Insert(new MainDict() { JpChar = jpchar, Explanation = explanation, Kana = Kana, ID = id });
+                    _conn.Insert(new Dict() { Keyword = keyword, Definition = definition, Reading = reading, ItemId = id });
                     _conn.Commit();
                 }
 
@@ -162,9 +162,9 @@ namespace JapaneseDict.QueryEngine
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            public static IEnumerable<MainDict> Query(string key)
+            public static IEnumerable<Dict> Query(string key)
             {
-                return _kanjiconn.Query<MainDict>("SELECT * FROM Kanjidict WHERE Kanji = ?", key);
+                return _kanjiconn.Query<Dict>("SELECT * FROM Kanjidict WHERE Kanji = ?", key);
             }
             /// <summary>
             /// Query kanji database using the given kanji and return the result in ObservableCollection type
@@ -306,37 +306,38 @@ namespace JapaneseDict.QueryEngine
 
             }
         }
-        public static class UserDefDictQueryEngine
+        public static class NotebookQueryEngine
         {
             private static SQLiteConnection _noteconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
 
             private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
             /// <summary>
-            /// Insert an item into UserDefDict db
+            /// Insert an item into Note db
             /// </summary>
             /// <param name="jpchar"></param>
             /// <param name="explanation"></param>
             /// <param name="Kana"></param>
+            [Obsolete]
             public static void Add(string jpchar, string explanation, string Kana)
             {
 
-                _noteconn.CreateTable<UserDefDict>();
-                _noteconn.Insert(new UserDefDict() { JpChar = jpchar, Explanation = explanation, Kana = Kana });
-                _noteconn.Commit();
+                //_noteconn.CreateTable<Note>();
+                //_noteconn.Insert(new Note() { JpChar = jpchar, Explanation = explanation, Kana = Kana });
+                //_noteconn.Commit();
             }
             /// <summary>
-            /// Insert an item into UserDefDict db
+            /// Insert an item into Note db
             /// </summary>
             /// <param name="id"></param>
             public static void Add(int id)
             {
                 try
                 {
-                    _noteconn.CreateTable<UserDefDict>();
-                    var item = _conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", id).FirstOrDefault();
-                    item.IsInUserDefDict = true;
+                    _noteconn.CreateTable<Note>();
+                    var item = _conn.Query<Dict>("SELECT * FROM Dict WHERE ItemId = ?", id).FirstOrDefault();
+                    item.IsInNotebook = true;
                     _conn.Update(item);
-                    _noteconn.Insert(new UserDefDict(item) { OriginID = id });
+                    _noteconn.Insert(new Note(item) { ItemId = id });
                     _noteconn.Commit();
                 }
                 catch (Exception ex)
@@ -346,38 +347,38 @@ namespace JapaneseDict.QueryEngine
 
             }
             /// <summary>
-            /// Remove the item with given originId from UserDefDict db
+            /// Remove the item with given originId from Note db
             /// </summary>
             /// <param name="originId"></param>
             public static void Remove(int originId)
             {
 
-                var item = _conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", originId).FirstOrDefault();
-                item.IsInUserDefDict = false;
+                var item = _conn.Query<Dict>("SELECT * FROM Dict WHERE ItemId = ?", originId).FirstOrDefault();
+                item.IsInNotebook = false;
                 _conn.Update(item);
-                _noteconn.Delete(_noteconn.Query<UserDefDict>("SELECT * FROM UserDefDict WHERE OriginID = ?", originId).First());
+                _noteconn.Delete(_noteconn.Query<Note>("SELECT * FROM Note WHERE ItemId = ?", originId).First());
                 _noteconn.Commit();
             }
             /// <summary>
-            /// Get items from UserDefDict db
+            /// Get items from Note db
             /// </summary>
             /// <returns></returns>
-            public static ObservableCollection<UserDefDict> Get()
+            public static ObservableCollection<Note> Get()
             {
-                _noteconn.CreateTable<UserDefDict>();
-                return new ObservableCollection<UserDefDict>(_noteconn.Table<UserDefDict>());
+                _noteconn.CreateTable<Note>(); 
+                return new ObservableCollection<Note>(_noteconn.Table<Note>());
             }
             /// <summary>
             /// An async copy of Get()
             /// </summary>
             /// <returns></returns>
-            public static async Task<ObservableCollection<UserDefDict>> GetAsync()
+            public static async Task<ObservableCollection<Note>> GetAsync()
             {
 
                 return await Task.Run(() =>
                 {
-                    _noteconn.CreateTable<UserDefDict>();
-                    return new ObservableCollection<UserDefDict>(_noteconn.Table<UserDefDict>());
+                    _noteconn.CreateTable<Note>();
+                    return new ObservableCollection<Note>(_noteconn.Table<Note>());
                 });
 
             }
@@ -388,19 +389,19 @@ namespace JapaneseDict.QueryEngine
             public static void MergeDb(string path)
             {
                 SQLiteConnection _mergeConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, path));
-                _mergeConn.CreateTable<UserDefDict>();
-                _noteconn.CreateTable<UserDefDict>();
-                foreach (var i in _mergeConn.Table<UserDefDict>())
+                _mergeConn.CreateTable<Note>();
+                _noteconn.CreateTable<Note>();
+                foreach (var i in _mergeConn.Table<Note>())
                 {
                     //put the data from given db into main db
                     _noteconn.Insert(i);
-                    var item = _conn.Query<MainDict>("SELECT * FROM MainDict WHERE ID = ?", i.OriginID).FirstOrDefault();
-                    item.IsInUserDefDict = true;
+                    var item = _conn.Query<Dict>("SELECT * FROM Dict WHERE ItemId = ?", i.ItemId).FirstOrDefault();
+                    item.IsInNotebook = true;
                     _conn.Update(item);
                 }
-                _noteconn.CreateTable<UserDefDict>();
+                _noteconn.CreateTable<Note>();
                 //remove duplicate rows
-                _noteconn.Query<UserDefDict>("DELETE FROM UserDefDict WHERE ID NOT IN (SELECT MAX(ID) ID FROM UserDefDict GROUP BY OriginID)");
+                _noteconn.Query<Note>("DELETE FROM Note WHERE ItemId NOT IN (SELECT MAX(ItemId) ItemId FROM Note GROUP BY ItemId)");
                 _mergeConn.Close();
             }
             //Recover from backup

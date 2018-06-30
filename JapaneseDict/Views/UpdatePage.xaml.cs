@@ -46,19 +46,24 @@ namespace JapaneseDict.GUI
         {
             base.OnNavigatedTo(e);
             NavigationCacheMode = NavigationCacheMode.Disabled;
+            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("dict.db") != null)
+            {
+                var dict = await ApplicationData.Current.LocalFolder.GetFileAsync("dict.db");
+                await dict.DeleteAsync();
+            }
             var updateFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///update.db"));
             var mainDictFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///dict.db"));
             await updateFile.CopyAsync(ApplicationData.Current.LocalFolder, "update.db", NameCollisionOption.ReplaceExisting);
             await mainDictFile.CopyAsync(ApplicationData.Current.LocalFolder, "dict.db", NameCollisionOption.ReplaceExisting);
             await Task.Run(async() =>
             {
-                string updatepath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db");
+                //string updatepath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "update.db");
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => Update_ProgressBar.Value = 25);
-                QueryEngine.QueryEngine.MainDictQueryEngine._conn.Execute($"ATTACH '{updatepath}' AS `tomerge` KEY ''");
+                //QueryEngine.QueryEngine.MainDictQueryEngine._conn.Execute($"ATTACH '{updatepath}' AS `tomerge` KEY ''");
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => Update_ProgressBar.Value = 35);
-                QueryEngine.QueryEngine.MainDictQueryEngine._conn.Execute("INSERT INTO MainDict(Id,JpChar,Kana,Explanation) SELECT AutoId,JpChar,Reading,Defination FROM tomerge.UpdateDict WHERE AutoId NOT IN (SELECT Id from MainDict);");
+                //QueryEngine.QueryEngine.MainDictQueryEngine._conn.Execute("INSERT INTO Dict(ItemId,Keyword,Reading,Definition) SELECT AutoId,JpChar,Reading,Defination FROM tomerge.UpdateDict WHERE AutoId NOT IN (SELECT Id from Dict);");
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => Update_ProgressBar.Value = 65);
-                QueryEngine.QueryEngine.MainDictQueryEngine._conn.Commit();
+                //QueryEngine.QueryEngine.MainDictQueryEngine._conn.Commit();
 
             }).ContinueWith(async t=> 
             {

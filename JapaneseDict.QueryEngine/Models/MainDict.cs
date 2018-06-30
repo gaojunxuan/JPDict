@@ -1,5 +1,4 @@
-﻿using JapaneseDict.Models;
-using SQLite.Net.Attributes;
+﻿using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace JapaneseDict.Models
 {
-    public class MainDict:IDictItem
+    [Obsolete]
+    public class MainDict
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
@@ -18,9 +18,9 @@ namespace JapaneseDict.Models
         {
             get
             {
-                
+
                 if (string.IsNullOrEmpty(_Kana) && Explanation != "没有本地释义")
-                    return JpChar.Replace("·","");
+                    return JpChar.Replace("·", "");
                 else if (!string.IsNullOrEmpty(_Kana))
                     return _Kana;
                 else
@@ -38,7 +38,7 @@ namespace JapaneseDict.Models
         {
             get
             {
-                return Explanation.Replace("\n"," ").Substring(0,((Explanation.Length>=31)?(30):(Explanation.Length))).Trim() + " ...";
+                return Explanation.Replace("\n", " ").Substring(0, ((Explanation.Length >= 31) ? (30) : (Explanation.Length))).Trim() + " ...";
             }
         }
         [Ignore]
@@ -67,6 +67,6 @@ namespace JapaneseDict.Models
         {
             get; set;
         }
-        
+
     }
 }

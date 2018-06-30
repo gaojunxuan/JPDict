@@ -107,24 +107,24 @@ namespace JapaneseDict.GUI
 
         private void AddToNote_Btn_Click(object sender, RoutedEventArgs e)
         {
-            mainPivot.Focus(FocusState.Programmatic);
+            mainPivot.Focus(FocusState.Pointer);
             ((Button)sender).Visibility = Visibility.Collapsed;
             ((Button)((Button)sender).Tag).Visibility = Visibility.Visible;
         }
 
         private void RemoveFromNote_Btn_Click(object sender, RoutedEventArgs e)
         {
-            mainPivot.Focus(FocusState.Programmatic);
+            mainPivot.Focus(FocusState.Pointer);
             ((Button)sender).Visibility = Visibility.Collapsed;
             ((Button)((Button)sender).Tag).Visibility = Visibility.Visible;
         }
 
         private void QueryBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            MainDict suggest = args.SelectedItem as MainDict;
+            Dict suggest = args.SelectedItem as Dict;
             if (suggest == null)
                 return;
-            sender.Text = suggest.JpChar;
+            sender.Text = suggest.Keyword;
         }
 
         private void seeOnlineResult_Btn_Click(object sender, RoutedEventArgs e)
@@ -135,19 +135,6 @@ namespace JapaneseDict.GUI
         private void kanjiItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-        }
-        string _content = "";
-        private void explanationBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            var content = (sender as TextBlock).Text;
-            _content += content;
-            if(_content!="")
-            {
-                if (!(_content.Contains("五 ]") | _content.Contains("一 ]") | _content.Contains("サ ]") | _content.Contains("カ ]") | content.Contains("動詞")))
-                {
-                    mainPivot.Items.Remove(mainPivot.Items[3]);
-                }
-            }
         }
         private void kanjiItem_Loaded(object sender, RoutedEventArgs e)
         {
@@ -227,6 +214,19 @@ namespace JapaneseDict.GUI
             transform.ScaleY = 0.4;
             geometry.Transform = transform;
             (sender as Path).Data = geometry;
+        }
+
+        private void resultFlipView_Loaded(object sender, RoutedEventArgs e)
+        {
+            mainPivot.Focus(FocusState.Pointer);
+        }
+
+        private void DefinitionListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if ((this.DataContext as ResultViewModel).VerbResult == null || (this.DataContext as ResultViewModel).VerbResult.Count == 0)
+            {
+                mainPivot.Items.Remove(mainPivot.Items[3]);
+            }
         }
     }
 }

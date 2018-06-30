@@ -25,7 +25,7 @@ namespace JapaneseDict.GUI.Helpers
         static bool IsSuruVerb(string word)
         {
             word = word.Replace(" ", "").Replace("　", "");
-            if (word == "する" || word.Substring(word.Length - 2) == "する")
+            if (word.Length >= 2 && (word == "する" || word.Substring(word.Length - 2) == "する"))
             {
                 return true;
             }

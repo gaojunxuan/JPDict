@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace JapaneseDict.Models
 {
-    public class UserDefDict : IDictItem
+    [Obsolete]
+    public class UserDefDict
     {
         public UserDefDict()
         {
@@ -21,14 +22,14 @@ namespace JapaneseDict.Models
             Explanation = source.Explanation;
             Kana = source.Kana;
             JpChar = source.JpChar;
-            
+
         }
         public UserDefDict(UserDefDict data)
         {
             Comment = data.Comment;
             Explanation = data.Explanation;
             JpChar = data.JpChar;
-            
+
         }
         public string Comment
         {

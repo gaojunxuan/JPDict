@@ -61,10 +61,7 @@ namespace JapaneseDict.GUI
         {
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///dict.db"));
-            if (await storageFolder.TryGetItemAsync("dict.db") == null)
-            {
-                await file.CopyAsync(storageFolder, "dict.db");
-            }
+
 
             if (await storageFolder.TryGetItemAsync("kanji.db") == null)
             {

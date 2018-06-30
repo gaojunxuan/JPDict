@@ -444,11 +444,11 @@
             </PivotItem>
         </Pivot>
         <StackPanel Background="#00b294" Height="65" VerticalAlignment="Bottom">
-            <AutoSuggestBox Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="JpChar" Style="{StaticResource AutoSuggestBoxStyle1}" PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen" IsTabStop="False">
+            <AutoSuggestBox Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="Keyword" Style="{StaticResource AutoSuggestBoxStyle1}" PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen" IsTabStop="False">
                 <AutoSuggestBox.Resources>
                     <DataTemplate x:Key="DataTemplate1">
                         <StackPanel Name="autosuggestion_Listitem" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding JpChar}" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center" TextWrapping="NoWrap"></TextBlock>
+                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Keyword}" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center" TextWrapping="NoWrap"></TextBlock>
                             <TextBlock Text="{Binding PreviewExplanation}" Margin="10,0,0,0" FontFamily="DengXian" FontWeight="Normal" VerticalAlignment="Center" TextWrapping="NoWrap"/>
                         </StackPanel>
                     </DataTemplate>

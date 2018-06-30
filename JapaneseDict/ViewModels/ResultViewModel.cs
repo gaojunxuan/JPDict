@@ -27,18 +27,28 @@ namespace JapaneseDict.GUI.ViewModels
 {
     public class ResultViewModel : ViewModelBase
     {
-        
-        // If you have install the code sniplets, use "propvm + [tab] +[tab]" create a property。
-        string _keyword;
+        private string keyword;
+
+        public string Keyword
+        {
+            get { return keyword; }
+            set
+            {
+                keyword = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         public ResultViewModel(string keyword)
         {
             
-            _keyword = keyword;
+            Keyword = keyword;
             QueryWord();
+            
             if(IsInDesignMode)
             {
-                _keyword = "あ";
+                Keyword = "あ";
             }
             
         }
@@ -48,7 +58,7 @@ namespace JapaneseDict.GUI.ViewModels
             QueryWord(id);
             if (IsInDesignMode)
             {
-                _keyword = "あ";
+                Keyword = "あ";
             }
 
         }
@@ -57,46 +67,102 @@ namespace JapaneseDict.GUI.ViewModels
         {
             if (IsInDesignMode)
             {
-                _keyword = "あ";
+                Keyword = "あ";
             }
         }
         
         private async void QueryWord()
         {
-            result = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(_keyword);
-            if (result.Count != 0 && result.FirstOrDefault().Explanation == "没有本地释义")
+            var queryResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(Keyword);
+            
+            if (queryResult.Count != 0 && queryResult.FirstOrDefault().Definition == "没有本地释义")
             {
-                string word = StringHelper.PrepareVerbs(_keyword);
-                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(word);
-                if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Explanation != "没有本地释义")
+                string word = StringHelper.PrepareVerbs(Keyword);
+                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(word);                
+                if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Definition != "没有本地释义")
                 {
-                    result.First().SeeAlso = seealsoresults.First().JpChar;
+                    queryResult.First().Suggestion = seealsoresults.First().Keyword;
                 }
                 var pv = Windows.ApplicationModel.Package.Current.Id.Version;
                 Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Word not found", new Dictionary<string, string>
                 {
-                    { "Keyword", _keyword },
+                    { "Keyword", Keyword },
                     { "Version", $"{pv.Major}.{pv.Minor}.{pv.Build}.{pv.Revision}" }
                 });
             }
-            Result = result;
-            foreach (var i in result)
-            {
-                var content = i.Explanation;
-            }
+            var grouped = queryResult.GroupBy(x => x.ItemId).Select(g=>new GroupedDictItem(g));
+            Result = new ObservableCollection<GroupedDictItem>(grouped);
+            QueryVerb();
+            await QueryOnline();      
         }
         private async void QueryWord(int id)
         {
-            result = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(id);
-            Result = result;
-            if(result != null && result.Count!=0)
+            var queryResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(id);
+            if(queryResult != null && queryResult.Count!=0)
             {
-                _keyword = result.First().JpChar;
+                Keyword = queryResult.First().Keyword;
             }
+            var grouped = queryResult.GroupBy(x => x.ItemId).Select(g => new GroupedDictItem(g));
+            Result = new ObservableCollection<GroupedDictItem>(grouped);
+            QueryVerb();
+            await QueryOnline();
+        }        
+        private void QueryVerb()
+        {
+            var vbres = new ObservableCollection<Verb>();
+            foreach (var i in Result)
+            {
+                foreach (var x in i)
+                {
+                    if (!string.IsNullOrEmpty(x.Pos))
+                    {
+                        if (x.Pos.Contains("五 ]") | x.Pos.Contains("一 ]") | x.Pos.Contains("サ ]") | x.Pos.Contains("カ ]") | x.Pos.Contains("動詞"))
+                        {
+                            if (vbres == null | vbres.Count == 0)
+                            {
+                                string keyword = x.Keyword;
+                                if (x.Pos.Contains("サ") && !x.Keyword.EndsWith("する"))
+                                {
+                                    keyword += "する";
+                                }
+                                vbres.Add(new Verb()
+                                {
+                                    Causative = VerbConjugationHelper.GetCausative(keyword, x.Pos),
+                                    EbaForm = VerbConjugationHelper.GetEbaForm(keyword, x.Pos),
+                                    Imperative = VerbConjugationHelper.GetImperative(keyword, x.Pos),
+                                    MasuForm = VerbConjugationHelper.GetMasuForm(keyword, x.Pos),
+                                    MasuNegative = VerbConjugationHelper.GetMasuNegative(keyword, x.Pos),
+                                    NegativeCausative = VerbConjugationHelper.GetNegativeCausative(keyword, x.Pos),
+                                    NegativeForm = VerbConjugationHelper.GetNegative(keyword, x.Pos),
+                                    NegativeImperative = VerbConjugationHelper.GetNegativeImperative(keyword),
+                                    NegativePassive = VerbConjugationHelper.GetNegativePassive(keyword, x.Pos),
+                                    NegativePotential = VerbConjugationHelper.GetNegativePotential(keyword, x.Pos),
+                                    OriginalForm = keyword,
+                                    Passive = VerbConjugationHelper.GetPassive(keyword, x.Pos),
+                                    PastNegative = VerbConjugationHelper.GetPastNegative(keyword, x.Pos),
+                                    Potential = VerbConjugationHelper.GetPotential(keyword, x.Pos),
+                                    TaForm = VerbConjugationHelper.GetTaForm(keyword, x.Pos),
+                                    TeForm = VerbConjugationHelper.GetTeForm(keyword, x.Pos),
+                                    Volitional = VerbConjugationHelper.GetVolitional(keyword, x.Pos)
+                                });
+                            }
+                        }
+                    }
+                }
+
+
+            }
+            VerbResult = vbres;
+        }
+        private async Task QueryOnline()
+        {
+            IsOnlineQueryBusy = true;
+            OnlineResult = await OnlineQueryEngine.Query(Keyword);
+            IsOnlineQueryBusy = false;
         }
 
-        private ObservableCollection<MainDict> result;
-        public ObservableCollection<MainDict> Result
+        private ObservableCollection<GroupedDictItem> result;
+        public ObservableCollection<GroupedDictItem> Result
         {
             get { return result; }
             set
@@ -154,100 +220,6 @@ namespace JapaneseDict.GUI.ViewModels
             }
         }
 
-        private RelayCommand _queryOnlineCommand;
-        /// <summary>
-        /// Gets the QueryOnlineCommand.
-        /// </summary>
-        public RelayCommand QueryOnlineCommand
-        {
-            get
-            {
-                return _queryOnlineCommand
-                    ?? (_queryOnlineCommand = new RelayCommand(
-                    async() =>
-                    {
-                        IsOnlineQueryBusy = true;
-                        OnlineResult = await OnlineQueryEngine.Query(result.First().JpChar);
-                        IsOnlineQueryBusy = false;
-                    }));
-            }
-        }
-
-        private RelayCommand _queryVerbCommand;
-        /// <summary>
-        /// Gets the QueryVerbCommand.
-        /// </summary>
-        public RelayCommand QueryVerbCommand
-        {
-            get
-            {
-                return _queryVerbCommand
-                    ?? (_queryVerbCommand = new RelayCommand(
-                    () =>
-                    {
-                        var vbres = new ObservableCollection<Verb>();
-                        foreach (var i in Result)
-                        {
-
-                            var content = i.Explanation;
-                            if (content.Contains("五 ]") | content.Contains("一 ]") | content.Contains("サ ]") | content.Contains("カ ]") | content.Contains("動詞"))
-                            {
-                                Regex reg = new Regex("[\u4e00-\u9fa5]+");
-                                string keyword = i.JpChar;
-                                var matches = reg.Matches(keyword);
-                                if (matches.Count == 0)
-                                {
-                                    string newkey;
-                                    newkey = content.Split('\n')[1];
-                                    if (!string.IsNullOrEmpty(newkey) & !newkey.Contains("["))
-                                    {
-                                        if (newkey.Contains("；"))
-                                        {
-                                            keyword = newkey.Split('；')[0].Replace(" ", "").Replace("　", "");
-                                        }
-                                        else
-                                        {
-                                            keyword = newkey.Replace(" ", "").Replace("　", "");
-                                        }
-                                    }
-                                }
-                                if (content.Contains("サ") && !i.JpChar.EndsWith("する"))
-                                {
-                                    keyword += "する";
-                                }
-
-                                //vm.IsVerbQueryEnabled = Visibility.Visible;
-                                vbres.Add(new Verb()
-                                {
-                                    Causative = VerbConjugationHelper.GetCausative(keyword, content),
-                                    EbaForm = VerbConjugationHelper.GetEbaForm(keyword, content),
-                                    Imperative = VerbConjugationHelper.GetImperative(keyword, content),
-                                    MasuForm = VerbConjugationHelper.GetMasuForm(keyword, content),
-                                    MasuNegative = VerbConjugationHelper.GetMasuNegative(keyword, content),
-                                    NegativeCausative = VerbConjugationHelper.GetNegativeCausative(keyword, content),
-                                    NegativeForm = VerbConjugationHelper.GetNegative(keyword, content),
-                                    NegativeImperative = VerbConjugationHelper.GetNegativeImperative(keyword),
-                                    NegativePassive = VerbConjugationHelper.GetNegativePassive(keyword, content),
-                                    NegativePotential = VerbConjugationHelper.GetNegativePotential(keyword, content),
-                                    OriginalForm = keyword,
-                                    Passive = VerbConjugationHelper.GetPassive(keyword, content),
-                                    PastNegative = VerbConjugationHelper.GetPastNegative(keyword, content),
-                                    Potential = VerbConjugationHelper.GetPotential(keyword, content),
-                                    TaForm = VerbConjugationHelper.GetTaForm(keyword, content),
-                                    TeForm = VerbConjugationHelper.GetTeForm(keyword, content),
-                                    Volitional = VerbConjugationHelper.GetVolitional(keyword, content)
-                                });
-                            }
-                            else
-                            {
-                                //vm.IsVerbQueryEnabled = Visibility.Collapsed;
-                            }
-                        }
-                        VerbResult = vbres;
-                    }));
-            }
-        }
-
         private RelayCommand _queryKanjiCommand;
         /// <summary>
         /// Gets the QueryKanjiCommand.
@@ -265,32 +237,7 @@ namespace JapaneseDict.GUI.ViewModels
                         StringBuilder sbkey = new StringBuilder();
                         foreach (var i in Result)
                         {
-                            sbkey.Append(i.JpChar);
-                            if (reg.Matches(i.JpChar).Count == 0)
-                            {
-                                if (i.Explanation != "没有本地释义")
-                                {
-                                    string[] lines;
-                                    lines = i.Explanation.Split('\n');
-                                    if (string.IsNullOrWhiteSpace(lines[0]))
-                                    {
-                                        if (!lines[1].Contains("["))
-                                        {
-                                            if (!en_reg.IsMatch(lines[1]) && lines[1].Contains(")"))
-                                                sbkey.Append(lines[1]);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (!lines[0].Contains("["))
-                                        {
-                                            if (!en_reg.IsMatch(lines[0]) && lines[0].Contains(")"))
-                                                sbkey.Append(lines[0]);
-                                        }
-                                    }
-                                }
-
-                            }
+                            sbkey.Append(i.First().Kanji);
                         }
                         var matches = reg.Matches(sbkey.ToString());
                         KanjiResult = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(matches);
@@ -367,7 +314,7 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_addToNotebookCommand = new RelayCommand<int>(
                     (x) =>
                     {
-                        QueryEngine.QueryEngine.UserDefDictQueryEngine.Add(x);
+                        QueryEngine.QueryEngine.NotebookQueryEngine.Add(x);
                     }));
             }
         }
@@ -384,7 +331,7 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_removeFromNotebookCommand = new RelayCommand<int>(
                     (x) =>
                     {
-                        QueryEngine.QueryEngine.UserDefDictQueryEngine.Remove(x);
+                        QueryEngine.QueryEngine.NotebookQueryEngine.Remove(x);
                     }));
             }
         }

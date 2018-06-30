@@ -9,11 +9,13 @@ namespace JapaneseDict.Models
 {
     interface IDictItem
     {
-        [PrimaryKey, AutoIncrement]
-        int ID { get; set; }
-        string JpChar { get; set; }
-        string Kana { get; set; }
-        string Explanation { get; set; }
-        string Comment { get; set; }
+        int ItemId { get; set; }
+        string Definition { get; set; }
+        string Pos { get; set; }
+        string Keyword { get; set; }
+        string Reading { get; set; }
+        string Kanji { get; set; }
+        string LoanWord { get; set; }
+        string SeeAlso { get; set; }
     }
 }

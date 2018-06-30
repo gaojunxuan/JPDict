@@ -225,10 +225,10 @@ namespace JapaneseDict.GUI
 
         private void QueryBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            MainDict suggest = args.SelectedItem as MainDict;
+            Dict suggest = args.SelectedItem as Dict;
             if (suggest == null)
                 return;
-            sender.Text = suggest.JpChar;
+            sender.Text = suggest.Keyword;
         }
 
         private void adControl_Loaded(object sender, RoutedEventArgs e)

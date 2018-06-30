@@ -121,7 +121,9 @@
     <Compile Include="Models\IKanji.cs" />
     <Compile Include="Models\Kanjidict.cs" />
     <Compile Include="Models\KanjiRadical.cs" />
+    <Compile Include="Models\Dict.cs" />
     <Compile Include="Models\MainDict.cs" />
+    <Compile Include="Models\Note.cs" />
     <Compile Include="Models\OnlineDict.cs" />
     <Compile Include="Models\UserDefDict.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

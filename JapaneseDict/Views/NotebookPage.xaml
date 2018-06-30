@@ -43,17 +43,17 @@
                                                      Opacity="0">
                                     <Border></Border>
                                 </controls:DropShadowPanel>
-                                <StackPanel Holding="noteItem_Holding" RightTapped="noteItem_RightTapped" Name="noteItem" Width="340" Margin="12" Background="White" Tag="{Binding OriginID}" BorderBrush="LightGray" BorderThickness="0.8" Tapped="noteItem_Tapped" RequestedTheme="Light">
-                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding JpChar}" Foreground="#00b294" FontSize="24" Margin="8,20,4,4"></TextBlock>
-                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kana}" Foreground="Gray" FontSize="14" Margin="10,4,4,4"></TextBlock>
+                                <StackPanel Holding="noteItem_Holding" RightTapped="noteItem_RightTapped" Name="noteItem" Width="340" Margin="12" Background="White" Tag="{Binding ItemId}" BorderBrush="LightGray" BorderThickness="0.8" Tapped="noteItem_Tapped" RequestedTheme="Light">
+                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Keyword}" Foreground="#00b294" FontSize="24" Margin="8,20,4,4"></TextBlock>
+                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Reading}" Foreground="Gray" FontSize="14" Margin="10,4,4,4"></TextBlock>
                                     <TextBlock FontFamily="DengXian" Text="{Binding PreviewExplanation}" FontSize="20" Margin="8,4,4,20" Foreground="Black"></TextBlock>
                                     <FlyoutBase.AttachedFlyout>
                                         <MenuFlyout>
-                                            <MenuFlyoutItem Text="删除" Command="{Binding ElementName=pageRoot,Path=DataContext.RemoveFromNotebookCommand}" CommandParameter="{Binding OriginID}"></MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="删除" Command="{Binding ElementName=pageRoot,Path=DataContext.RemoveFromNotebookCommand}" CommandParameter="{Binding ItemId}"></MenuFlyoutItem>
                                         </MenuFlyout>
                                     </FlyoutBase.AttachedFlyout>
                                 </StackPanel>
-                                <Button x:Name="DeleteBtn" RequestedTheme="Light" Margin="32" Background="#FF5252" Foreground="White" Style="{StaticResource RoundButtonStyle}" Width="32" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding ElementName=pageRoot,Path=DataContext.RemoveFromNotebookCommand}" CommandParameter="{Binding OriginID}" Loaded="DeleteBtn_Loaded">
+                                <Button x:Name="DeleteBtn" RequestedTheme="Light" Margin="32" Background="#FF5252" Foreground="White" Style="{StaticResource RoundButtonStyle}" Width="32" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding ElementName=pageRoot,Path=DataContext.RemoveFromNotebookCommand}" CommandParameter="{Binding ItemId}" Loaded="DeleteBtn_Loaded">
                                     <Button.Content>
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE10A;" FontSize="12"/>
                                     </Button.Content>

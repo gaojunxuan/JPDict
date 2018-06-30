@@ -172,6 +172,7 @@
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\UpdatePromptHelper.cs" />
     <Compile Include="Helpers\VerbConjugationHelper.cs" />
+    <Compile Include="Models\GroupedDictItem.cs" />
     <Compile Include="Models\Kana.cs" />
     <Compile Include="Models\PageInfo.cs" />
     <Compile Include="Views\KanaFlashcardPage.xaml.cs">

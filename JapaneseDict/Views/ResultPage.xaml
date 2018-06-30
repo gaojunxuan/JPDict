@@ -25,33 +25,63 @@
         <DataTemplate x:Key="DataTemplate2">
             <ScrollViewer x:Name="resultViewer" RequestedTheme="Light">
                 <StackPanel>
-
-                    <TextBlock FontFamily="Yu Gothic UI" x:Name="pageTitle" Text="{Binding JpChar}" Style="{StaticResource HeaderTextBlockStyle}"
+                    <TextBlock FontFamily="Yu Gothic UI" x:Name="pageTitle" Text="{Binding Keyword}" Style="{StaticResource HeaderTextBlockStyle}"
                                   IsHitTestVisible="false" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20,30,30,0" FontWeight="Normal" Foreground="#FF00B294" FontSize="32" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
                     <StackPanel Orientation="Vertical" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource boolToVisibility}}">
-                        <Button x:Name="Speak_Btn" Command="{Binding ElementName=pageRoot,Path=DataContext.SpeakCommand}" CommandParameter="{Binding Kana}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="26.667" Height="44" Background="#FF00B294" Foreground="White">
+                        <Button x:Name="Speak_Btn" Command="{Binding ElementName=pageRoot,Path=DataContext.SpeakCommand}" CommandParameter="{Binding Reading}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="26.667" Height="44" Background="#FF00B294" Foreground="White">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kana}" FontSize="18.667" TextWrapping="Wrap"/>
+                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Reading}" FontSize="18.667" TextWrapping="Wrap"/>
                                 <SymbolIcon Symbol="Volume" Margin="10,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <StackPanel Orientation="Horizontal">
-                            <Button Name="AddToNote_Btn" Click="AddToNote_Btn_Click" Tag="{Binding ElementName=RemoveFromNote_Btn}" Visibility="{Binding IsInUserDefDict,Converter={StaticResource negateConverter}}" Command="{Binding ElementName=pageRoot,Path=DataContext.AddToNotebookCommand}" CommandParameter="{Binding ID}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="29.333" Height="44" Foreground="White" Background="#FF00B294">
+                            <Button Name="AddToNote_Btn" Click="AddToNote_Btn_Click" Tag="{Binding ElementName=RemoveFromNote_Btn}" Visibility="{Binding IsInNotebook,Converter={StaticResource negateConverter}}" Command="{Binding ElementName=pageRoot,Path=DataContext.AddToNotebookCommand}" CommandParameter="{Binding Key}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="29.333" Height="44" Foreground="White" Background="#FF00B294">
                                 <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="24"></TextBlock>
                             </Button>
-                            <Button Name="RemoveFromNote_Btn" Click="RemoveFromNote_Btn_Click" Tag="{Binding ElementName=AddToNote_Btn}" Visibility="{Binding IsInUserDefDict,Converter={StaticResource boolToVisibility}}" Command="{Binding ElementName=pageRoot,Path=DataContext.RemoveFromNotebookCommand}" CommandParameter="{Binding ID}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="29.333" Height="44" Foreground="White" Background="#FF00B294">
+                            <Button Name="RemoveFromNote_Btn" Click="RemoveFromNote_Btn_Click" Tag="{Binding ElementName=AddToNote_Btn}" Visibility="{Binding IsInNotebook,Converter={StaticResource boolToVisibility}}" Command="{Binding ElementName=pageRoot,Path=DataContext.RemoveFromNotebookCommand}" CommandParameter="{Binding Key}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="29.333" Height="44" Foreground="White" Background="#FF00B294">
                                 <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="24"></TextBlock>
                             </Button>
                         </StackPanel>
 
                     </StackPanel>
-
-                    <TextBlock x:Name="explanationBox" Text="{Binding Explanation}" Margin="20,20,30,40" TextWrapping="Wrap" FontSize="20" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294" Loaded="explanationBox_Loaded" FontFamily="DengXian" FontWeight="Normal" LineHeight="30"/>
-                    <StackPanel Visibility="{Binding IsSeeAlsoBtnVisible,Converter={StaticResource boolToVisibility},UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Margin="20,20,30,40">
-                        <TextBlock Text="您查找的词可能是" FontSize="16" VerticalAlignment="Center"></TextBlock>
-                        <Button Name="SeeAlso_Btn" Content="{Binding SeeAlso}" FontSize="16" Margin="10,0,0,0" VerticalAlignment="Center" Background="#00b294" Foreground="White" FontFamily="Yu Gothic UI" Click="SeeAlso_Btn_Click"></Button>
+                    <StackPanel x:Name="KanjiPanel" Margin="4,12,4,4" Visibility="{Binding ShowKanjiPanel,Converter={StaticResource boolToVisibility}}">
+                        <TextBlock Text="汉字" Style="{StaticResource CaptionTextBlockStyle}" Foreground="DarkGray" Margin="16,4,0,4"></TextBlock>
+                        <TextBlock Text="{Binding Kanji}" FontSize="20" FontFamily="Yu Gothic UI" Margin="16,4,0,4"></TextBlock>
                     </StackPanel>
-                    <Button x:Name="seeOnlineResult_Btn" Content="在线释义" CommandParameter="{Binding JpChar}" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource negateConverter}}" Margin="20,20,30,0" Foreground="White" Background="#FF00B294" Height="40" Width="80" Click="seeOnlineResult_Btn_Click"></Button>
+                    <StackPanel x:Name="LoanWordPanel" Margin="4,12,4,4" Visibility="{Binding ShowLoanWordPanel,Converter={StaticResource boolToVisibility}}">
+                        <TextBlock Text="外来语" Style="{StaticResource CaptionTextBlockStyle}" Foreground="DarkGray" Margin="16,4,0,4"></TextBlock>
+                        <TextBlock Text="{Binding LoanWord}" FontSize="20" FontFamily="Yu Gothic UI" Margin="16,4,0,4"></TextBlock>
+                    </StackPanel>
+                    <StackPanel x:Name="DefinitionPanel" Margin="4,12,4,4">
+                        <TextBlock Text="释义" Style="{StaticResource CaptionTextBlockStyle}" Foreground="DarkGray" Margin="16,4,0,4"></TextBlock>
+                        <ListView x:Name="DefinitionListView" ItemsSource="{Binding Definitions}" SelectionMode="None" Loaded="DefinitionListView_Loaded">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="4,0,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="PosTbk" Grid.Column="0" Text="{Binding Pos}" Foreground="Gray" FontSize="20" FontWeight="Light" VerticalAlignment="Top" Margin="0,0,4,0" Style="{StaticResource HeaderTextBlockStyle}"></TextBlock>
+                                        <TextBlock x:Name="DefTbk"  Grid.Column="1" Text="{Binding Definition}" VerticalAlignment="Top" FontSize="20" Style="{StaticResource HeaderTextBlockStyle}" TextWrapping="WrapWholeWords"></TextBlock>
+
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+
+                    <ListView>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Visibility="{Binding IsSeeAlsoBtnVisible,Converter={StaticResource boolToVisibility},UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBlock Text="您查找的词可能是" FontSize="16" VerticalAlignment="Center"></TextBlock>
+                                    <Button Name="SeeAlso_Btn" Content="{Binding Suggestion}" FontSize="16" Margin="10,0,0,0" VerticalAlignment="Center" Background="#00b294" Foreground="White" FontFamily="Yu Gothic UI" Click="SeeAlso_Btn_Click"></Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Button x:Name="seeOnlineResult_Btn" Content="在线释义" CommandParameter="{Binding Keyword}" Margin="20,20,30,0" Foreground="White" Background="#FF00B294" Height="40" Width="80" Click="seeOnlineResult_Btn_Click" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource negateConverter}}"></Button>
                 </StackPanel>
 
             </ScrollViewer>
@@ -95,7 +125,7 @@
                         </StackPanel>
                     </StackPanel>
                 </PivotItem.Header>
-                <FlipView ItemsSource="{Binding Result}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3">
+                <FlipView ItemsSource="{Binding Result}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3" Loaded="resultFlipView_Loaded">
                 </FlipView>
                
             </PivotItem>
@@ -112,11 +142,6 @@
                 <Grid>
                     <ProgressRing x:Name="onlineRes_ProgressRing" Foreground="#FF00B294" IsActive="{Binding IsOnlineQueryBusy}"></ProgressRing>
                     <FlipView ItemsSource="{Binding OnlineResult}"  x:Name="onlineeresultFlipView" ItemTemplate="{StaticResource DataTemplate3}">
-                        <Interactivity:Interaction.Behaviors>
-                            <Core:EventTriggerBehavior EventName="Loaded">
-                                <Core:InvokeCommandAction Command="{Binding QueryOnlineCommand}"/>
-                            </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
                     </FlipView>
                 </Grid>
             </PivotItem>
@@ -297,22 +322,22 @@
                                 </Grid>
                             </DataTemplate>
                         </FlipView.ItemTemplate>
-                        <Interactivity:Interaction.Behaviors>
+                        <!--<Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="Loaded">
                                 <Core:InvokeCommandAction Command="{Binding QueryVerbCommand}"/>
                             </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
+                        </Interactivity:Interaction.Behaviors>-->
                     </FlipView>
                 </Grid>
             </PivotItem>
         </Pivot>
         <StackPanel Background="#00b294" Height="65" VerticalAlignment="Bottom">
 
-            <AutoSuggestBox x:Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="JpChar"  PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen">
+            <AutoSuggestBox x:Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="Keyword"  PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen">
                 <AutoSuggestBox.Resources>
                     <DataTemplate x:Key="DataTemplate1">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding JpChar}" FontFamily="Yu Gothic UI" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Keyword}" FontFamily="Yu Gothic UI" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding PreviewExplanation}"  FontFamily="DengXian" FontWeight="Normal" Margin="10,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>

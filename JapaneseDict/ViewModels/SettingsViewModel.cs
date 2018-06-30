@@ -149,7 +149,7 @@ namespace JapaneseDict.GUI.ViewModels
                                     await filestream.CopyToAsync(writestream);
                                     filestream.Dispose();
                                     writestream.Dispose();
-                                    QueryEngine.QueryEngine.UserDefDictQueryEngine.CopyFromBackup();
+                                    QueryEngine.QueryEngine.NotebookQueryEngine.CopyFromBackup();
                                     NotebookPage._needRefresh = true;
                                 }
                             });

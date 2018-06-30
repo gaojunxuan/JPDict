@@ -31,8 +31,8 @@ namespace JapaneseDict.GUI.ViewModels
             IsBusy = true;
             try
             {
-                var a = QueryEngine.QueryEngine.UserDefDictQueryEngine.Get();
-                Func<ObservableCollection<GroupedNoteItem>> func = (() => { return new ObservableCollection<GroupedNoteItem>((from item in QueryEngine.QueryEngine.UserDefDictQueryEngine.Get() orderby item.GroupingKey group item by item.GroupingKey into newItems select new GroupedNoteItem { Key = newItems.Key, ItemContent = newItems.ToList() }).ToList()); });
+                var a = QueryEngine.QueryEngine.NotebookQueryEngine.Get();
+                Func<ObservableCollection<GroupedNoteItem>> func = (() => { return new ObservableCollection<GroupedNoteItem>((from item in QueryEngine.QueryEngine.NotebookQueryEngine.Get() orderby item.GroupingKey group item by item.GroupingKey into newItems select new GroupedNoteItem { Key = newItems.Key, ItemContent = newItems.ToList() }).ToList()); });
                 GroupedNoteList = await Task.Run(func);
                 if (GroupedNoteList.Count == 0)
                 {
@@ -74,7 +74,7 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_removeFromNotebookCommand = new RelayCommand<int>(
                     (x) =>
                     {
-                        QueryEngine.QueryEngine.UserDefDictQueryEngine.Remove(x);
+                        QueryEngine.QueryEngine.NotebookQueryEngine.Remove(x);
                         LoadData();
                     }));
             }

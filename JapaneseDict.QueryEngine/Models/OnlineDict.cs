@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JapaneseDict.Models
 {
-    public class OnlineDict : IDictItem
+    public class OnlineDict
     {
         public string Comment
         {
