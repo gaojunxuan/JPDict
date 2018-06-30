@@ -114,6 +114,7 @@
   <ItemGroup>
     <Compile Include="AuthenticationHelper.cs" />
     <Compile Include="AzureAuthToken.cs" />
+    <Compile Include="ErrorResponse.cs" />
     <Compile Include="Helpers\Md5Helper.cs" />
     <Compile Include="Models\EverydaySentence.cs" />
     <Compile Include="Models\JPDictFeedbackItem.cs" />

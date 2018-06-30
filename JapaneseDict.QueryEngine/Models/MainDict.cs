@@ -22,7 +22,7 @@ namespace JapaneseDict.Models
                 if (string.IsNullOrEmpty(_Kana) && Explanation != "没有本地释义")
                     return JpChar.Replace("·","");
                 else if (!string.IsNullOrEmpty(_Kana))
-                    return _Kana.Replace("·", "");
+                    return _Kana;
                 else
                     return null;
             }
@@ -38,7 +38,7 @@ namespace JapaneseDict.Models
         {
             get
             {
-                return Explanation.Replace("\r", " ").Replace("\n"," ").Substring(0,((Explanation.Length>=31)?(30):(Explanation.Length))).Trim() + " ...";
+                return Explanation.Replace("\n"," ").Substring(0,((Explanation.Length>=31)?(30):(Explanation.Length))).Trim() + " ...";
             }
         }
         [Ignore]

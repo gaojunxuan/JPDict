@@ -168,8 +168,8 @@ namespace JapaneseDict.OnlineService
         /// <para>The default value is <strong>true</strong>.</para>
         /// </remarks>
         /// <seealso cref="Language"/>
-        public bool AutoDetectLanguage { get; set; }
-        public AzureAuthToken AuthToken { get; set; }
+        private bool AutoDetectLanguage { get; set; }
+        private AzureAuthToken AuthToken { get; set; }
 
 
         #endregion
@@ -564,7 +564,7 @@ namespace JapaneseDict.OnlineService
             //if (string.IsNullOrWhiteSpace(ClientID))
             //    throw new ArgumentException("Invalid Client ID. Go to Azure Marketplace and sign up for Microsoft Translator: https://datamarket.azure.com/developer/applications");
 
-            headerValue = await AuthToken.GetAccessTokenAsync();
+            headerValue = await AuthToken.GetAccessTokenAsync().ConfigureAwait(false);
         }
     }
 }

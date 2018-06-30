@@ -76,12 +76,6 @@ namespace JapaneseDict.GUI
                 var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanjirad.db"));
                 await kanjifile.CopyAsync(storageFolder, "kanjirad.db", NameCollisionOption.ReplaceExisting);
             }
-
-            if (await storageFolder.TryGetItemAsync("synclog.log") == null)
-            {
-                Windows.Storage.StorageFile logFile = await storageFolder.CreateFileAsync("synclog.log", Windows.Storage.CreationCollisionOption.OpenIfExists);
-                Windows.Storage.StorageFile onlineFile = await storageFolder.CreateFileAsync("onlinelog.log", Windows.Storage.CreationCollisionOption.OpenIfExists);
-            }
         }
 
         private async void InitOnlineServiceAsync()

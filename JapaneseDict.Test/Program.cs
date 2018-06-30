@@ -11,10 +11,10 @@ namespace JapaneseDict.Test
     {
         static void Main(string[] args)
         {
-            Debug.WriteLine(VerbConjugationHelper.PrepNegative("くる"));
-            Debug.WriteLine(VerbConjugationHelper.PrepNegative("たべる"));
-            Debug.WriteLine(VerbConjugationHelper.PrepNegative("会う"));
-
+            //Debug.WriteLine(VerbConjugationHelper.PrepNegative("くる"));
+            //Debug.WriteLine(VerbConjugationHelper.PrepNegative("たべる"));
+            //Debug.WriteLine(VerbConjugationHelper.PrepNegative("会う"));
+            Class2.ReplaceAll();
             Console.ReadLine();
         }
     }

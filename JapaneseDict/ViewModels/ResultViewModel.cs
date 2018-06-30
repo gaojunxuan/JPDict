@@ -72,10 +72,11 @@ namespace JapaneseDict.GUI.ViewModels
                 {
                     result.First().SeeAlso = seealsoresults.First().JpChar;
                 }
+                var pv = Windows.ApplicationModel.Package.Current.Id.Version;
                 Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Word not found", new Dictionary<string, string>
                 {
                     { "Keyword", _keyword },
-                    { "Version", Windows.ApplicationModel.Package.Current.Id.Version.ToString() }
+                    { "Version", $"{pv.Major}.{pv.Minor}.{pv.Build}.{pv.Revision}" }
                 });
             }
             Result = result;
@@ -197,10 +198,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 if (matches.Count == 0)
                                 {
                                     string newkey;
-                                    if (content.Contains("\r"))
-                                        newkey = content.Split('\r')[1];
-                                    else
-                                        newkey = content.Split('\n')[1];
+                                    newkey = content.Split('\n')[1];
                                     if (!string.IsNullOrEmpty(newkey) & !newkey.Contains("["))
                                     {
                                         if (newkey.Contains("；"))
@@ -273,14 +271,7 @@ namespace JapaneseDict.GUI.ViewModels
                                 if (i.Explanation != "没有本地释义")
                                 {
                                     string[] lines;
-                                    if (i.Explanation.Contains("\r"))
-                                    {
-                                        lines = i.Explanation.Split('\r');
-                                    }
-                                    else
-                                    {
-                                        lines = i.Explanation.Split('\n');
-                                    }
+                                    lines = i.Explanation.Split('\n');
                                     if (string.IsNullOrWhiteSpace(lines[0]))
                                     {
                                         if (!lines[1].Contains("["))

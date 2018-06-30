@@ -65,7 +65,7 @@ namespace JapaneseDict.Models
         {
             get
             {
-                return Explanation.Replace("\r", " ").Substring(0, ((Explanation.Length >= 31) ? (30) : (Explanation.Length))).Trim() + " ...";
+                return Explanation.Replace("\n", " ").Substring(0, ((Explanation.Length >= 31) ? (30) : (Explanation.Length))).Trim() + " ...";
             }
         }
     }
