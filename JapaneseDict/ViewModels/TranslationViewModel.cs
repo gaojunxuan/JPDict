@@ -115,10 +115,30 @@ namespace JapaneseDict.GUI.ViewModels
                     }));
             }
         }
-        private string sourceLang;
+        private RelayCommand _clearResultCommand;
+
+        /// <summary>
+        /// Gets the ClearResultCommand.
+        /// </summary>
+        public RelayCommand ClearResultCommand
+        {
+            get
+            {
+                return _clearResultCommand
+                    ?? (_clearResultCommand = new RelayCommand(
+                    () =>
+                    {
+                        TranslationResult = "";
+                    }));
+            }
+        }
+        private string sourceLang = "jp";
         public string SourceLang
         {
-            get { return sourceLang; }
+            get
+            {
+                return sourceLang ?? "jp";
+            }
             set
             {
                 sourceLang = value;

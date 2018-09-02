@@ -41,6 +41,7 @@ namespace JapaneseDict.GUI
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            this.NavigationCacheMode = NavigationCacheMode.Disabled;
             base.OnNavigatedTo(e);
         }
 
@@ -85,32 +86,32 @@ namespace JapaneseDict.GUI
 
         private void Upload_Btn_Click(object sender, RoutedEventArgs e)
         {
-            pageRoot.Focus(FocusState.Programmatic);
+            pageRoot.Focus(FocusState.Pointer);
         }
 
         private void Download_Btn_Click(object sender, RoutedEventArgs e)
         {
-            pageRoot.Focus(FocusState.Programmatic);
+            pageRoot.Focus(FocusState.Pointer);
         }
 
         private void update_Btn_Click(object sender, RoutedEventArgs e)
         {
-            pageRoot.Focus(FocusState.Programmatic);
+            pageRoot.Focus(FocusState.Pointer);
         }
 
         private void update_Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            pageRoot.Focus(FocusState.Programmatic);
+            pageRoot.Focus(FocusState.Pointer);
         }
 
         private void Upload_Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            pageRoot.Focus(FocusState.Programmatic);
+            pageRoot.Focus(FocusState.Pointer);
         }
 
         private void Download_Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            pageRoot.Focus(FocusState.Programmatic);
+            pageRoot.Focus(FocusState.Pointer);
         }
     }
 }

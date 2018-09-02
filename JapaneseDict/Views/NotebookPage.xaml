@@ -27,11 +27,11 @@
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <ProgressRing IsActive="{Binding IsBusy}" Foreground="#00b294"></ProgressRing>
+        <ProgressRing IsActive="{Binding IsBusy}" Foreground="#00b294" Loaded="ProgressRing_Loaded"/>
         <TextBlock Name="emptynotebook_Tbx" Style="{StaticResource HeaderTextBlockStyle}" Visibility="{Binding IsNotebookEmpty,Converter={StaticResource boolToVisibility}}" Text="生词本中没有单词 _(:3」∠)_" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray"/>
         <SemanticZoom Margin="-8,0,-8,0" ViewChangeStarted="SemanticZoom_ViewChangeStarted" RequestedTheme="Dark">
             <SemanticZoom.ZoomedInView>
-                <GridView Name="NotebookGridView" ItemsSource="{Binding Source={StaticResource noteItems}}" SelectionMode="None" IsSwipeEnabled="False" IsItemClickEnabled="True" ItemClick="GridView_ItemClick" ContainerContentChanging="NotebookGridView_ContainerContentChanging">
+                <GridView Name="NotebookGridView" ItemsSource="{Binding Source={StaticResource noteItems}}" SelectionMode="None" IsSwipeEnabled="False" IsItemClickEnabled="True" ContainerContentChanging="NotebookGridView_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid x:Name="NoteItem_Grid" PointerEntered="NoteItem_Grid_PointerEntered" PointerExited="NoteItem_Grid_PointerExited">
@@ -44,7 +44,7 @@
                                     <Border></Border>
                                 </controls:DropShadowPanel>
                                 <StackPanel Holding="noteItem_Holding" RightTapped="noteItem_RightTapped" Name="noteItem" Width="340" Margin="12" Background="White" Tag="{Binding ItemId}" BorderBrush="LightGray" BorderThickness="0.8" Tapped="noteItem_Tapped" RequestedTheme="Light">
-                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Keyword}" Foreground="#00b294" FontSize="24" Margin="8,20,4,4"></TextBlock>
+                                    <TextBlock x:Name="KeywordTbk" FontFamily="Yu Gothic UI" Text="{Binding Keyword}" Foreground="#00b294" FontSize="24" Margin="8,20,4,4"></TextBlock>
                                     <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Reading}" Foreground="Gray" FontSize="14" Margin="10,4,4,4"></TextBlock>
                                     <TextBlock FontFamily="DengXian" Text="{Binding PreviewExplanation}" FontSize="20" Margin="8,4,4,20" Foreground="Black"></TextBlock>
                                     <FlyoutBase.AttachedFlyout>
@@ -73,7 +73,7 @@
                 </GridView>
             </SemanticZoom.ZoomedInView>
             <SemanticZoom.ZoomedOutView>
-                <GridView Name="ZoomedOutGridView" ItemsSource="{Binding GroupedNoteList}" SelectionMode="None" ContainerContentChanging="ZoomedOutGridView_ContainerContentChanging">
+                <GridView Name="ZoomedOutGridView" ItemsSource="{Binding GroupedNoteList}" SelectionMode="None" IsItemClickEnabled="True" ContainerContentChanging="ZoomedOutGridView_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>

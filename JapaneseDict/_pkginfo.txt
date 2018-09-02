@@ -1,1 +1,1 @@
-C:\Users\gaoju\Documents\Skylark Workshop\Source Code\SkylarkWsp.JPDict\JapaneseDict\bin\ARM\Release\Upload\JapaneseDict.GUI_2.0.0.0\JapaneseDict.GUI_2.0.0.0_x86_x64_arm.appxbundle
+C:\Users\gaoju\source\repos\JPDict\JapaneseDict\bin\x64\Release\Upload\JapaneseDict.GUI_3.0.0.0\JapaneseDict.GUI_3.0.0.0_x86_x64.appxbundle

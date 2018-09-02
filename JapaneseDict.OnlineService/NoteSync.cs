@@ -1,4 +1,5 @@
 ﻿using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using Microsoft.OneDrive.Sdk;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,10 @@ namespace JapaneseDict.OnlineService
             {
                 return null;
             }
+        }
+        public static void Logout()
+        {
+            AuthenticationHelper.SignOut();
         }
     }
 }

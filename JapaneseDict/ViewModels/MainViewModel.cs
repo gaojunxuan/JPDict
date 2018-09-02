@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Media.Animation;
 using JapaneseDict.GUI.Models;
 using JapaneseDict.OnlineService.Helpers;
 using JapaneseDict.GUI.Helpers;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -62,19 +64,19 @@ namespace JapaneseDict.GUI.ViewModels
         const string CLIENT_SECRET = "uzHa5qUm4+GehYnL2pMIw8XtNox8sbqGNq7S+UiM6bk=";
         SpeechSynthesizer transServ = new SpeechSynthesizer(CLIENT_ID, CLIENT_SECRET);
 
-        private RelayCommand<string> _querywordsCommand;
+        private RelayCommand<object> _querywordsCommand;
         /// <summary>
         /// Gets the QueryWordCommand.
         /// </summary>
-        public RelayCommand<string> QueryWordsCommand
+        public RelayCommand<object> QueryWordsCommand
         {
             get
             {
                 return _querywordsCommand
-                    ?? (_querywordsCommand = new RelayCommand<string>(
+                    ?? (_querywordsCommand = new RelayCommand<object>(
                     (x) =>
                     {
-                        if (!string.IsNullOrWhiteSpace(x) && (x != "Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs"))
+                        if (x is string && !string.IsNullOrWhiteSpace(x.ToString()))
                         {
                             Frame rootFrame = Window.Current.Content as Frame;
                             rootFrame.Navigate(typeof(ResultPage), StringHelper.ResolveReplicator(x.ToString().Replace(" ", "").Replace(" ", "")));

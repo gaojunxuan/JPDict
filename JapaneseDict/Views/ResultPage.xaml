@@ -25,7 +25,7 @@
         <DataTemplate x:Key="DataTemplate2">
             <ScrollViewer x:Name="resultViewer" RequestedTheme="Light">
                 <StackPanel>
-                    <TextBlock FontFamily="Yu Gothic UI" x:Name="pageTitle" Text="{Binding Keyword}" Style="{StaticResource HeaderTextBlockStyle}"
+                    <TextBlock FontFamily="Yu Gothic UI" x:Name="KeywordTbk" Text="{Binding Keyword}" Style="{StaticResource HeaderTextBlockStyle}"
                                   IsHitTestVisible="false" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20,30,30,0" FontWeight="Normal" Foreground="#FF00B294" FontSize="32" IsTextSelectionEnabled="True" SelectionHighlightColor="#FF00B294"/>
                     <StackPanel Orientation="Vertical" Visibility="{Binding IsControlBtnVisible,Converter={StaticResource boolToVisibility}}">
                         <Button x:Name="Speak_Btn" Command="{Binding ElementName=pageRoot,Path=DataContext.SpeakCommand}" CommandParameter="{Binding Reading}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,0,0" FontSize="26.667" Height="44" Background="#FF00B294" Foreground="White">
@@ -106,259 +106,263 @@
             </NavigationThemeTransition>
         </TransitionCollection>
     </Page.Transitions>
-
     <Grid Name="mainGrid" Background="#FFF3F3F3">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
-        <Pivot Name="mainPivot" RequestedTheme="Dark" Margin="0,-1,0,71">
-            <PivotItem Margin="12,-8,0,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="&#xE90A;" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">释义</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">ていぎ</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Rectangle Grid.Row="1" Fill="{StaticResource HostBackdropBrush}" Margin="0" Height="70" VerticalAlignment="Top"/>
+            <Pivot Grid.Row="1" Name="mainPivot" RequestedTheme="Dark" Margin="0,-1,0,71">
+                <PivotItem Margin="12,-8,0,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="&#xE90A;" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">释义</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">ていぎ</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <FlipView ItemsSource="{Binding Result}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3" Loaded="resultFlipView_Loaded">
-                </FlipView>
-               
-            </PivotItem>
-            <PivotItem Margin="12,-8,0,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="&#xE12B;" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">在线释义</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">オンラインていぎ</TextBlock>
-                        </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <Grid>
-                    <ProgressRing x:Name="onlineRes_ProgressRing" Foreground="#FF00B294" IsActive="{Binding IsOnlineQueryBusy}"></ProgressRing>
-                    <FlipView ItemsSource="{Binding OnlineResult}"  x:Name="onlineeresultFlipView" ItemTemplate="{StaticResource DataTemplate3}">
+                    </PivotItem.Header>
+                    <FlipView ItemsSource="{Binding Result}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3" Loaded="resultFlipView_Loaded">
                     </FlipView>
-                </Grid>
-            </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">汉字</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">かんじ</TextBlock>
+
+                </PivotItem>
+                <PivotItem Margin="12,-8,0,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="&#xE12B;" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">在线释义</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">オンラインていぎ</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <Grid>
-                    <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="没有结果的说" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray" Name="kanjinores_Tbx"  Visibility="Visible"></TextBlock>
-                    <GridView Name="Kanji_GridView" ItemsSource="{Binding KanjiResult}" SelectionMode="None" IsSwipeEnabled="False" Margin="-8,0,0,0" IsItemClickEnabled="True" ContainerContentChanging="Kanji_GridView_ContainerContentChanging">
-                        <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid x:Name="KanjiItem_Grid" PointerEntered="KanjiItem_Grid_PointerEntered" PointerExited="KanjiItem_Grid_PointerExited">
-                                    <controls:DropShadowPanel HorizontalContentAlignment="Stretch"
+                    </PivotItem.Header>
+                    <Grid>
+                        <ProgressRing x:Name="onlineRes_ProgressRing" Foreground="#FF00B294" IsActive="{Binding IsOnlineQueryBusy}"></ProgressRing>
+                        <FlipView ItemsSource="{Binding OnlineResult}"  x:Name="onlineeresultFlipView" ItemTemplate="{StaticResource DataTemplate3}">
+                        </FlipView>
+                    </Grid>
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">汉字</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">かんじ</TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </PivotItem.Header>
+                    <Grid>
+                        <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="没有结果的说" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray" Name="kanjinores_Tbx"  Visibility="Visible"></TextBlock>
+                        <GridView Name="Kanji_GridView" ItemsSource="{Binding KanjiResult}" SelectionMode="None" IsSwipeEnabled="False" Margin="-8,0,0,0" IsItemClickEnabled="True" ContainerContentChanging="Kanji_GridView_ContainerContentChanging">
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid x:Name="KanjiItem_Grid" PointerEntered="KanjiItem_Grid_PointerEntered" PointerExited="KanjiItem_Grid_PointerExited">
+                                        <controls:DropShadowPanel HorizontalContentAlignment="Stretch"
                                                      VerticalContentAlignment="Stretch"
                                                      Margin="16"
                                                      BlurRadius="16"
                                                      ShadowOpacity="0.3"
                                                      Opacity="0">
-                                        <Border></Border>
-                                    </controls:DropShadowPanel>
-                                    <StackPanel Name="kanjiItem" Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal" Tapped="kanjiItem_Tapped" Loaded="kanjiItem_Loaded">
-                                        <controls:DropShadowPanel></controls:DropShadowPanel>
-                                        <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kanji}" VerticalAlignment="Center" Foreground="#00b294" FontSize="48" Margin="20,20,0,20"/>
-                                        <StackPanel Width="250" VerticalAlignment="Center" Margin="16,0,4,12">
-                                            <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Width="340" FontFamily="Meiryo UI" Text="{Binding KunReading}" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="NoWrap"/>
-                                            <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="{Binding OnReading}" Foreground="Gray" FontSize="16" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                            <Border></Border>
+                                        </controls:DropShadowPanel>
+                                        <StackPanel Name="kanjiItem" Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal" Tapped="kanjiItem_Tapped" Loaded="kanjiItem_Loaded">
+                                            <controls:DropShadowPanel></controls:DropShadowPanel>
+                                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Kanji}" VerticalAlignment="Center" Foreground="#00b294" FontSize="48" Margin="20,20,0,20"/>
+                                            <StackPanel Width="250" VerticalAlignment="Center" Margin="16,0,4,12">
+                                                <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Width="340" FontFamily="Meiryo UI" Text="{Binding KunReading}" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="NoWrap"/>
+                                                <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="{Binding OnReading}" Foreground="Gray" FontSize="16" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                            </StackPanel>
+
+
+                                            <FlyoutBase.AttachedFlyout>
+                                                <Flyout>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="音读: "></TextBlock>
+                                                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding OnReading}" Margin="8,0,0,0" TextWrapping="WrapWholeWords"></TextBlock>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="训读: "></TextBlock>
+                                                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding KunReading}" Margin="8,0,0,0" TextWrapping="WrapWholeWords" MaxWidth="160"></TextBlock>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="笔画: "></TextBlock>
+                                                                <TextBlock Text="{Binding Strokes}" Margin="8,0,0,0"></TextBlock>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="等级: "></TextBlock>
+                                                                <TextBlock Text="{Binding Grade}" Margin="8,0,0,0"></TextBlock>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="JLPT: "></TextBlock>
+                                                                <TextBlock Text="{Binding Jlpt}" Margin="8,0,0,0"></TextBlock>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                        <StackPanel>
+                                                            <GridView ItemsSource="{Binding KanjiRad}" MaxWidth="240" Margin="24,0,0,0" SelectionMode="None">
+                                                                <GridView.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid Width="60" Height="60">
+                                                                            <Rectangle Fill="White" Stroke="LightGray" Width="80" Height="80"/>
+                                                                            <Line X1="0" X2="60" Y1="30" Y2="30" StrokeDashArray="2,2" Stroke="LightGray"/>
+                                                                            <Line X1="30" X2="30" Y1="0" Y2="60" StrokeDashArray="2.2" Stroke="LightGray"/>
+                                                                            <Path Loaded="Path_Loaded" Tag="{Binding SVGPath}" Stroke="#008272" Height="40" Width="40" Margin="0,0,4,4">
+                                                                            </Path>
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </GridView.ItemTemplate>
+                                                            </GridView>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Flyout>
+                                            </FlyoutBase.AttachedFlyout>
                                         </StackPanel>
-
-
-                                        <FlyoutBase.AttachedFlyout>
-                                            <Flyout>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <StackPanel Orientation="Vertical">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="音读: "></TextBlock>
-                                                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding OnReading}" Margin="8,0,0,0" TextWrapping="WrapWholeWords"></TextBlock>
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="训读: "></TextBlock>
-                                                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding KunReading}" Margin="8,0,0,0" TextWrapping="WrapWholeWords" MaxWidth="160"></TextBlock>
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="笔画: "></TextBlock>
-                                                            <TextBlock Text="{Binding Strokes}" Margin="8,0,0,0"></TextBlock>
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="等级: "></TextBlock>
-                                                            <TextBlock Text="{Binding Grade}" Margin="8,0,0,0"></TextBlock>
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="JLPT: "></TextBlock>
-                                                            <TextBlock Text="{Binding Jlpt}" Margin="8,0,0,0"></TextBlock>
-                                                        </StackPanel>
-                                                    </StackPanel>
-                                                    <StackPanel>
-                                                        <GridView ItemsSource="{Binding KanjiRad}" MaxWidth="240" Margin="24,0,0,0" SelectionMode="None">
-                                                            <GridView.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Grid Width="60" Height="60">
-                                                                        <Rectangle Fill="White" Stroke="LightGray" Width="80" Height="80"/>
-                                                                        <Line X1="0" X2="60" Y1="30" Y2="30" StrokeDashArray="2,2" Stroke="LightGray"/>
-                                                                        <Line X1="30" X2="30" Y1="0" Y2="60" StrokeDashArray="2.2" Stroke="LightGray"/>
-                                                                        <Path Loaded="Path_Loaded" Tag="{Binding SVGPath}" Stroke="#008272" Height="40" Width="40" Margin="0,0,4,4">
-                                                                        </Path>
-                                                                    </Grid>
-                                                                </DataTemplate>
-                                                            </GridView.ItemTemplate>
-                                                        </GridView>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </Flyout>
-                                        </FlyoutBase.AttachedFlyout>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                        <Interactivity:Interaction.Behaviors>
-                            <Core:EventTriggerBehavior EventName="Loaded">
-                                <Core:InvokeCommandAction Command="{Binding QueryKanjiCommand}"/>
-                            </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
-                    </GridView>
-                </Grid>
-            </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">动词</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">どうし</TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                        </GridView>
+                    </Grid>
+                </PivotItem>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">动词</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">どうし</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <Grid>
-                    <FlipView Name="verbRes_flipview" ItemsSource="{Binding VerbResult}">
-                        <FlipView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <ScrollViewer>
-                                        <StackPanel Margin="8,0,0,0">
-                                            <TextBlock Text="简体形（肯定）" Foreground="#FF00B294" FontSize="24" Margin="0,8,0,0"></TextBlock>
-                                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                                                <TextBlock Text="辞书形: " Foreground="Black" FontSize="18"></TextBlock>
-                                                <TextBlock Text="{Binding OriginalForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                    </PivotItem.Header>
+                    <Grid>
+                        <FlipView Name="verbRes_flipview" ItemsSource="{Binding VerbResult}">
+                            <FlipView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <ScrollViewer>
+                                            <StackPanel Margin="8,0,0,0">
+                                                <TextBlock Text="简体形（肯定）" Foreground="#FF00B294" FontSize="24" Margin="0,8,0,0"></TextBlock>
+                                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                                    <TextBlock Text="辞书形: " Foreground="Black" FontSize="18"></TextBlock>
+                                                    <TextBlock Text="{Binding OriginalForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="て形: " FontSize="18" Foreground="Black" FontFamily="m"></TextBlock>
+                                                    <TextBlock Text="{Binding TeForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="た形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding TaForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="假定（ば）形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding EbaForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="可能形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding Potential}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="被动（受身）形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding Passive}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="使役形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding Causative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="命令形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding Imperative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="意志形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding Volitional}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <TextBlock Text="简体形（否定）" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0"></TextBlock>
+                                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                                    <TextBlock Text="ない形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding NegativeForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="可能形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding NegativePotential}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="被动（受身）形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding NegativePassive}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="使役形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding NegativeCausative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="命令形: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding NegativeImperative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <TextBlock Text="ます形" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0"></TextBlock>
+                                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                                    <TextBlock Text="肯定: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding MasuForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,24">
+                                                    <TextBlock Text="否定: " FontSize="18" Foreground="Black"></TextBlock>
+                                                    <TextBlock Text="{Binding MasuNegative}" Margin="4,0,0,0" FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
+                                                </StackPanel>
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="て形: " FontSize="18" Foreground="Black" FontFamily="m"></TextBlock>
-                                                <TextBlock Text="{Binding TeForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="た形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding TaForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="假定（ば）形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding EbaForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="可能形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding Potential}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="被动（受身）形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding Passive}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="使役形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding Causative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="命令形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding Imperative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="意志形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding Volitional}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <TextBlock Text="简体形（否定）" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0"></TextBlock>
-                                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                                                <TextBlock Text="ない形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding NegativeForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="可能形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding NegativePotential}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="被动（受身）形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding NegativePassive}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="使役形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding NegativeCausative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <TextBlock Text="命令形: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding NegativeImperative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <TextBlock Text="ます形" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0"></TextBlock>
-                                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                                                <TextBlock Text="肯定: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding MasuForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,24">
-                                                <TextBlock Text="否定: " FontSize="18" Foreground="Black"></TextBlock>
-                                                <TextBlock Text="{Binding MasuNegative}" Margin="4,0,0,0" FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </ScrollViewer>
-                                </Grid>
-                            </DataTemplate>
-                        </FlipView.ItemTemplate>
-                        <!--<Interactivity:Interaction.Behaviors>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </DataTemplate>
+                            </FlipView.ItemTemplate>
+                            <!--<Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="Loaded">
                                 <Core:InvokeCommandAction Command="{Binding QueryVerbCommand}"/>
                             </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>-->
-                    </FlipView>
-                </Grid>
-            </PivotItem>
-        </Pivot>
-        <StackPanel Background="#00b294" Height="65" VerticalAlignment="Bottom">
+                        </FlipView>
+                    </Grid>
+                </PivotItem>
+            </Pivot>
+            <StackPanel Height="65" VerticalAlignment="Bottom" Background="{StaticResource HostBackdropBrush}">
+                <AutoSuggestBox x:Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="Keyword"  PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen" AllowDrop="True" DragOver="QueryBox_DragOver" Drop="QueryBox_Drop">
+                    <AutoSuggestBox.Resources>
+                        <DataTemplate x:Key="DataTemplate1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Keyword}" FontFamily="Yu Gothic UI" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding PreviewExplanation}"  FontFamily="DengXian" FontWeight="Normal" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </AutoSuggestBox.Resources>
+                    <AutoSuggestBox.Style>
+                        <StaticResource ResourceKey="AutoSuggestBoxStyle1"/>
+                    </AutoSuggestBox.Style>
+                    <AutoSuggestBox.ItemTemplate>
+                        <StaticResource ResourceKey="DataTemplate1"/>
+                    </AutoSuggestBox.ItemTemplate>
 
-            <AutoSuggestBox x:Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="Keyword"  PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen">
-                <AutoSuggestBox.Resources>
-                    <DataTemplate x:Key="DataTemplate1">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Keyword}" FontFamily="Yu Gothic UI" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding PreviewExplanation}"  FontFamily="DengXian" FontWeight="Normal" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </AutoSuggestBox.Resources>
-                <AutoSuggestBox.Style>
-                    <StaticResource ResourceKey="AutoSuggestBoxStyle1"/>
-                </AutoSuggestBox.Style>
-                <AutoSuggestBox.ItemTemplate>
-                    <StaticResource ResourceKey="DataTemplate1"/>
-                </AutoSuggestBox.ItemTemplate>
-
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="QuerySubmitted">
-                        <Core:InvokeCommandAction Command="{Binding QueryWordsCommand}"
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="QuerySubmitted">
+                            <Core:InvokeCommandAction Command="{Binding QueryWordsCommand}"
         					CommandParameter ="{Binding Text, ElementName=QueryBox}"/>
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-                <AutoSuggestBox.QueryIcon>
-                    <FontIcon Glyph="&#xE11A;" FontSize="20"/>
-                </AutoSuggestBox.QueryIcon>
-            </AutoSuggestBox>
-        </StackPanel>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                    <AutoSuggestBox.QueryIcon>
+                        <FontIcon Glyph="&#xE11A;" FontSize="20"/>
+                    </AutoSuggestBox.QueryIcon>
+                </AutoSuggestBox>
+            </StackPanel>
+        </Grid>
+        <Grid Name="titleBarGrid" Background="{StaticResource HostBackdropBrush}">
+            <local:TitleBarControl x:Name="titleBarCtl" HorizontalAlignment="Stretch" Margin="48,0,0,0"></local:TitleBarControl>
+            <Button Name="overlayBtn" Style="{StaticResource TitlebarButtonStyle}" Margin="48,0,0,0" Content="&#xE73F;" Background="Transparent" Foreground="White" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left" Height="32" Width="48" Click="overlayBtn_Click" FontSize="12"></Button>
+
+        </Grid>
     </Grid>
 </Page>

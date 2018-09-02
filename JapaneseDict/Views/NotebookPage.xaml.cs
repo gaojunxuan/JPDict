@@ -28,6 +28,7 @@ using Windows.UI.Composition;
 using Windows.Foundation.Metadata;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using JapaneseDict.GUI.Models;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,7 +39,7 @@ namespace JapaneseDict.GUI
     /// </summary>
     public sealed partial class NotebookPage : Page
     {
-        public static bool _needRefresh = false;
+        public static bool NeedRefresh { get; set; }
         public NotebookPage()
         {
             InitializeComponent();
@@ -47,6 +48,8 @@ namespace JapaneseDict.GUI
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            this.NavigationCacheMode = NavigationCacheMode.Disabled;
+
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -84,10 +87,6 @@ namespace JapaneseDict.GUI
             (pageRoot.DataContext as NotebookViewModel).LoadData();
         }
 
-        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            
-        }
         ImplicitAnimationCollection _implicitAnimations;
         private void EnsureImplicitAnimations()
         {
@@ -128,7 +127,7 @@ namespace JapaneseDict.GUI
 
         private void ZoomedOutGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            pageRoot.Focus(FocusState.Programmatic);
+            pageRoot.Focus(FocusState.Pointer);
             if (ApiInformation.IsTypePresent(
             typeof(ImplicitAnimationCollection).FullName))
             {
@@ -172,6 +171,15 @@ namespace JapaneseDict.GUI
         private void DeleteBtn_Loaded(object sender, RoutedEventArgs e)
         {
             ElementCompositionPreview.GetElementVisual(sender as UIElement).Opacity = 0;
+        }
+        private void NotebookGridView_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ProgressRing_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.pageRoot.Focus(FocusState.Pointer);
         }
     }
 }

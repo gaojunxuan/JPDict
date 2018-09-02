@@ -11,15 +11,20 @@ namespace JapaneseDict.GUI.ViewModels
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            SimpleIoc.Default.Register(() => new NavigationServiceEx());
-            Register<MainViewModel, MainPage>();
-            Register<NotebookViewModel, NotebookPage>();
-            Register<ResultViewModel, ResultPage>();
-            Register<TranslationViewModel, TranslationPage>();
-            Register<SettingsViewModel, SettingsPage>();
-            Register<UpdateViewModel, UpdatePage>();
-            Register<KanaFlashcardViewModel, KanaFlashcardPage>();
-            Register<KanjiFlashcardViewModel, KanjiFlashcardPage>();
+            if(!SimpleIoc.Default.IsRegistered<NavigationServiceEx>())
+            {
+                SimpleIoc.Default.Register(() => new NavigationServiceEx());
+                Register<MainViewModel, MainPage>();
+                Register<NotebookViewModel, NotebookPage>();
+                Register<ResultViewModel, ResultPage>();
+                Register<TranslationViewModel, TranslationPage>();
+                Register<SettingsViewModel, SettingsPage>();
+                Register<UpdateViewModel, UpdatePage>();
+                Register<KanaFlashcardViewModel, KanaFlashcardPage>();
+                Register<KanjiFlashcardViewModel, KanjiFlashcardPage>();
+                Register<NewsReaderViewModel, NewsReaderPage>();
+            }
+            
 
         }
 
@@ -31,6 +36,7 @@ namespace JapaneseDict.GUI.ViewModels
         public UpdateViewModel UpdateViewModel => ServiceLocator.Current.GetInstance<UpdateViewModel>();
         public KanaFlashcardViewModel KanaFlashcardViewModel => ServiceLocator.Current.GetInstance<KanaFlashcardViewModel>();
         public KanjiFlashcardViewModel KanjiFlashcardViewModel => ServiceLocator.Current.GetInstance<KanjiFlashcardViewModel>();
+        public NewsReaderViewModel NewsReaderViewModel => ServiceLocator.Current.GetInstance<NewsReaderViewModel>();
         public NavigationServiceEx NavigationService => ServiceLocator.Current.GetInstance<NavigationServiceEx>();
 
         public void Register<VM, V>()

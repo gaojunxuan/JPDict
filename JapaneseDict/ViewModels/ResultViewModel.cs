@@ -93,6 +93,7 @@ namespace JapaneseDict.GUI.ViewModels
             var grouped = queryResult.GroupBy(x => x.ItemId).Select(g=>new GroupedDictItem(g));
             Result = new ObservableCollection<GroupedDictItem>(grouped);
             QueryVerb();
+            await QueryKanji();
             await QueryOnline();      
         }
         private async void QueryWord(int id)
@@ -105,6 +106,7 @@ namespace JapaneseDict.GUI.ViewModels
             var grouped = queryResult.GroupBy(x => x.ItemId).Select(g => new GroupedDictItem(g));
             Result = new ObservableCollection<GroupedDictItem>(grouped);
             QueryVerb();
+            await QueryKanji();
             await QueryOnline();
         }        
         private void QueryVerb()
@@ -160,6 +162,19 @@ namespace JapaneseDict.GUI.ViewModels
             OnlineResult = await OnlineQueryEngine.Query(Keyword);
             IsOnlineQueryBusy = false;
         }
+        private async Task QueryKanji()
+        {
+            Regex reg = new Regex("[\u4e00-\u9fa5]+");
+            Regex en_reg = new Regex("[A-z\\s]+");
+            StringBuilder sbkey = new StringBuilder();
+            foreach (var i in Result)
+            {
+                sbkey.Append(i.Kanji);
+                sbkey.Append(i.Keyword);
+            }
+            var matches = reg.Matches(sbkey.ToString());
+            KanjiResult = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(matches);
+        }
 
         private ObservableCollection<GroupedDictItem> result;
         public ObservableCollection<GroupedDictItem> Result
@@ -194,19 +209,19 @@ namespace JapaneseDict.GUI.ViewModels
             }
         }
 
-        private RelayCommand<string> _querywordsCommand;
+        private RelayCommand<object> _querywordsCommand;
         /// <summary>
         /// Gets the QueryWordsCommand.
         /// </summary>
-        public RelayCommand<string> QueryWordsCommand
+        public RelayCommand<object> QueryWordsCommand
         {
             get
             {
                 return _querywordsCommand
-                    ?? (_querywordsCommand = new RelayCommand<string>(
+                    ?? (_querywordsCommand = new RelayCommand<object>(
                     (x) =>
                     {
-                        if ((!string.IsNullOrWhiteSpace(x.ToString())) && (x.ToString() != "Windows.UI.Xaml.Controls.AutoSuggestBoxQuerySubmittedEventArgs"))
+                        if (x is string && !string.IsNullOrWhiteSpace(x.ToString()))
                         {
                             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -219,33 +234,7 @@ namespace JapaneseDict.GUI.ViewModels
                     }));
             }
         }
-
-        private RelayCommand _queryKanjiCommand;
-        /// <summary>
-        /// Gets the QueryKanjiCommand.
-        /// </summary>
-        public RelayCommand QueryKanjiCommand
-        {
-            get
-            {
-                return _queryKanjiCommand
-                    ?? (_queryKanjiCommand = new RelayCommand(
-                    async() =>
-                    {
-                        Regex reg = new Regex("[\u4e00-\u9fa5]+");
-                        Regex en_reg = new Regex("[A-z\\s]+");
-                        StringBuilder sbkey = new StringBuilder();
-                        foreach (var i in Result)
-                        {
-                            sbkey.Append(i.First().Kanji);
-                        }
-                        var matches = reg.Matches(sbkey.ToString());
-                        KanjiResult = await QueryEngine.QueryEngine.KanjiDictQueryEngine.QueryForUIAsync(matches);
-                    }));
-            }
-        }
-
-
+        
         private bool isOnlineQueryBusy;
         public bool IsOnlineQueryBusy
         {

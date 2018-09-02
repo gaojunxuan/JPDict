@@ -23,6 +23,8 @@ using System.Collections.ObjectModel;
 using Windows.Phone.UI.Input;
 using Windows.UI.Core;
 using JapaneseDict.Models;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -36,8 +38,14 @@ namespace JapaneseDict.GUI
         public KanaFlashcardPage()
         {
             InitializeComponent();
+            ExtendAcrylicIntoTitleBar();
         }
-
+        private void ExtendAcrylicIntoTitleBar()
+        {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            Window.Current.SetTitleBar(titleBarCtl);
+        }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -217,6 +225,14 @@ namespace JapaneseDict.GUI
             showhistoryKata_item.Visibility = Visibility.Visible;
             hidehistoryKata_item.Visibility = Visibility.Collapsed;
             replayKata_item.Visibility = Visibility.Visible;
+        }
+        private async void overlayBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+            {
+                Frame.Navigate(typeof(CompactMainPage));
+                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+            }
         }
     }
 }

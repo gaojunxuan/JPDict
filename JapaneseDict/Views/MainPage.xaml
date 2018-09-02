@@ -12,6 +12,7 @@
     xmlns:ad="using:Microsoft.Advertising.WinRT.UI"
     xmlns:converter="using:JapaneseDict.GUI.Helpers"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Loaded="Page_Loaded"
     DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
     <Page.Resources>
@@ -21,14 +22,14 @@
         <converter:TimeSpanToDouble x:Key="timespanConverter"/>
         <DataTemplate x:Key="DailySentenceTemplate">
             <Grid>
-                <Image Source="{Binding BackgroundImage}" Stretch="UniformToFill" MaxHeight="200" VerticalAlignment="Top"></Image>
-                <StackPanel>
+                <Image Source="{Binding BackgroundImage}" Stretch="UniformToFill" MaxHeight="280" VerticalAlignment="Top"></Image>
+                <StackPanel VerticalAlignment="Center" Height="200">
                     <StackPanel>
                         <ScrollViewer Height="60" VerticalScrollBarVisibility="Hidden" Margin="0,20,0,0">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding JpText}" TextAlignment="Center" Foreground="White" FontSize="21.333" TextWrapping="WrapWholeWords" Margin="10,0,10,0"></TextBlock>
+                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding JpText}" TextAlignment="Center" Foreground="White" FontSize="21.333" TextWrapping="WrapWholeWords" Margin="20,0,20,0"></TextBlock>
                         </ScrollViewer>
                         <ScrollViewer Height="40" VerticalScrollBarVisibility="Hidden" Margin="0,15,0,0">
-                            <TextBlock Text="{Binding CnText}" TextAlignment="Center" Foreground="#BFFFFFFF" FontSize="13.333" Margin="20,0,20,0" TextWrapping="WrapWholeWords"></TextBlock>
+                            <TextBlock Text="{Binding CnText}" TextAlignment="Center" Foreground="#BFFFFFFF" FontSize="13.333" Margin="28,0,28,0" TextWrapping="WrapWholeWords"></TextBlock>
                         </ScrollViewer>
 
                     </StackPanel>
@@ -54,200 +55,241 @@
         </TransitionCollection>
     </Page.Transitions>
     <Grid Background="#F3F3F3">
-        <MediaElement Name="mediaEle" MediaEnded="mediaEle_MediaEnded" AudioCategory="BackgroundCapableMedia" CurrentStateChanged="MediaEle_CurrentStateChanged"></MediaElement>
-        <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
-        <Pivot Name="mainPivot" Margin="0,1,0,65" RequestedTheme="Dark" SelectionChanged="mainPivot_SelectionChanged">
-            <PivotItem>
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="&#xE10F;" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">主页</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">ホームページ</TextBlock>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <PopupThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="SizeStateGroup">
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DailySentence_FlipView.Height" Value="280" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DailySentence_FlipView.Height" Value="200" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <MediaElement Name="mediaEle" MediaEnded="mediaEle_MediaEnded" AudioCategory="BackgroundCapableMedia" CurrentStateChanged="MediaEle_CurrentStateChanged"></MediaElement>
+            <Rectangle Fill="{StaticResource HostBackdropBrush}" Margin="0" Height="70" VerticalAlignment="Top"/>
+            <Pivot Name="mainPivot" Margin="0,1,0,65" RequestedTheme="Dark" SelectionChanged="mainPivot_SelectionChanged">
+                <PivotItem>
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="&#xE10F;" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">主页</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">ホームページ</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <ScrollViewer RequestedTheme="Light" VerticalScrollBarVisibility="Auto" Margin="-12,-12,-12,0" Style="{StaticResource ScrollViewerStyle1}">
-                    <Grid>
-                        <ProgressRing IsActive="True" Foreground="#00b294" VerticalAlignment="Top" Margin="0,88,0,0"></ProgressRing>
-                        <FlipView VerticalAlignment="Top" ItemsSource="{Binding DailySentence}" ItemTemplate="{StaticResource DailySentenceTemplate}" Height="200" MaxHeight="200"/>
-
-                        <ScrollViewer Margin="0,200,-12,0" VerticalAlignment="Top" RequestedTheme="Light" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
-                                <StackPanel Name="newsPanel" HorizontalAlignment="Left">
-                                    <StackPanel Margin="24,24,0,0" Height="48" HorizontalAlignment="Left">
-                                        <TextBlock FontSize="24">NHK 新闻</TextBlock>
-                                        <TextBlock FontSize="8" FontFamily="Yu Gothic UI">NHK ニュース</TextBlock>
-                                    </StackPanel>
-                                    <ListView SelectionMode="None" UseSystemFocusVisuals="False" Margin="4,8,0,0" ItemsSource="{Binding NHKNews}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}" IsItemClickEnabled="True">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,0,24,0">
-                                                    <Grid>
-                                                        <ProgressRing IsActive="True" Foreground="#00b294"></ProgressRing>
-                                                        <Image Source="{Binding IconPath}" Stretch="Uniform" Width="160" Height="80"></Image>
-                                                    </Grid>
-                                                    <StackPanel Orientation="Vertical" Margin="4,-4,8,0">
-                                                        <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="22" Foreground="Black"></TextBlock>
-                                                        <HyperlinkButton NavigateUri="{Binding Link}" Foreground="#00b294">
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2,2,0,0"></TextBlock>
-                                                                <TextBlock Margin="8,0,0,0" Text="详细报道"></TextBlock>
-                                                            </StackPanel>
-                                                        </HyperlinkButton>
+                    </PivotItem.Header>
+                    <ScrollViewer RequestedTheme="Light" VerticalScrollBarVisibility="Auto" Margin="-12,-12,-12,0" Style="{StaticResource ScrollViewerStyle1}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ProgressRing IsActive="True" Foreground="#00b294" VerticalAlignment="Top" Margin="0,88,0,0"></ProgressRing>
+                            <FlipView x:Name="DailySentence_FlipView" Grid.Row="0" VerticalAlignment="Top" ItemsSource="{Binding DailySentence}" ItemTemplate="{StaticResource DailySentenceTemplate}" Height="280"/>
+                            <ScrollViewer Grid.Row="1" Margin="0,0,-12,0" VerticalAlignment="Top" RequestedTheme="Light" VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <StackPanel Name="newsPanel" HorizontalAlignment="Left">
+                                        <StackPanel Margin="24,24,0,0" Height="48" HorizontalAlignment="Left">
+                                            <TextBlock FontSize="24">NHK 新闻</TextBlock>
+                                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">NHK ニュース</TextBlock>
+                                        </StackPanel>
+                                        <ListView SelectionMode="None" UseSystemFocusVisuals="False" Margin="0,8,0,0" ItemsSource="{Binding NHKNews}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}" IsItemClickEnabled="True">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="24,0,24,0">
+                                                        <Grid>
+                                                            <ProgressRing IsActive="True" Foreground="#00b294"></ProgressRing>
+                                                            <toolkit:DropShadowPanel Width="160" Height="80" ShadowOpacity="0.6" BlurRadius="4">
+                                                                <Image Source="{Binding IconPath}" Stretch="Uniform"></Image>
+                                                            </toolkit:DropShadowPanel>
+                                                        </Grid>
+                                                        <StackPanel Orientation="Vertical" Margin="4,-4,8,0">
+                                                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="22" Foreground="Black"></TextBlock>
+                                                            <HyperlinkButton x:Name="ReadNews_Btn"  Foreground="#00b294" Tag="{Binding Link}" Click="ReadNews_Btn_Click">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2,2,0,0"></TextBlock>
+                                                                    <TextBlock Margin="8,0,0,0" Text="阅读"></TextBlock>
+                                                                </StackPanel>
+                                                            </HyperlinkButton>
+                                                            <HyperlinkButton NavigateUri="{Binding Link}" Foreground="#00b294">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2,2,0,0"></TextBlock>
+                                                                    <TextBlock Margin="8,0,0,0" Text="详细报道"></TextBlock>
+                                                                </StackPanel>
+                                                            </HyperlinkButton>
+                                                        </StackPanel>
                                                     </StackPanel>
-                                                </StackPanel>
 
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                        <ListView.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
-                                            </ItemsPanelTemplate>
-                                        </ListView.ItemsPanel>
-                                    </ListView>
-                                </StackPanel>
-                                <StackPanel Name="listeningPracPanel">
-                                    <StackPanel Margin="24,24,0,0" Height="48" HorizontalAlignment="Left">
-                                        <TextBlock FontSize="24">NHK Radio News</TextBlock>
-                                        <TextBlock FontSize="8" FontFamily="Yu Gothic UI">NHK ラジオニュース</TextBlock>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                            <ListView.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <ItemsStackPanel Orientation="Horizontal"></ItemsStackPanel>
+                                                </ItemsPanelTemplate>
+                                            </ListView.ItemsPanel>
+                                        </ListView>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <HyperlinkButton Visibility="Collapsed" x:Name="StopNHKRadiosPlay_Btn" Margin="24,0,0,0" Foreground="#FF00C9A7" Click="StopNHKRadiosPlay_Btn_Click">
-                                            <HyperlinkButton.Content>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="" Margin="0,4,12,0" FontFamily="Segoe MDL2 Assets"></TextBlock>
-                                                    <TextBlock Text="STOP"></TextBlock>
-                                                </StackPanel>
-                                            </HyperlinkButton.Content>
-                                        </HyperlinkButton>
-                                        <HyperlinkButton Visibility="Collapsed" x:Name="ResumeNHKRadiosPlay_Btn" Margin="24,0,0,0" Foreground="#FF00C9A7" Click="ResumeNHKRadiosPlay_Btn_Click">
-                                            <HyperlinkButton.Content>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="" Margin="0,4,12,0" FontFamily="Segoe MDL2 Assets"></TextBlock>
-                                                    <TextBlock Text="PLAY"></TextBlock>
-                                                </StackPanel>
-                                            </HyperlinkButton.Content>
-                                        </HyperlinkButton>
-                                        <Slider x:Name="listeningPosition_Slider" Visibility="Collapsed" Margin="20,8,0,0" Foreground="#00c9a7"  Width="160" Value="{Binding ElementName=mediaEle, Path=Position, Converter={StaticResource timespanConverter},Mode=TwoWay}" Maximum="{Binding ElementName=mediaEle, Path=NaturalDuration, Converter={StaticResource durationConverter}}" Style="{StaticResource SliderStyle1}"></Slider>
-                                    </StackPanel>
-                                    <Pivot RequestedTheme="Light" Style="{StaticResource NHKRadioPivotStyle}">
-                                        <Pivot.Resources>
-                                            <Style TargetType="PivotHeaderItem">
-                                                <Setter Property="FontSize" Value="14" />
-                                                <Setter Property="FontFamily" Value="{ThemeResource PivotHeaderItemFontFamily}" />
-                                                <Setter Property="FontWeight" Value="Light" />
-                                                <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
-                                                <Setter Property="Background" Value="Transparent" />
-                                                <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
-                                                <Setter Property="Padding" Value="{ThemeResource PivotHeaderItemMargin}" />
-                                                <Setter Property="Height" Value="60" />
-                                                <Setter Property="VerticalContentAlignment" Value="Center" />
-                                                <Setter Property="IsTabStop" Value="False" />
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="PivotHeaderItem">
-                                                            <Grid x:Name="Grid" Background="{TemplateBinding Background}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0">
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="*" />
-                                                                    <RowDefinition Height="Auto" />
-                                                                </Grid.RowDefinitions>
+                                    <StackPanel Name="listeningPracPanel" Margin="0,0,0,24">
+                                        <StackPanel Margin="24,24,0,0" Height="48" HorizontalAlignment="Left">
+                                            <TextBlock FontSize="24">NHK Radio News</TextBlock>
+                                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">NHK ラジオニュース</TextBlock>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <HyperlinkButton Visibility="Collapsed" x:Name="StopNHKRadiosPlay_Btn" Margin="24,0,0,0" Foreground="#FF00C9A7" Click="StopNHKRadiosPlay_Btn_Click">
+                                                <HyperlinkButton.Content>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="" Margin="0,4,12,0" FontFamily="Segoe MDL2 Assets"></TextBlock>
+                                                        <TextBlock Text="STOP"></TextBlock>
+                                                    </StackPanel>
+                                                </HyperlinkButton.Content>
+                                            </HyperlinkButton>
+                                            <HyperlinkButton Visibility="Collapsed" x:Name="ResumeNHKRadiosPlay_Btn" Margin="24,0,0,0" Foreground="#FF00C9A7" Click="ResumeNHKRadiosPlay_Btn_Click">
+                                                <HyperlinkButton.Content>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="" Margin="0,4,12,0" FontFamily="Segoe MDL2 Assets"></TextBlock>
+                                                        <TextBlock Text="PLAY"></TextBlock>
+                                                    </StackPanel>
+                                                </HyperlinkButton.Content>
+                                            </HyperlinkButton>
+                                            <Slider x:Name="listeningPosition_Slider" Visibility="Collapsed" Margin="20,8,0,0" Foreground="#00c9a7"  Width="160" Value="{Binding ElementName=mediaEle, Path=Position, Converter={StaticResource timespanConverter},Mode=TwoWay}" Maximum="{Binding ElementName=mediaEle, Path=NaturalDuration, Converter={StaticResource durationConverter}}" Style="{StaticResource SliderStyle1}"></Slider>
+                                        </StackPanel>
+                                        <Pivot RequestedTheme="Light" Style="{StaticResource NHKRadioPivotStyle}">
+                                            <Pivot.Resources>
+                                                <Style TargetType="PivotHeaderItem">
+                                                    <Setter Property="FontSize" Value="14" />
+                                                    <Setter Property="FontFamily" Value="{ThemeResource PivotHeaderItemFontFamily}" />
+                                                    <Setter Property="FontWeight" Value="Light" />
+                                                    <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+                                                    <Setter Property="Padding" Value="{ThemeResource PivotHeaderItemMargin}" />
+                                                    <Setter Property="Height" Value="60" />
+                                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                                    <Setter Property="IsTabStop" Value="False" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="PivotHeaderItem">
+                                                                <Grid x:Name="Grid" Background="{TemplateBinding Background}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="*" />
+                                                                        <RowDefinition Height="Auto" />
+                                                                    </Grid.RowDefinitions>
 
-                                                                <Grid.Resources>
-                                                                    <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
-                                                                        <Setter Property="FontFamily" Value="Segoe UI" />
-                                                                        <Setter Property="FontWeight" Value="Normal" />
-                                                                        <Setter Property="FontSize" Value="15" />
-                                                                        <Setter Property="TextWrapping" Value="Wrap" />
-                                                                        <Setter Property="LineStackingStrategy" Value="MaxHeight" />
-                                                                        <Setter Property="TextLineBounds" Value="Full" />
-                                                                        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
-                                                                    </Style>
-                                                                    <Style x:Key="BodyContentPresenterStyle" TargetType="ContentPresenter" BasedOn="{StaticResource BaseContentPresenterStyle}">
-                                                                        <Setter Property="FontFamily" Value="{ThemeResource PivotHeaderItemFontFamily}" />
-                                                                        <Setter Property="FontWeight" Value="{ThemeResource PivotHeaderItemThemeFontWeight}" />
-                                                                        <Setter Property="FontSize" Value="{ThemeResource PivotHeaderItemFontSize}" />
-                                                                    </Style>
-                                                                </Grid.Resources>
-                                                                <VisualStateManager.VisualStateGroups>
-                                                                    <VisualStateGroup x:Name="SelectionStates">
-                                                                        <VisualStateGroup.Transitions>
-                                                                            <VisualTransition From="Unselected" To="UnselectedLocked" GeneratedDuration="0:0:0.33" />
-                                                                            <VisualTransition From="UnselectedLocked" To="Unselected" GeneratedDuration="0:0:0.33" />
-                                                                        </VisualStateGroup.Transitions>
-                                                                        <VisualState x:Name="Disabled">
-                                                                            <Storyboard>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                            </Storyboard>
-                                                                        </VisualState>
-                                                                        <VisualState x:Name="Unselected" />
-                                                                        <VisualState x:Name="UnselectedLocked">
-                                                                            <Storyboard>
-                                                                                <DoubleAnimation Storyboard.TargetName="ContentPresenterTranslateTransform" Storyboard.TargetProperty="X" Duration="0" To="{ThemeResource PivotHeaderItemLockedTranslation}" />
-                                                                                <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0" To="0" />
-                                                                            </Storyboard>
-                                                                        </VisualState>
-                                                                        <VisualState x:Name="Selected">
-                                                                            <Storyboard>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="FontWeight">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Bold" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                            </Storyboard>
-                                                                        </VisualState>
-                                                                        <VisualState x:Name="UnselectedPointerOver">
-                                                                            <Storyboard>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                            </Storyboard>
-                                                                        </VisualState>
-                                                                        <VisualState x:Name="SelectedPointerOver">
-                                                                            <Storyboard>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="FontWeight">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Bold" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                            </Storyboard>
-                                                                        </VisualState>
-                                                                        <VisualState x:Name="UnselectedPressed">
-                                                                            <Storyboard>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                            </Storyboard>
-                                                                        </VisualState>
-                                                                        <VisualState x:Name="SelectedPressed">
-                                                                            <Storyboard>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="FontWeight">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Bold" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                                                </ObjectAnimationUsingKeyFrames>
-                                                                            </Storyboard>
-                                                                        </VisualState>
-                                                                    </VisualStateGroup>
-                                                                </VisualStateManager.VisualStateGroups>
-                                                                <ContentPresenter x:Name="ContentPresenter" 
+                                                                    <Grid.Resources>
+                                                                        <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
+                                                                            <Setter Property="FontFamily" Value="Segoe UI" />
+                                                                            <Setter Property="FontWeight" Value="Normal" />
+                                                                            <Setter Property="FontSize" Value="15" />
+                                                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                                                            <Setter Property="LineStackingStrategy" Value="MaxHeight" />
+                                                                            <Setter Property="TextLineBounds" Value="Full" />
+                                                                            <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+                                                                        </Style>
+                                                                        <Style x:Key="BodyContentPresenterStyle" TargetType="ContentPresenter" BasedOn="{StaticResource BaseContentPresenterStyle}">
+                                                                            <Setter Property="FontFamily" Value="{ThemeResource PivotHeaderItemFontFamily}" />
+                                                                            <Setter Property="FontWeight" Value="{ThemeResource PivotHeaderItemThemeFontWeight}" />
+                                                                            <Setter Property="FontSize" Value="{ThemeResource PivotHeaderItemFontSize}" />
+                                                                        </Style>
+                                                                    </Grid.Resources>
+                                                                    <VisualStateManager.VisualStateGroups>
+                                                                        <VisualStateGroup x:Name="SelectionStates">
+                                                                            <VisualStateGroup.Transitions>
+                                                                                <VisualTransition From="Unselected" To="UnselectedLocked" GeneratedDuration="0:0:0.33" />
+                                                                                <VisualTransition From="UnselectedLocked" To="Unselected" GeneratedDuration="0:0:0.33" />
+                                                                            </VisualStateGroup.Transitions>
+                                                                            <VisualState x:Name="Disabled">
+                                                                                <Storyboard>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                </Storyboard>
+                                                                            </VisualState>
+                                                                            <VisualState x:Name="Unselected" />
+                                                                            <VisualState x:Name="UnselectedLocked">
+                                                                                <Storyboard>
+                                                                                    <DoubleAnimation Storyboard.TargetName="ContentPresenterTranslateTransform" Storyboard.TargetProperty="X" Duration="0" To="{ThemeResource PivotHeaderItemLockedTranslation}" />
+                                                                                    <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0" To="0" />
+                                                                                </Storyboard>
+                                                                            </VisualState>
+                                                                            <VisualState x:Name="Selected">
+                                                                                <Storyboard>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="FontWeight">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Bold" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                </Storyboard>
+                                                                            </VisualState>
+                                                                            <VisualState x:Name="UnselectedPointerOver">
+                                                                                <Storyboard>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                </Storyboard>
+                                                                            </VisualState>
+                                                                            <VisualState x:Name="SelectedPointerOver">
+                                                                                <Storyboard>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="FontWeight">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Bold" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                </Storyboard>
+                                                                            </VisualState>
+                                                                            <VisualState x:Name="UnselectedPressed">
+                                                                                <Storyboard>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                </Storyboard>
+                                                                            </VisualState>
+                                                                            <VisualState x:Name="SelectedPressed">
+                                                                                <Storyboard>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="FontWeight">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Bold" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                </Storyboard>
+                                                                            </VisualState>
+                                                                        </VisualStateGroup>
+                                                                    </VisualStateManager.VisualStateGroups>
+                                                                    <ContentPresenter x:Name="ContentPresenter" 
                                                                                   Grid.Row="0"  
                                                                                   Foreground="#00b294"
                                                                                   Content="{TemplateBinding Content}" 
@@ -258,221 +300,255 @@
                                                                                   FontWeight="Light" 
                                                                                   HorizontalAlignment="Center" 
                                                                                   VerticalAlignment="Center">
-                                                                    <ContentPresenter.RenderTransform>
-                                                                        <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
-                                                                    </ContentPresenter.RenderTransform>
-                                                                </ContentPresenter>
-                                                            </Grid>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Pivot.Resources>
-                                        <PivotItem>
-                                            <PivotItem.Header>
-                                                <TextBlock Text="🐌 慢速"></TextBlock>
-                                            </PivotItem.Header>
-                                            <ListView Name="listeningSlow_List" SelectionMode="None" UseSystemFocusVisuals="False" Margin="0,8,0,0" ItemsSource="{Binding NHKListeningSlow}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Margin="12,0,0,0">
-                                                            <Button HorizontalAlignment="Left" x:Name="playNHKRadio_Btn" Height="70" Background="#00c9a7" Tag="{Binding SoundUrl}" Click="playNHKRadio_Btn_Click">
-                                                                <StackPanel Name="playercontrolslow" Orientation="Horizontal">
-                                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
-                                                                    <StackPanel Margin="8,0,0,0">
-                                                                        <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
-                                                                        <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
+                                                                        <ContentPresenter.RenderTransform>
+                                                                            <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
+                                                                        </ContentPresenter.RenderTransform>
+                                                                    </ContentPresenter>
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Pivot.Resources>
+                                            <PivotItem>
+                                                <PivotItem.Header>
+                                                    <TextBlock Text="🐌 慢速"></TextBlock>
+                                                </PivotItem.Header>
+                                                <ListView Name="listeningSlow_List" SelectionMode="None" UseSystemFocusVisuals="False" Margin="0,8,0,0" ItemsSource="{Binding NHKListeningSlow}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Margin="12,0,0,0">
+                                                                <Button HorizontalAlignment="Left" x:Name="playNHKRadio_Btn" Height="70" Background="#00c9a7" Tag="{Binding SoundUrl}" Click="playNHKRadio_Btn_Click">
+                                                                    <StackPanel Name="playercontrolslow" Orientation="Horizontal">
+                                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
+                                                                        <StackPanel Margin="8,0,0,0">
+                                                                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
+                                                                            <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
+                                                                        </StackPanel>
                                                                     </StackPanel>
-                                                                </StackPanel>
-                                                            </Button>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                                <ListView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <ItemsStackPanel Orientation="Horizontal" Margin="0,0,40,0"></ItemsStackPanel>
-                                                    </ItemsPanelTemplate>
-                                                </ListView.ItemsPanel>
-                                            </ListView>
-                                        </PivotItem>
-                                        <PivotItem>
-                                            <PivotItem.Header>
-                                                <TextBlock Text="🚗 普通"></TextBlock>
-                                            </PivotItem.Header>
-                                            <ListView Name="listeningNormal_List" SelectionMode="None" UseSystemFocusVisuals="False" Margin="0,8,0,0" ItemsSource="{Binding NHKListeningNormal}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Margin="12,0,0,0">
-                                                            <Button HorizontalAlignment="Left" x:Name="playNHKRadio_Btn" Height="70" Background="#00c9a7" Tag="{Binding SoundUrl}" Click="playNHKRadio_Btn_Click">
-                                                                <StackPanel Name="playercontrolnormal" Orientation="Horizontal">
-                                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
-                                                                    <StackPanel Margin="8,0,0,0">
-                                                                        <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
-                                                                        <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                    <ListView.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <ItemsStackPanel Orientation="Horizontal" Margin="0,0,40,0"></ItemsStackPanel>
+                                                        </ItemsPanelTemplate>
+                                                    </ListView.ItemsPanel>
+                                                </ListView>
+                                            </PivotItem>
+                                            <PivotItem>
+                                                <PivotItem.Header>
+                                                    <TextBlock Text="🚗 普通"></TextBlock>
+                                                </PivotItem.Header>
+                                                <ListView Name="listeningNormal_List" SelectionMode="None" UseSystemFocusVisuals="False" Margin="0,8,0,0" ItemsSource="{Binding NHKListeningNormal}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Margin="12,0,0,0">
+                                                                <Button HorizontalAlignment="Left" x:Name="playNHKRadio_Btn" Height="70" Background="#00c9a7" Tag="{Binding SoundUrl}" Click="playNHKRadio_Btn_Click">
+                                                                    <StackPanel Name="playercontrolnormal" Orientation="Horizontal">
+                                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
+                                                                        <StackPanel Margin="8,0,0,0">
+                                                                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
+                                                                            <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
+                                                                        </StackPanel>
                                                                     </StackPanel>
-                                                                </StackPanel>
-                                                            </Button>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                                <ListView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <ItemsStackPanel Orientation="Horizontal" Margin="0,0,40,0"></ItemsStackPanel>
-                                                    </ItemsPanelTemplate>
-                                                </ListView.ItemsPanel>
-                                            </ListView>
-                                        </PivotItem>
-                                        <PivotItem>
-                                            <PivotItem.Header>
-                                                <TextBlock Text="🚀 快速"></TextBlock>
-                                            </PivotItem.Header>
-                                            <ListView Name="listeningFast_List" SelectionMode="None" UseSystemFocusVisuals="False" Margin="0,8,0,0" ItemsSource="{Binding NHKListeningFast}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Margin="12,0,0,0">
-                                                            <Button HorizontalAlignment="Left" x:Name="playNHKRadio_Btn" Height="70" Background="#00c9a7" Tag="{Binding SoundUrl}" Click="playNHKRadio_Btn_Click">
-                                                                <StackPanel Name="playercontrolfast" Orientation="Horizontal">
-                                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
-                                                                    <StackPanel Margin="8,0,0,0">
-                                                                        <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
-                                                                        <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                    <ListView.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <ItemsStackPanel Orientation="Horizontal" Margin="0,0,40,0"></ItemsStackPanel>
+                                                        </ItemsPanelTemplate>
+                                                    </ListView.ItemsPanel>
+                                                </ListView>
+                                            </PivotItem>
+                                            <PivotItem>
+                                                <PivotItem.Header>
+                                                    <TextBlock Text="🚀 快速"></TextBlock>
+                                                </PivotItem.Header>
+                                                <ListView Name="listeningFast_List" SelectionMode="None" UseSystemFocusVisuals="False" Margin="0,8,0,0" ItemsSource="{Binding NHKListeningFast}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.VerticalScrollMode="Disabled" ItemContainerStyle="{StaticResource NewsListStyle}">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Margin="12,0,0,0">
+                                                                <Button HorizontalAlignment="Left" x:Name="playNHKRadio_Btn" Height="70" Background="#00c9a7" Tag="{Binding SoundUrl}" Click="playNHKRadio_Btn_Click">
+                                                                    <StackPanel Name="playercontrolfast" Orientation="Horizontal">
+                                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="White"></TextBlock>
+                                                                        <StackPanel Margin="8,0,0,0">
+                                                                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Title}" FontSize="21.333" Foreground="White"></TextBlock>
+                                                                            <TextBlock Text="{Binding StartDate}" Foreground="#B2FFFFFF"></TextBlock>
+                                                                        </StackPanel>
                                                                     </StackPanel>
-                                                                </StackPanel>
-                                                            </Button>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                                <ListView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <ItemsStackPanel Orientation="Horizontal" Margin="0,0,40,0"></ItemsStackPanel>
-                                                    </ItemsPanelTemplate>
-                                                </ListView.ItemsPanel>
-                                            </ListView>
-                                        </PivotItem>
-                                    </Pivot>
-                                </StackPanel>
-                                <StackPanel Name="adsPanel" HorizontalAlignment="Left">
-                                    <StackPanel Margin="24,24,0,0" Height="48" HorizontalAlignment="Left">
-                                        <TextBlock FontSize="24">广告 + 推广</TextBlock>
-                                        <TextBlock FontSize="8" FontFamily="Yu Gothic UI">こうこく</TextBlock>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                    <ListView.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <ItemsStackPanel Orientation="Horizontal" Margin="0,0,40,0"></ItemsStackPanel>
+                                                        </ItemsPanelTemplate>
+                                                    </ListView.ItemsPanel>
+                                                </ListView>
+                                            </PivotItem>
+                                        </Pivot>
                                     </StackPanel>
-                                    <!--<ad:AdControl Loaded="adControl_Loaded" x:Name="ad" Height="50" IsCloseIconEnabled="True" ApplicationKey="7efd3ebc52e4fe39980e77f0296a1653" AdType="Banner" Margin="0,0,0,24"></ad:AdControl>-->
-                                    <ad:AdControl x:Name="ad" ApplicationId="9nblggh58vrl" AdUnitId="1100024104" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="320" Margin="24,12,0,24"/>
-                                    
+                                    <StackPanel Name="adsPanel" HorizontalAlignment="Left" Visibility="Collapsed">
+                                        <StackPanel Margin="24,24,0,0" Height="48" HorizontalAlignment="Left">
+                                            <TextBlock FontSize="24">广告 + 推广</TextBlock>
+                                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">こうこく</TextBlock>
+                                        </StackPanel>
+                                        <!--<ad:AdControl Loaded="adControl_Loaded" x:Name="ad" Height="50" IsCloseIconEnabled="True" ApplicationKey="7efd3ebc52e4fe39980e77f0296a1653" AdType="Banner" Margin="0,0,0,24"></ad:AdControl>-->                                     
+
+                                    </StackPanel>
                                 </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </ScrollViewer>
+                </PivotItem>
+                <PivotItem Margin="12,-8,8,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="&#xE82D;" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">生词本</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">たんごちょう</TextBlock>
                             </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                </ScrollViewer>
-            </PivotItem>
-            <PivotItem Margin="12,-8,8,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="&#xE82D;" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">生词本</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">たんごちょう</TextBlock>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <PivotItem.Content>
-                    <Frame Name="noteBook_frame" Loaded="noteBook_frame_Loaded"/>
-                </PivotItem.Content>
-            </PivotItem>
-            <PivotItem RequestedTheme="Light" Margin="12,-8,0,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="T" Width="25" Margin="0,0,5,2" FontFamily="ms-appx:Segoe Translator Symbol.ttf#Segoe Translator Symbol" FontSize="24"></FontIcon>
-                        <StackPanel  Height="48">
-                            <TextBlock FontSize="24">翻译</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">ほんやく</TextBlock>
+                    </PivotItem.Header>
+                    <PivotItem.Content>
+                        <Frame Name="noteBook_frame" Loaded="noteBook_frame_Loaded">
+                            <Frame.ContentTransitions>
+                                <TransitionCollection>
+                                    <NavigationThemeTransition>
+                                        <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                            <ContinuumNavigationTransitionInfo/>
+                                        </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                    </NavigationThemeTransition>
+                                </TransitionCollection>
+                            </Frame.ContentTransitions>
+                        </Frame>
+                    </PivotItem.Content>
+                </PivotItem>
+                <PivotItem RequestedTheme="Light" Margin="12,-8,0,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="T" Width="25" Margin="0,0,5,2" FontFamily="ms-appx:Segoe Translator Symbol.ttf#Segoe Translator Symbol" FontSize="24"></FontIcon>
+                            <StackPanel  Height="48">
+                                <TextBlock FontSize="24">翻译</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">ほんやく</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <Frame Name="translate_frame" Loaded="translate_frame_Loaded"></Frame>
-            </PivotItem>
-            <PivotItem Margin="4,0,0,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">Flashcards</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">フラッシュ カード</TextBlock>
+                    </PivotItem.Header>
+                    <Frame Name="translate_frame" Loaded="translate_frame_Loaded">
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <NavigationThemeTransition>
+                                    <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                        <ContinuumNavigationTransitionInfo/>
+                                    </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                </NavigationThemeTransition>
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+                    </Frame>
+                </PivotItem>
+                <PivotItem Margin="4,0,0,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">Flashcards</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">フラッシュ カード</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <GridView x:Name="FlashcardGridView" Margin="0" ItemsSource="{Binding FlashcardPageInfo}" SelectionMode="None" IsItemClickEnabled="True" ContainerContentChanging="FlashcardGridView_ContainerContentChanging">
-                    <GridView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Name="FlashcardItem_Grid" PointerEntered="FlashcardItem_Grid_PointerEntered" PointerExited="FlashcardItem_Grid_PointerExited">
-                                <Interactivity:Interaction.Behaviors>
-                                    <Core:EventTriggerBehavior EventName="Tapped">
-                                        <Core:InvokeCommandAction Command="{Binding ElementName=pageRoot,Path=DataContext.NavToFlashcardPageCommand}" CommandParameter="{Binding NavigationInfo}"/>
-                                    </Core:EventTriggerBehavior>
-                                </Interactivity:Interaction.Behaviors>
-                                <controls:DropShadowPanel HorizontalContentAlignment="Stretch"
+                    </PivotItem.Header>
+                    <GridView x:Name="FlashcardGridView" Margin="0" ItemsSource="{Binding FlashcardPageInfo}" SelectionMode="None" IsItemClickEnabled="True" ContainerContentChanging="FlashcardGridView_ContainerContentChanging">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Name="FlashcardItem_Grid" PointerEntered="FlashcardItem_Grid_PointerEntered" PointerExited="FlashcardItem_Grid_PointerExited">
+                                    <Interactivity:Interaction.Behaviors>
+                                        <Core:EventTriggerBehavior EventName="Tapped">
+                                            <Core:InvokeCommandAction Command="{Binding ElementName=pageRoot,Path=DataContext.NavToFlashcardPageCommand}" CommandParameter="{Binding NavigationInfo}"/>
+                                        </Core:EventTriggerBehavior>
+                                    </Interactivity:Interaction.Behaviors>
+                                    <controls:DropShadowPanel HorizontalContentAlignment="Stretch"
                                                      VerticalContentAlignment="Stretch"
                                                      Margin="16"
                                                      BlurRadius="16"
                                                      ShadowOpacity="0.3"
                                                      Opacity="0">
-                                    <Border></Border>
-                                </controls:DropShadowPanel>
-                                <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
-                                    <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Icon}" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
-                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
-                                        <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="{Binding Name}" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
-                                        <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="{Binding Description}" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                        <Border></Border>
+                                    </controls:DropShadowPanel>
+                                    <StackPanel Width="340" Margin="12" Background="White" BorderBrush="LightGray" BorderThickness="0.8" Orientation="Horizontal">
+                                        <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Icon}" VerticalAlignment="Center" Foreground="#00b294" FontSize="36" Margin="20,0,0,0"/>
+                                        <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                            <TextBlock  Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Microsoft Yahei" Text="{Binding Name}" Foreground="Black" FontSize="24" VerticalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" FontFamily="Meiryo UI" Text="{Binding Description}" Foreground="Gray" FontSize="16" VerticalAlignment="Center" Margin="0,0,0,12"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </PivotItem>
+                <PivotItem Margin="12,-8,0,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="&#xE115;" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">设置</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">せってい</TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </PivotItem.Header>
+                    <Frame Name="settings_frame" Loaded="settings_frame_Loaded">
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <NavigationThemeTransition>
+                                    <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                        <ContinuumNavigationTransitionInfo/>
+                                    </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                </NavigationThemeTransition>
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+                    </Frame>
+                </PivotItem>
+            </Pivot>
+            <StackPanel Background="{StaticResource HostBackdropBrush}" Height="65" VerticalAlignment="Bottom">
+                <AutoSuggestBox Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="Keyword" Style="{StaticResource AutoSuggestBoxStyle1}" PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen" IsTabStop="False" AllowDrop="True" Drop="QueryBox_Drop" DragOver="QueryBox_DragOver">
+                    <AutoSuggestBox.Resources>
+                        <DataTemplate x:Key="DataTemplate1">
+                            <StackPanel Name="autosuggestion_Listitem" Orientation="Horizontal">
+                                <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Keyword}" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center" TextWrapping="NoWrap"></TextBlock>
+                                <TextBlock Text="{Binding PreviewExplanation}" Margin="10,0,0,0" FontFamily="DengXian" FontWeight="Normal" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                            </StackPanel>
                         </DataTemplate>
-                    </GridView.ItemTemplate>
-                </GridView>
-            </PivotItem>
-            <PivotItem Margin="12,-8,0,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="&#xE115;" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">设置</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">せってい</TextBlock>
-                        </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <Frame Name="settings_frame" Loaded="settings_frame_Loaded"></Frame>
-            </PivotItem>
-        </Pivot>
-        <StackPanel Background="#00b294" Height="65" VerticalAlignment="Bottom">
-            <AutoSuggestBox Name="QueryBox" FontFamily="Yu Gothic UI" TextMemberPath="Keyword" Style="{StaticResource AutoSuggestBoxStyle1}" PlaceholderText="请输入要查询的日语单词" Height="59" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Margin="0,4,0,0" SuggestionChosen="QueryBox_SuggestionChosen" IsTabStop="False">
-                <AutoSuggestBox.Resources>
-                    <DataTemplate x:Key="DataTemplate1">
-                        <StackPanel Name="autosuggestion_Listitem" Orientation="Horizontal">
-                            <TextBlock FontFamily="Yu Gothic UI" Text="{Binding Keyword}" Foreground="#00b294" FontSize="21.333" VerticalAlignment="Center" TextWrapping="NoWrap"></TextBlock>
-                            <TextBlock Text="{Binding PreviewExplanation}" Margin="10,0,0,0" FontFamily="DengXian" FontWeight="Normal" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </AutoSuggestBox.Resources>
-                <AutoSuggestBox.ItemTemplate>
-                    <StaticResource ResourceKey="DataTemplate1"/>
-                </AutoSuggestBox.ItemTemplate>
+                    </AutoSuggestBox.Resources>
+                    <AutoSuggestBox.ItemTemplate>
+                        <StaticResource ResourceKey="DataTemplate1"/>
+                    </AutoSuggestBox.ItemTemplate>
 
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="QuerySubmitted">
-                        <Core:InvokeCommandAction Command="{Binding QueryWordsCommand}"
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="QuerySubmitted">
+                            <Core:InvokeCommandAction Command="{Binding QueryWordsCommand}"
                                                   CommandParameter ="{Binding ElementName=QueryBox,Path=Text}"/>
-                    </Core:EventTriggerBehavior>
-                    <!--<Core:EventTriggerBehavior EventName="TextChanged">
+                        </Core:EventTriggerBehavior>
+                        <!--<Core:EventTriggerBehavior EventName="TextChanged">
                         <Core:InvokeCommandAction Command="{Binding CommandUpdateSuggestion}"
                                                   CommandParameter ="{Binding ElementName=QueryBox,Path=Text}"/>
                     </Core:EventTriggerBehavior>-->
-                </Interactivity:Interaction.Behaviors>
+                    </Interactivity:Interaction.Behaviors>
 
 
-                <AutoSuggestBox.QueryIcon>
-                    <FontIcon Glyph="&#xE11A;" FontSize="20"/>
-                </AutoSuggestBox.QueryIcon>
-            </AutoSuggestBox>
-        </StackPanel>
+                    <AutoSuggestBox.QueryIcon>
+                        <FontIcon Glyph="&#xE11A;" FontSize="20"/>
+                    </AutoSuggestBox.QueryIcon>
+                </AutoSuggestBox>
+            </StackPanel>
+        </Grid>
+        <Grid Name="titleBarGrid" Background="{StaticResource HostBackdropBrush}">
+            <local:TitleBarControl x:Name="titleBarCtl" HorizontalAlignment="Stretch" Margin="48,0,0,0"></local:TitleBarControl>
+            <Button Name="overlayBtn" FontSize="12" Style="{StaticResource TitlebarButtonStyle}" Content="&#xE73F;" Background="Transparent" Foreground="White" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left" Height="32" Width="48" Click="overlayBtn_Click"></Button>
+        </Grid>
     </Grid>
 </Page>

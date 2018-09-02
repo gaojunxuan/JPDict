@@ -7,31 +7,40 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid Background="#FFF3F3F3"  >
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-        <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
-        <Pivot Name="mainPivot" RequestedTheme="Dark" Margin="0,0,0,0">
-            <PivotItem Margin="0,0,0,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0" Foreground="White"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">更新</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">こうしん</TextBlock>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Background="#FFF3F3F3" Grid.Row="1">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <Rectangle Fill="{StaticResource HostBackdropBrush}" Margin="0" Height="70" VerticalAlignment="Top"/>
+            <Pivot Name="mainPivot" RequestedTheme="Dark" Margin="0,0,0,0">
+                <PivotItem Margin="0,0,0,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="" Width="25" Margin="0,0,5,0" Foreground="White"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">更新</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">こうしん</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <Grid>
-                    <StackPanel>
-                        <TextBlock Text="本次更新包含词库更新，需要花费一段时间更新词库，在更新完成之前请不要关闭应用。" TextWrapping="WrapWholeWords" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiLight" Foreground="Gray" Margin="16,8,16,0"></TextBlock>
-                        <ProgressBar Name="Update_ProgressBar" Margin="16,48,16,0" Foreground="#00b294"></ProgressBar>
-                    </StackPanel>
-                </Grid>
-            </PivotItem>
-        </Pivot>
+                    </PivotItem.Header>
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="本次更新包含词库更新，需要花费一段时间更新词库，在更新完成之前请不要关闭应用。" TextWrapping="WrapWholeWords" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiLight" Foreground="Gray" Margin="16,8,16,0"></TextBlock>
+                            <ProgressBar Name="Update_ProgressBar" Margin="16,48,16,0" Foreground="#00b294"></ProgressBar>
+                        </StackPanel>
+                    </Grid>
+                </PivotItem>
+            </Pivot>
+        </Grid>
+        <Grid Name="titleBarGrid" Background="{StaticResource HostBackdropBrush}">
+            <local:TitleBarControl x:Name="titleBarCtl" HorizontalAlignment="Stretch" Margin="0,0,0,0"></local:TitleBarControl>
+        </Grid>
     </Grid>
 </Page>

@@ -10,93 +10,103 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     DataContext="{Binding KanjiFlashcardViewModel, Source={StaticResource Locator}}">
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  >
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-        <Rectangle Fill="#00b294" Margin="0" Height="70" VerticalAlignment="Top"/>
-        <Pivot Name="mainPivot" RequestedTheme="Dark" Margin="0,0,0,0">
-            <PivotItem Margin="0,0,0,0">
-                <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
-                        <StackPanel Height="48">
-                            <TextBlock FontSize="24">汉字</TextBlock>
-                            <TextBlock FontSize="8" FontFamily="Yu Gothic UI">かんじ</TextBlock>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  >
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <Rectangle Fill="{StaticResource HostBackdropBrush}" Margin="0" Height="70" VerticalAlignment="Top"/>
+            <Pivot Name="mainPivot" RequestedTheme="Dark" Margin="0,0,0,0">
+                <PivotItem Margin="0,0,0,0">
+                    <PivotItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
+                            <StackPanel Height="48">
+                                <TextBlock FontSize="24">汉字</TextBlock>
+                                <TextBlock FontSize="8" FontFamily="Yu Gothic UI">かんじ</TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </PivotItem.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="107*"></RowDefinition>
-                        <RowDefinition Height="35*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Background="#00b294" Grid.RowSpan="1" Margin="0,-12,0,12">
-                        <FlipView x:Name="ViewerFlipView" ItemsSource="{Binding Kanji,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Background="{x:Null}" Margin="0,-36,0,0">
-                            <FlipView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <TextBlock x:Name="kanji_Tbk" Text="{Binding Kanji}" FontFamily="Yu Gothic UI" TextAlignment="Center" FontSize="82" VerticalAlignment="Stretch"></TextBlock>
-                                        <TextBlock x:Name="kunreading_Tbk" FontFamily="Yu Gothic UI" Text="{Binding KunReading}" TextAlignment="Center" FontSize="28" Margin="32,4,32,0" Visibility="{Binding ShowReading}" TextWrapping="Wrap" MaxWidth="800"></TextBlock>
-                                        <TextBlock x:Name="onreading_Tbk" FontFamily="Yu Gothic UI" Text="{Binding OnReading}" TextAlignment="Center" FontSize="24" Margin="36,4,36,0" Visibility="{Binding ShowReading}" TextWrapping="Wrap"></TextBlock>
+                    </PivotItem.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="107*"></RowDefinition>
+                            <RowDefinition Height="35*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="{StaticResource HostBackdropBrush }" Grid.RowSpan="1" Margin="0,-12,0,12">
+                            <FlipView x:Name="ViewerFlipView" ItemsSource="{Binding Kanji,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Background="{x:Null}" Margin="0,-36,0,0">
+                                <FlipView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock x:Name="kanji_Tbk" Text="{Binding Kanji}" FontFamily="Yu Gothic UI" TextAlignment="Center" FontSize="82" VerticalAlignment="Stretch"></TextBlock>
+                                            <TextBlock x:Name="kunreading_Tbk" FontFamily="Yu Gothic UI" Text="{Binding KunReading}" TextAlignment="Center" FontSize="28" Margin="32,4,32,0" Visibility="{Binding ShowReading}" TextWrapping="Wrap" MaxWidth="800"></TextBlock>
+                                            <TextBlock x:Name="onreading_Tbk" FontFamily="Yu Gothic UI" Text="{Binding OnReading}" TextAlignment="Center" FontSize="24" Margin="36,4,36,0" Visibility="{Binding ShowReading}" TextWrapping="Wrap"></TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </FlipView.ItemTemplate>
+                            </FlipView>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <ListView Name="MenuGridView" SelectionMode="None" Margin="0,-12,0,8" IsItemClickEnabled="True" ContainerContentChanging="MenuGridView_ContainerContentChanging">
+                                <ListViewItem x:Name="replayHira_item" Margin="0,12,0,0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="340">
+                                        <TextBlock Foreground="#FF00B294" FontSize="32" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0" Height="35"></TextBlock>
+                                        <StackPanel Margin="20,0,0,0">
+                                            <TextBlock Text="重新开始" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
+                                            <TextBlock Text="リプレイ" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        </StackPanel>
                                     </StackPanel>
-                                </DataTemplate>
-                            </FlipView.ItemTemplate>
-                        </FlipView>
+                                    <Interactivity:Interaction.Behaviors>
+                                        <Core:EventTriggerBehavior EventName="Tapped">
+                                            <Core:InvokeCommandAction Command="{Binding ReplayCommand}"/>
+                                        </Core:EventTriggerBehavior>
+                                    </Interactivity:Interaction.Behaviors>
+                                </ListViewItem>
+                                <ListViewItem x:Name="hideReading_item" Margin="0,12,0,0" Tapped="hideReading_item_Tapped">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Grid>
+                                            <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
+                                            <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="30" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,9">あ</TextBlock>
+                                        </Grid>
+                                        <StackPanel Margin="20,0,0,0">
+                                            <TextBlock Text="隐藏读音" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
+                                            <TextBlock Text="読み方を表示しない" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Interactivity:Interaction.Behaviors>
+                                        <Core:EventTriggerBehavior EventName="Tapped">
+                                            <Core:InvokeCommandAction Command="{Binding HideReadingCommand}"/>
+                                        </Core:EventTriggerBehavior>
+                                    </Interactivity:Interaction.Behaviors>
+                                </ListViewItem>
+                                <ListViewItem x:Name="showReading_item" Margin="0,12,0,0" Tapped="showReading_item_Tapped" Visibility="Collapsed">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="34" Width="40" Height="40" TextAlignment="Center">あ</TextBlock>
+                                        <StackPanel Margin="20,0,0,0">
+                                            <TextBlock Text="显示读音" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
+                                            <TextBlock Text="読み方を表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Interactivity:Interaction.Behaviors>
+                                        <Core:EventTriggerBehavior EventName="Tapped">
+                                            <Core:InvokeCommandAction Command="{Binding ShowReadingCommand}"/>
+                                        </Core:EventTriggerBehavior>
+                                    </Interactivity:Interaction.Behaviors>
+                                </ListViewItem>
+                            </ListView>
+                        </Grid>
                     </Grid>
-                    <Grid Grid.Row="1">
-                        <GridView Name="MenuGridView" SelectionMode="None" Margin="12,-12,0,8" IsItemClickEnabled="True" ContainerContentChanging="MenuGridView_ContainerContentChanging">
-                            <GridViewItem x:Name="replayHira_item" Margin="0,12,0,0" Width="340">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="340">
-                                    <TextBlock Foreground="#FF00B294" FontSize="32" Width="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,10,0,0" Height="35"></TextBlock>
-                                    <StackPanel Margin="20,0,0,0">
-                                        <TextBlock Text="重新开始" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="リプレイ" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                                <Interactivity:Interaction.Behaviors>
-                                    <Core:EventTriggerBehavior EventName="Tapped">
-                                        <Core:InvokeCommandAction Command="{Binding ReplayCommand}"/>
-                                    </Core:EventTriggerBehavior>
-                                </Interactivity:Interaction.Behaviors>
-                            </GridViewItem>
-                            <GridViewItem x:Name="hideReading_item" Margin="0,12,0,0" Tapped="hideReading_item_Tapped" Width="340">
-                                <StackPanel Orientation="Horizontal" Width="340">
-                                    <Grid>
-                                        <TextBlock Foreground="#FF00B294" FontSize="36" Width="40" Height="40" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,4,0,0"></TextBlock>
-                                        <TextBlock Foreground="#9900B294" FontFamily="Yu Gothic UI" FontSize="24" Width="40" Height="30" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,0,9">あ</TextBlock>
-                                    </Grid>
-                                    <StackPanel Margin="20,0,0,0">
-                                        <TextBlock Text="隐藏读音" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="読み方を表示しない" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                                <Interactivity:Interaction.Behaviors>
-                                    <Core:EventTriggerBehavior EventName="Tapped">
-                                        <Core:InvokeCommandAction Command="{Binding HideReadingCommand}"/>
-                                    </Core:EventTriggerBehavior>
-                                </Interactivity:Interaction.Behaviors>
-                            </GridViewItem>
-                            <GridViewItem x:Name="showReading_item" Margin="0,12,0,0" Tapped="showReading_item_Tapped" Visibility="Collapsed" Width="340">
-                                <StackPanel Orientation="Horizontal" Width="340">
-                                    <TextBlock Foreground="#FF00B294" FontFamily="Yu Gothic UI" FontSize="34" Width="40" Height="40" TextAlignment="Center">あ</TextBlock>
-                                    <StackPanel Margin="20,0,0,0">
-                                        <TextBlock Text="显示读音" Foreground="Black" Margin="0,4,0,0" FontSize="20"></TextBlock>
-                                        <TextBlock Text="読み方を表示する" Foreground="Gray" FontSize="14" FontFamily="Yu Gothic UI"></TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                                <Interactivity:Interaction.Behaviors>
-                                    <Core:EventTriggerBehavior EventName="Tapped">
-                                        <Core:InvokeCommandAction Command="{Binding ShowReadingCommand}"/>
-                                    </Core:EventTriggerBehavior>
-                                </Interactivity:Interaction.Behaviors>
-                            </GridViewItem>
-                        </GridView>
-                    </Grid>
-                </Grid>
-            </PivotItem>
-        </Pivot>
+                </PivotItem>
+            </Pivot>
+        </Grid>
+        <Grid Name="titleBarGrid" Background="{StaticResource HostBackdropBrush}">
+            <local:TitleBarControl x:Name="titleBarCtl" HorizontalAlignment="Stretch" Margin="48,0,0,0"></local:TitleBarControl>
+            <Button Name="overlayBtn" Margin="48,0,0,0" FontSize="12" Style="{StaticResource TitlebarButtonStyle}" Content="&#xE73F;" Background="Transparent" Foreground="White" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left" Height="32" Width="48" Click="overlayBtn_Click"></Button>
+        </Grid>
     </Grid>
 </Page>

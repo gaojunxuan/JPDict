@@ -15,13 +15,8 @@
         <x:String x:Key="AppName">My Application</x:String>
         <converter:StringEquationToBoolConverter x:Key="strEquationConverter"/>
     </Page.Resources>
-    
+
     <Grid RequestedTheme="Light">
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="SizeStateGroup">
                 <VisualState x:Name="Widest1200State">
@@ -125,7 +120,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                     <Button x:Name="Trans_Btn"  Margin="0,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Command="{Binding TranslateCommand}" CommandParameter="{Binding ElementName=originTbx,Path=Text}">翻译</Button>
-                    <Button x:Name="ClearTrans_Btn"  Margin="10,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Click="ClearTrans_Btn_Click">清空</Button>
+                    <Button x:Name="ClearTrans_Btn"  Margin="10,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Click="ClearTrans_Btn_Click" Command="{Binding ClearResultCommand}">清空</Button>
                     <Button x:Name="CopyTransResult_Btn"  Margin="10.1,10,0,0" Background="#FF00B294" Foreground="#CCFFFFFF" Click="CopyTransResult_Btn_Click">复制结果</Button>
                 </StackPanel>
 

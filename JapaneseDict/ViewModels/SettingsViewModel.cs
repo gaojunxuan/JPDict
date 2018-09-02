@@ -20,6 +20,7 @@ using Windows.UI.Core;
 using Windows.Storage;
 using JapaneseDict.GUI;
 using JapaneseDict.GUI.Helpers;
+using Microsoft.Identity.Client;
 
 namespace JapaneseDict.GUI.ViewModels
 {
@@ -78,7 +79,7 @@ namespace JapaneseDict.GUI.ViewModels
                         {
                             await new MessageDialog("更新失败，请检查您的网络连接", "失败").ShowAsync();
                         }
-                        IsBusy = true;
+                        IsBusy = false;
                     }));
             }
         }
@@ -111,11 +112,29 @@ namespace JapaneseDict.GUI.ViewModels
                                 IsBusy = false;
                             });
                         }
+                        catch (MsalServiceException msalEx)
+                        {
+                            if (msalEx.ErrorCode == "authentication_canceled")
+                                await new MessageDialog("您取消了备份操作", "出现错误").ShowAsync();
+                            else
+                                await new MessageDialog($"其他错误\n{msalEx.ErrorCode}", "出现错误").ShowAsync();
+                        }
+                        catch (MsalClientException clientEx)
+                        {
+                            if (clientEx.ErrorCode == "network_not_available")
+                                await new MessageDialog("请检查网络连接", "出现错误").ShowAsync();
+                            if (clientEx.ErrorCode == "access_denied")
+                                await new MessageDialog("权限不足，可能是由于您拒绝了 Skylark JPDict 访问 OneDrive 文件的请求。", "出现错误").ShowAsync();
+                            else
+                                await new MessageDialog($"其他错误\n{clientEx.ErrorCode}", "出现错误").ShowAsync();
+
+                        }
                         catch (Exception ex)
                         {
-                            await new MessageDialog("备份过程中出现错误，请稍后重试。\n\n" + ex.ToString(), "失败").ShowAsync();
-                            IsBusy = false;
+                            await new MessageDialog("备份过程中出现错误，请稍后重试。\n\n" + ex.Message, "出现错误").ShowAsync();
+                            NoteSync.Logout();
                         }
+                        IsBusy = false;
                     }));
             }
         }
@@ -150,13 +169,31 @@ namespace JapaneseDict.GUI.ViewModels
                                     filestream.Dispose();
                                     writestream.Dispose();
                                     QueryEngine.QueryEngine.NotebookQueryEngine.CopyFromBackup();
-                                    NotebookPage._needRefresh = true;
+                                    NotebookPage.NeedRefresh = true;
                                 }
                             });
+                        }
+                        catch(MsalServiceException msalEx)
+                        {
+                            if(msalEx.ErrorCode== "authentication_canceled")
+                                await new MessageDialog("您取消了恢复操作", "出现错误").ShowAsync();
+                            else
+                                await new MessageDialog($"其他错误\n{msalEx.ErrorCode}", "出现错误").ShowAsync();
+                        }
+                        catch (MsalClientException clientEx)
+                        {
+                            if(clientEx.ErrorCode=="network_not_available")
+                                await new MessageDialog("请检查网络连接", "出现错误").ShowAsync();
+                            if (clientEx.ErrorCode== "access_denied")
+                                await new MessageDialog("权限不足，可能是由于您拒绝了 Skylark JPDict 访问 OneDrive 文件的请求。", "出现错误").ShowAsync();
+                            else
+                                await new MessageDialog($"其他错误\n{clientEx.ErrorCode}", "出现错误").ShowAsync();
+
                         }
                         catch (Exception ex)
                         {
                             await new MessageDialog("恢复过程中出现错误，请稍后重试。\n\n" + ex.Message, "出现错误").ShowAsync();
+                            NoteSync.Logout();
                         }
                         IsBusy = false;
                     }));

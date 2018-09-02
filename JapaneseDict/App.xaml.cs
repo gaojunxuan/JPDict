@@ -30,6 +30,9 @@ using Microsoft.AppCenter.Push;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Services.Store.Engagement;
 using JapaneseDict.GUI.Helpers;
+using Windows.UI.Xaml.Media.Animation;
+using Microsoft.QueryStringDotNET;
+using Windows.UI.ViewManagement;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=402347&clcid=0x409
 namespace JapaneseDict.GUI
@@ -60,9 +63,6 @@ namespace JapaneseDict.GUI
         private async void CopyMainDb()
         {
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///dict.db"));
-
-
             if (await storageFolder.TryGetItemAsync("kanji.db") == null)
             {
                 var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanji.db"));
@@ -148,10 +148,41 @@ namespace JapaneseDict.GUI
         {
             base.OnActivated(args);
             await ActivationService.ActivateAsync(args);
+            Helpers.ThemeHelper.SetThemeForJPDict();
             if (args is ToastNotificationActivatedEventArgs)
             {
                 var toastActivationArgs = args as ToastNotificationActivatedEventArgs;
+                QueryString parameters= QueryString.Parse(toastActivationArgs.Argument);
                 Frame rootFrame = Window.Current.Content as Frame;
+                if (parameters.Contains("action"))
+                {
+                    switch (parameters["action"])
+                    {
+                        case "detailResult":
+                            string keyword = parameters["keyword"];
+                            if (rootFrame == null)
+                            {
+                                rootFrame = new Frame();
+                                rootFrame.NavigationFailed += OnNavigationFailed;
+                                // Place the frame in the current Window
+                                Window.Current.Content = rootFrame;
+                            }
+                            if (rootFrame.Content == null)
+                            {
+                                rootFrame.Navigate(typeof(MainPage));
+                                rootFrame.Navigate(typeof(ResultPage), keyword);
+                            }
+                            else
+                            {
+                                if (rootFrame.CanGoBack)
+                                    rootFrame.GoBack();
+                                rootFrame.Navigate(typeof(ResultPage), keyword);
+                                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+                            }
+                            break;
+                    }
+                }
+
                 CopyMainDb();
                 InitOnlineServiceAsync();
                 Helpers.ThemeHelper.SetThemeForJPDict();
@@ -189,6 +220,40 @@ namespace JapaneseDict.GUI
 
                 // Use the originalArgs variable to access the original arguments
                 // that were passed to the app.
+            }
+
+            if (args.Kind == ActivationKind.Protocol)
+            {
+                var uriArgs = args as ProtocolActivatedEventArgs;
+                if (uriArgs != null)
+                {
+                    Frame rootFrame = Window.Current.Content as Frame;
+                    CopyMainDb();
+                    InitOnlineServiceAsync();
+                    // Do not repeat app initialization when the Window already has content,
+                    // just ensure that the window is active
+                    if (rootFrame == null)
+                    {
+                        // Create a Frame to act as the navigation context and navigate to the first page
+                        rootFrame = new Frame();
+                        rootFrame.NavigationFailed += OnNavigationFailed;
+                        // Place the frame in the current Window
+                        Window.Current.Content = rootFrame;
+                    }
+                    if (rootFrame.Content == null)
+                    {
+                        if (uriArgs.Uri.Host == "result")
+                        {
+                            //rootFrame.BackStack.Insert(0,new PageStackEntry(typeof(MainPage), null, new EntranceNavigationTransitionInfo()));
+                            rootFrame.Navigate(typeof(MainPage));
+                            rootFrame.Navigate(typeof(ResultPage),Uri.UnescapeDataString(uriArgs.Uri.Query.Replace("?keyword=","")));
+                        }
+                    }
+
+                    // Ensure the current window is active
+                    Window.Current.Activate();
+                    
+                }
             }
         }
 

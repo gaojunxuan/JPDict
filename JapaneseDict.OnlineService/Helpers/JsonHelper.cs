@@ -14,6 +14,7 @@ using Windows.Security.Cryptography.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Web.Http.Filters;
 using JapaneseDict.OnlineService.Helpers;
+using Windows.UI.Xaml.Media;
 
 namespace JapaneseDict.OnlineService.Helpers
 {
@@ -121,7 +122,7 @@ namespace JapaneseDict.OnlineService.Helpers
             try
             {
                 //string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/EverydayJapanese?index=" +index);
-                JsonObject resultobj = JsonObject.Parse(await GetJsonString("http://api.skylark-workshop.xyz/api/GetDailySentence?code=/BiWp6KIaa4DJ5fP5n4CfG6KxD9DRHqc2Wwosiw2tKAoPADvDtizEw==&index=" + index));
+                JsonObject resultobj = JsonObject.Parse(await GetJsonString("http://api.skylark-workshop.xyz/api/GetDailySentence?code=fi6c4bz3w5LkUnl8hGT0V4n/PoKBq7KH3Ly8za8HC4b/r8QRfj/zzw==&index=" + index));
                 return new EverydaySentence() { JpText = resultobj["sentence"].GetString(), CnText = resultobj["trans"].GetString(), AudioUri = new Uri(resultobj["audio"].GetString()), NotesOnText = resultobj["sentencePoint"].GetString(), Author = resultobj["creator"].GetString(), BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
             }
             catch (Exception ex)
@@ -134,7 +135,7 @@ namespace JapaneseDict.OnlineService.Helpers
         {
             try
             {
-                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=G6TCeDVc9HGW8TU7C6pGEv2Ivfuoxy/aY22TSaLNa/9LF/y9WfLJrQ==");
+                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=cElmudLe2wJ8tOXumYBog85EiqHN/76341GVoB5Ogtltdxrr/xlGmQ==");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 var resultarritem = jsonobj["data"].GetObject()["item"].GetArray()[index];
                 NHKNews res = new NHKNews() {Title=resultarritem.GetObject()["title"].GetString(),Link= new Uri(resultarritem.GetObject()["link"].GetString()),IconPath=new Uri(resultarritem.GetObject()["iconPath"].GetString()),VideoPath=new Uri(resultarritem.GetObject()["videoPath"].GetString()) };
@@ -149,7 +150,7 @@ namespace JapaneseDict.OnlineService.Helpers
         {
             try
             {
-                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=G6TCeDVc9HGW8TU7C6pGEv2Ivfuoxy/aY22TSaLNa/9LF/y9WfLJrQ==");
+                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=cElmudLe2wJ8tOXumYBog85EiqHN/76341GVoB5Ogtltdxrr/xlGmQ==");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 var resultarritem = jsonobj["data"].GetObject()["item"].GetArray();
                 List<NHKNews> res = new List<NHKNews>();
@@ -173,7 +174,7 @@ namespace JapaneseDict.OnlineService.Helpers
         {
             try
             {
-                string jsonStr = await GetJsonString($"http://api.skylark-workshop.xyz/api/GetNHKRadio?code=Lwgwi3BFqmOzq/C7SIAaN1kK/GpiDtppAfr0X3MXklpp057unrBmHQ==&speed={speed}&index={index}");
+                string jsonStr = await GetJsonString($"http://api.skylark-workshop.xyz/api/GetNHKRadio?code=NjIR9q6QzPOo29fPMCIZhuyie35aFxAgikYYwV5oFw5QzMVaUtSo6A==&speed={speed}&index={index}");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 NHKRadios res = new NHKRadios() { Title = jsonobj["title"].GetString(), StartDate = jsonobj["startdate"].GetString(), EndDate = jsonobj["enddate"].GetString(), SoundUrl = new Uri(jsonobj["soundurl"].GetString()) };
                 return res;
@@ -187,13 +188,19 @@ namespace JapaneseDict.OnlineService.Helpers
         {
             try
             {
-                return Int32.Parse(await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKRadio?code=Lwgwi3BFqmOzq/C7SIAaN1kK/GpiDtppAfr0X3MXklpp057unrBmHQ==&getItemsCount=true"));
+                return Int32.Parse(await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKRadio?code=NjIR9q6QzPOo29fPMCIZhuyie35aFxAgikYYwV5oFw5QzMVaUtSo6A==&getItemsCount=true"));
 
             }
             catch
             {
                 return 1;
             }
+        }
+        public static async Task<FormattedNews> GetFormattedNews(string url)
+        {
+            string jsonStr = await GetJsonString($"http://api.skylark-workshop.xyz/api/GetFormattedNews?code=m3Bk0nEYpaEACAD9BHVsdtgLhJAkT3Hhr4kFPEfpfQgllIsok9rPEw==&url={url}");
+            JsonObject jsonobj = JsonObject.Parse(jsonStr);
+            return new FormattedNews() { Title = jsonobj["title"].GetString(), Content = jsonobj["content"].GetString(), Image = new Uri(jsonobj["image"].GetString()) };
         }
         /// <summary>
         /// Get UTC+8

@@ -2,6 +2,7 @@
 <StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
   <Publisher>CN=47610EF9-B72C-4C0E-B513-511D56E63511</Publisher>
   <PublisherDisplayName>Kevin Gao</PublisherDisplayName>
+  <DeveloperAccountType>MSA</DeveloperAccountType>
   <GeneratePackageHash>http://www.w3.org/2001/04/xmlenc#sha256</GeneratePackageHash>
   <SupportedLocales>
     <Language Code="af" InMinimumRequirementSet="true" />
@@ -365,6 +366,7 @@
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>45240.QuickShutdown</MainPackageIdentityName>
+    <MainPackageIdentityName>45240.ReT</MainPackageIdentityName>
     <MainPackageIdentityName>45240.59205074FAA25</MainPackageIdentityName>
     <MainPackageIdentityName>45240.171724F804E7</MainPackageIdentityName>
     <MainPackageIdentityName>45240.3082847B7318</MainPackageIdentityName>

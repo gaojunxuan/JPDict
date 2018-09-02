@@ -366,7 +366,7 @@ namespace JapaneseDict.QueryEngine
             public static ObservableCollection<Note> Get()
             {
                 _noteconn.CreateTable<Note>(); 
-                return new ObservableCollection<Note>(_noteconn.Table<Note>());
+                return new ObservableCollection<Note>(_noteconn.Query<Note>("SELECT * FROM Note"));
             }
             /// <summary>
             /// An async copy of Get()
@@ -378,7 +378,7 @@ namespace JapaneseDict.QueryEngine
                 return await Task.Run(() =>
                 {
                     _noteconn.CreateTable<Note>();
-                    return new ObservableCollection<Note>(_noteconn.Table<Note>());
+                    return new ObservableCollection<Note>(_noteconn.Query<Note>("SELECT * FROM Note"));
                 });
 
             }
@@ -390,6 +390,8 @@ namespace JapaneseDict.QueryEngine
             {
                 SQLiteConnection _mergeConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, path));
                 _mergeConn.CreateTable<Note>();
+#pragma warning disable CS0612 // Type or member is obsolete
+                _mergeConn.CreateTable<UserDefDict>();
                 _noteconn.CreateTable<Note>();
                 foreach (var i in _mergeConn.Table<Note>())
                 {
@@ -399,10 +401,18 @@ namespace JapaneseDict.QueryEngine
                     item.IsInNotebook = true;
                     _conn.Update(item);
                 }
-                _noteconn.CreateTable<Note>();
+                foreach (var i in _mergeConn.Table<UserDefDict>())
+                {
+                    //put the data from given db into main db
+                    _noteconn.Insert(new Note() { ItemId = i.OriginID, Keyword = i.JpChar, Definition = i.PreviewExplanation, Reading = i.Kana });
+                    var item = _conn.Query<Dict>("SELECT * FROM Dict WHERE ItemId = ?", i.OriginID).FirstOrDefault();
+                    item.IsInNotebook = true;
+                    _conn.Update(item);
+                }
                 //remove duplicate rows
                 _noteconn.Query<Note>("DELETE FROM Note WHERE ItemId NOT IN (SELECT MAX(ItemId) ItemId FROM Note GROUP BY ItemId)");
                 _mergeConn.Close();
+#pragma warning restore CS0612 // Type or member is obsolete
             }
             //Recover from backup
             public static async void CopyFromBackup()

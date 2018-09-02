@@ -39,6 +39,7 @@ namespace JapaneseDict.GUI
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            this.NavigationCacheMode = NavigationCacheMode.Disabled;
             base.OnNavigatedTo(e);
         }
 
@@ -49,7 +50,6 @@ namespace JapaneseDict.GUI
         private void ClearTrans_Btn_Click(object sender, RoutedEventArgs e)
         {
             originTbx.Text = "";
-            resultTbx.Text = "";
         }
 
         private void CopyTransResult_Btn_Click(object sender, RoutedEventArgs e)

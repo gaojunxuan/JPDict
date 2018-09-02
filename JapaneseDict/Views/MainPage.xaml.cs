@@ -23,6 +23,12 @@ using Microsoft.Toolkit.Uwp.UI.Animations;
 using JapaneseDict.GUI.Extensions;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using JapaneseDict.GUI.Helpers;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI;
+using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
+using System.Text.RegularExpressions;
 
 
 
@@ -38,6 +44,7 @@ namespace JapaneseDict.GUI
         public MainPage()
         {
             InitializeComponent();
+            ExtendAcrylicIntoTitleBar();
             systemControls = SystemMediaTransportControls.GetForCurrentView();
             systemControls.ButtonPressed += SystemControls_ButtonPressed;
         }
@@ -53,7 +60,7 @@ namespace JapaneseDict.GUI
                          {
                              mediaEle.Play();
                              StopNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
-                             mainPivot.Focus(FocusState.Programmatic);
+                             mainPivot.Focus(FocusState.Pointer);
                              ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
                          }
                          break;
@@ -61,7 +68,7 @@ namespace JapaneseDict.GUI
                          if (mediaEle.Source != null)
                          {
                              mediaEle.Pause();
-                             mainPivot.Focus(FocusState.Programmatic);
+                             mainPivot.Focus(FocusState.Pointer);
                              StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
                              ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
                          }
@@ -92,7 +99,7 @@ namespace JapaneseDict.GUI
         {
             try
             {
-                mainPivot.Focus(FocusState.Programmatic);
+                mainPivot.Focus(FocusState.Pointer);
                 StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
                 listeningPosition_Slider.Visibility = Visibility.Collapsed;
                 ((Button)sender).IsEnabled = false;
@@ -119,7 +126,7 @@ namespace JapaneseDict.GUI
                                 QueryBox.ItemsSource = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(StringHelper.ResolveReplicator(QueryBox.Text));
                                 //await Task.Delay(500);
                             }));
-
+            pageRoot.Focus(FocusState.Pointer);
         }
 
         private void noteBook_frame_Loaded(object sender, RoutedEventArgs e)
@@ -137,7 +144,7 @@ namespace JapaneseDict.GUI
             base.OnNavigatedFrom(e);
             mediaEle.Source = null;
             mediaEle.Stop();
-            mainPivot.Focus(FocusState.Programmatic);
+            mainPivot.Focus(FocusState.Pointer);
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             listeningPosition_Slider.Visibility = Visibility.Collapsed;
@@ -188,7 +195,7 @@ namespace JapaneseDict.GUI
         {
             try
             {
-                mainPivot.Focus(FocusState.Programmatic);
+                mainPivot.Focus(FocusState.Pointer);
                 ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
                 mediaEle.Stop();
                 var currentBtn = ((Button)sender);
@@ -218,7 +225,7 @@ namespace JapaneseDict.GUI
         private void StopNHKRadiosPlay_Btn_Click(object sender, RoutedEventArgs e)
         {
             mediaEle.Pause();
-            mainPivot.Focus(FocusState.Programmatic);
+            mainPivot.Focus(FocusState.Pointer);
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             ResumeNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
         }
@@ -231,39 +238,41 @@ namespace JapaneseDict.GUI
             sender.Text = suggest.Keyword;
         }
 
-        private void adControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile"))
-            {
-                ad.Margin = new Thickness(24, 12, 0, 24);
-            }
-        }
-
         private void mediaEle_MediaEnded(object sender, RoutedEventArgs e)
         {
-            mainPivot.Focus(FocusState.Programmatic);
+            mainPivot.Focus(FocusState.Pointer);
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Collapsed;
             listeningPosition_Slider.Visibility = Visibility.Collapsed;
         }
         private void ResumeNHKRadiosPlay_Btn_Click(object sender, RoutedEventArgs e)
         {
             mediaEle.Play();
-            mainPivot.Focus(FocusState.Programmatic);
+            mainPivot.Focus(FocusState.Pointer);
             (sender as HyperlinkButton).Visibility = Visibility.Collapsed;
             StopNHKRadiosPlay_Btn.Visibility = Visibility.Visible;
         }
         //refresh the notebook list after recovering from backup
         private void mainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //switch(mainPivot.SelectedIndex)
+            //{
+            //    case 1:
+            //        noteBook_frame.Navigate(typeof(NotebookPage));
+            //        break;
+            //    case 2:
+            //        translate_frame.Navigate(typeof(TranslationPage));
+            //        break;
+            //    case 4:
+            //        settings_frame.Navigate(typeof(SettingsPage));
+            //        break;
+            //}
             if((sender as Pivot).SelectedIndex==1)
             {
-                if (NotebookPage._needRefresh)
+                if(NotebookPage.NeedRefresh)
                 {
-                    if(noteBook_frame.Content!=null)
-                    {
+                    if (noteBook_frame.Content != null)
                         ((noteBook_frame.Content as NotebookPage).DataContext as NotebookViewModel).LoadData();
-                    }
-                    NotebookPage._needRefresh = false;
+                    NotebookPage.NeedRefresh = false;
                 }
             }
         }
@@ -321,5 +330,67 @@ namespace JapaneseDict.GUI
             OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(600) };
             opacityAnimation.StartAnimation(shadowPanel);
         }
+
+        private async void ReadNews_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            string x = ((HyperlinkButton)sender).Tag?.ToString();
+            if (!string.IsNullOrWhiteSpace(x))
+            {
+                if(!ApplicationViewHelper.Contains(x))
+                {
+                    int newViewId = await ApplicationViewHelper.CreateNewViewAsync(x, typeof(NewsReaderPage), navParameter: x);
+                    CoreApplicationView newView = ApplicationViewHelper.GetViewFromId(newViewId);
+                    bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId, ViewSizePreference.UseMore);
+                }
+                else
+                {
+                    int newViewId = ApplicationViewHelper.GetId(x);
+                    if (newViewId != -1)
+                        await ApplicationViewSwitcher.SwitchAsync(newViewId);
+                }
+            }
+        }
+
+        private async void overlayBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+            {
+                Frame.Navigate(typeof(CompactMainPage));
+                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+            }
+        }
+
+        private void ExtendAcrylicIntoTitleBar()
+        {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            Window.Current.SetTitleBar(titleBarCtl);
+            titleBarCtl.SetPaddingForMainPage();
+        }
+        private void QueryBox_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+        }
+
+        private async void QueryBox_Drop(object sender, DragEventArgs e)
+        {
+            var content = e.DataView;
+            if (content != null)
+            {
+                Regex regex = new Regex(@"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]");
+                if (content.Contains(StandardDataFormats.Text))
+                {
+                    string keyword = await content.GetTextAsync();
+                    if (regex.IsMatch(keyword))
+                    {
+                        if (Frame.CanGoBack)
+                            Frame.GoBack();
+                        Frame.Navigate(typeof(ResultPage), keyword);
+                    }
+                }
+            }
+        }
+
     }
 }
+

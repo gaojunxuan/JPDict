@@ -65,7 +65,7 @@ namespace JapaneseDict.Models
         {
             get
             {
-                return Pos + " " + Definition.Replace("\n", " ").Substring(0, ((Definition.Length >= 31) ? (30) : (Definition.Length))).Trim() + " ...";
+                return Pos + (string.IsNullOrEmpty(Pos)?"":" ") + Definition.Replace("\n", " ").Replace("\r", " ").Substring(0, ((Definition.Length >= 31) ? (30) : (Definition.Length))).Trim() + " ...";
             }
         }
     }

@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="JapaneseDict.GUI.NewsReaderPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:JapaneseDict.GUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding NewsReaderViewModel, Source={StaticResource Locator}}">
+
+    <Grid Background="#F9F5E8">
+        <ScrollViewer>
+            <StackPanel>
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition/>
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+                <TextBlock Name="TitleTbk" Text="{Binding Title}" TextWrapping="Wrap" FontFamily="Yu Mincho" FontSize="48" FontWeight="Bold" Margin="48,48,48,0"></TextBlock>
+                <toolkit:DropShadowPanel Margin="48,24,48,24" BlurRadius="8" ShadowOpacity="0.6" OffsetX="0" OffsetY="0" Color="Black">
+                    <Image HorizontalAlignment="Left" Stretch="Uniform" MaxHeight="320">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding Image}"/>
+                        </Image.Source>
+                    </Image>
+                </toolkit:DropShadowPanel>
+                <TextBlock Name="ContentTbk" Text="{Binding Content}" TextWrapping="WrapWholeWords" Margin="48,24,48,0" FontSize="24" FontFamily="Yu Mincho"></TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

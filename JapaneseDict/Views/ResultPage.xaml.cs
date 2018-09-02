@@ -31,6 +31,13 @@ using Microsoft.Graphics.Canvas;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Shapes;
 using JapaneseDict.GUI.Helpers;
+using Windows.ApplicationModel.UserActivities;
+using JapaneseDict.GUI.Models;
+using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using Windows.ApplicationModel.DataTransfer;
+using System.Text.RegularExpressions;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -45,6 +52,7 @@ namespace JapaneseDict.GUI
         public ResultPage()
         {
             InitializeComponent();
+            ExtendAcrylicIntoTitleBar();
             //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             //{
             //    HardwareButtons.BackPressed += HardwareButtons_BackPressed;
@@ -61,10 +69,16 @@ namespace JapaneseDict.GUI
         //    /* so the subscription of BackPressed should be in the handler of OnNavigatedTo event */
         //    /* because this event will be triggered every time when user navigate to this page */
         //}
-
+        private void ExtendAcrylicIntoTitleBar()
+        {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            Window.Current.SetTitleBar(titleBarCtl);
+        }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             if (e.Parameter!=null&!(e.Parameter is int))
             {
                 _keyword = e.Parameter.ToString();
@@ -221,11 +235,69 @@ namespace JapaneseDict.GUI
             mainPivot.Focus(FocusState.Pointer);
         }
 
-        private void DefinitionListView_Loaded(object sender, RoutedEventArgs e)
+        private async void DefinitionListView_Loaded(object sender, RoutedEventArgs e)
         {
             if ((this.DataContext as ResultViewModel).VerbResult == null || (this.DataContext as ResultViewModel).VerbResult.Count == 0)
             {
                 mainPivot.Items.Remove(mainPivot.Items[3]);
+            }
+            this._keyword = (this.resultFlipView.Items.First() as GroupedDictItem).Keyword;
+            await GenerateActivityAsync();
+        }
+        
+        private async Task GenerateActivityAsync()
+        {
+            if(ApiInformation.IsTypePresent("Windows.ApplicationModel.UserActivities.UserActivityChannel"))
+            {
+                UserActivitySession currentActivity = null;
+                // Get the default UserActivityChannel and query it for our UserActivity. If the activity doesn't exist, one is created.
+                UserActivityChannel channel = UserActivityChannel.GetDefault();
+                UserActivity userActivity = await channel.GetOrCreateUserActivityAsync(DateTime.Today.ToString("yyyyMMdd"));
+
+                // Populate required properties
+                userActivity.VisualElements.DisplayText = _keyword;
+                userActivity.VisualElements.Description = (this.resultFlipView.Items.First() as GroupedDictItem).First().Definition;
+                userActivity.ActivationUri = new Uri($"jpdict://result?keyword={_keyword}");
+
+                //Save
+                await userActivity.SaveAsync(); //save the new metadata
+
+                // Dispose of any current UserActivitySession, and create a new one.
+                currentActivity?.Dispose();
+                currentActivity = userActivity.CreateSession();
+            }
+        }
+
+        private async void overlayBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+            {
+                Frame.Navigate(typeof(CompactMainPage));
+                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+            }
+        }
+
+        private void QueryBox_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+        }
+
+        private async void QueryBox_Drop(object sender, DragEventArgs e)
+        {
+            var content = e.DataView;
+            if (content != null)
+            {
+                Regex regex = new Regex(@"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]");
+                if (content.Contains(StandardDataFormats.Text))
+                {
+                    string keyword = await content.GetTextAsync();
+                    if (regex.IsMatch(keyword))
+                    {
+                        if (Frame.CanGoBack)
+                            Frame.GoBack();
+                        Frame.Navigate(typeof(ResultPage), keyword);
+                    }
+                }
             }
         }
     }

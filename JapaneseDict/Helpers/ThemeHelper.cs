@@ -19,7 +19,7 @@ namespace JapaneseDict.GUI.Helpers
         {
             var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
             titleBar.BackgroundColor = bc;
-            titleBar.ButtonBackgroundColor = bc;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonForegroundColor = fc;
             titleBar.InactiveBackgroundColor = bc;
             titleBar.InactiveForegroundColor = fc;

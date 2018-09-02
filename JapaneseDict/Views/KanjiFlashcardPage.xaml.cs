@@ -25,6 +25,9 @@ using JapaneseDict.GUI.Extensions;
 using Windows.UI.Composition;
 using Windows.UI.Xaml.Hosting;
 using Windows.Foundation.Metadata;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using JapaneseDict.GUI.Helpers;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,8 +41,14 @@ namespace JapaneseDict.GUI
         public KanjiFlashcardPage()
         {
             InitializeComponent();
+            ExtendAcrylicIntoTitleBar();
         }
-
+        private void ExtendAcrylicIntoTitleBar()
+        {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            Window.Current.SetTitleBar(titleBarCtl);
+        }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -106,6 +115,14 @@ namespace JapaneseDict.GUI
                     EnsureImplicitAnimations();
                     elementVisual.ImplicitAnimations = _implicitAnimations;
                 }
+            }
+        }
+        private async void overlayBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+            {
+                Frame.Navigate(typeof(CompactMainPage));
+                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
             }
         }
     }

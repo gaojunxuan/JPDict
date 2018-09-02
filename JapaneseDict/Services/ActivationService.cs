@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using JapaneseDict.GUI.Activation;
-
+using JapaneseDict.GUI.Helpers;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -78,6 +79,7 @@ namespace JapaneseDict.GUI.Services
                 // Tasks after activation
                 await StartupAsync();
             }
+            ApplicationViewHelper.MainViewId = ApplicationView.GetForCurrentView().Id;
         }
 
         private async Task InitializeAsync()
