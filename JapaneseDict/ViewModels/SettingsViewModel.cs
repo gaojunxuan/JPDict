@@ -176,7 +176,7 @@ namespace JapaneseDict.GUI.ViewModels
                         catch(MsalServiceException msalEx)
                         {
                             if(msalEx.ErrorCode== "authentication_canceled")
-                                await new MessageDialog("备份操作被取消", "出现错误").ShowAsync();
+                                await new MessageDialog("恢复操作被取消", "出现错误").ShowAsync();
                             else
                                 await new MessageDialog($"其他错误\n{msalEx.ErrorCode}", "出现错误").ShowAsync();
                         }
