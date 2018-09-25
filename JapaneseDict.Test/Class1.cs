@@ -9,50 +9,37 @@ namespace JapaneseDict.Test
 {
     public static class Class1
     {
-        public static void Do()
-        {
-            var connection = new SQLiteConnection(Console.ReadLine());
-            var result = connection.Query<MainDict>("select * from MainDict where JpChar like '%·%'");
-            foreach(var i in result)
-            {
-                i.Kana = i.Kana.Replace("·", "");
-                connection.Update(i);
-                connection.Insert(new MainDict() {JpChar=i.JpChar.Replace("·",""),Kana= i.Kana.Replace("·", ""),Explanation=i.Explanation });
-                Console.WriteLine(i.JpChar);
-            }
-        }
+        //public static void Do()
+        //{
+        //    var connection = new SQLiteConnection(Console.ReadLine());
+        //    var result = connection.Query<MainDict>("select * from MainDict where JpChar like '%·%'");
+        //    foreach(var i in result)
+        //    {
+        //        i.Kana = i.Kana.Replace("·", "");
+        //        connection.Update(i);
+        //        connection.Insert(new MainDict() {JpChar=i.JpChar.Replace("·",""),Kana= i.Kana.Replace("·", ""),Explanation=i.Explanation });
+        //        Console.WriteLine(i.JpChar);
+        //    }
+        //}
     }
-    public class MainDict
+    public class Dict
     {
         [PrimaryKey, AutoIncrement]
-        public int ID { get; set; }
-        public string JpChar { get; set; }
-        private string _Kana;
-        public string Kana
-        {
-            get
-            {
-
-                if (string.IsNullOrEmpty(_Kana) && Explanation != "没有本地释义")
-                    return JpChar.Replace("·", "");
-                else if (!string.IsNullOrEmpty(_Kana))
-                    return _Kana.Replace("·", "");
-                else
-                    return null;
-            }
-            set
-            {
-                _Kana = value;
-            }
-        }
-        public string Explanation { get; set; }
-        public string Comment { get; set; }
+        public int DefinitionId { get; set; }
+        public int ItemId { get; set; }
+        public string Definition { get; set; }
+        public string Pos { get; set; }
+        public string Keyword { get; set; }
+        public string Reading { get; set; }
+        public string Kanji { get; set; }
+        public string LoanWord { get; set; }
+        public string SeeAlso { get; set; }
         [Ignore]
         public string PreviewExplanation
         {
             get
             {
-                return Explanation.Replace("\n", " ").Substring(0, ((Explanation.Length >= 31) ? (30) : (Explanation.Length))).Trim() + " ...";
+                return Pos + " " + Definition.Replace("\n", " ").Substring(0, ((Definition.Length >= 31) ? (30) : (Definition.Length))).Trim() + " ...";
             }
         }
         [Ignore]
@@ -60,7 +47,7 @@ namespace JapaneseDict.Test
         {
             get
             {
-                return !string.IsNullOrEmpty(Kana);
+                return !string.IsNullOrEmpty(Reading);
             }
         }
         [Ignore]
@@ -72,12 +59,12 @@ namespace JapaneseDict.Test
             }
         }
         [Ignore]
-        public string SeeAlso
+        public string Suggestion
         {
             get;
             set;
         }
-        public bool IsInUserDefDict
+        public bool IsInNotebook
         {
             get; set;
         }

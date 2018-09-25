@@ -29,5 +29,14 @@
                 <TextBlock Name="ContentTbk" Text="{Binding Content}" TextWrapping="WrapWholeWords" Margin="48,24,48,0" FontSize="24" FontFamily="Yu Mincho"></TextBlock>
             </StackPanel>
         </ScrollViewer>
+        <Grid Name="ErrorGrid" Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE783;" FontFamily="Segoe MDL2 Assets" FontSize="24" VerticalAlignment="Center" Margin="0,4,24,0"></TextBlock>
+                    <TextBlock Text="出现错误" Style="{StaticResource HeaderTextBlockStyle}" FontSize="24"></TextBlock>
+                </StackPanel>
+                <Button x:Name="retryBtn" Content="重试" Margin="0,32,0,0" HorizontalAlignment="Center" FontSize="16" Click="retryBtn_Click"></Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

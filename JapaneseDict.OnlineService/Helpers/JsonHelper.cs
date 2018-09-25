@@ -88,7 +88,7 @@ namespace JapaneseDict.OnlineService.Helpers
             }
             catch
             {
-                return "出现连接错误";
+                return "出现错误";
             }
         }
         public static async Task<String> GetJpToCnTranslationResult(string input)
@@ -103,20 +103,6 @@ namespace JapaneseDict.OnlineService.Helpers
             JsonObject jsonobj = JsonObject.Parse(jsonStr);
             return jsonobj["resultset"].GetObject()["result"].GetObject()["text"].GetString();
         }
-        //public static async Task<EverydaySentence> GetEverydaySentence(DateTime date,int index)
-        //{
-        //    try
-        //    {
-        //        string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/EverydayJapanese?datestr=" + date.ToString("yyyyMMdd"));
-        //        JsonObject resultobj = JsonObject.Parse(jsonStr);
-        //        return new EverydaySentence() { JpText= resultobj["sentence"].GetString(), CnText= resultobj["trans"].GetString(), AudioUri=new Uri(resultobj["audio"].GetString()),NotesOnText= resultobj["sentencePoint"].GetString(), Author= resultobj["creator"].GetString(),BackgroundImage=new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg",UriKind.RelativeOrAbsolute)) };
-        //    }
-        //    catch(Exception)
-        //    {
-        //        return new EverydaySentence() { JpText = "出现错误", CnText = "请确认您是否已连接到互联网", BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
-        //    }
-
-        //}
         public static async Task<EverydaySentence> GetEverydaySentence(int index)
         {
             try
@@ -128,7 +114,7 @@ namespace JapaneseDict.OnlineService.Helpers
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
-                return new EverydaySentence() { JpText = "出现错误", CnText = "请确认您是否已连接到互联网", BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
+                return new EverydaySentence() { JpText = "出现错误", CnText = "请检查网络连接", BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
             }
         }
         public static async Task<NHKNews> GetNHKNews(int index)
@@ -138,7 +124,7 @@ namespace JapaneseDict.OnlineService.Helpers
                 string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=cElmudLe2wJ8tOXumYBog85EiqHN/76341GVoB5Ogtltdxrr/xlGmQ==");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 var resultarritem = jsonobj["data"].GetObject()["item"].GetArray()[index];
-                NHKNews res = new NHKNews() {Title=resultarritem.GetObject()["title"].GetString(),Link= new Uri(resultarritem.GetObject()["link"].GetString()),IconPath=new Uri(resultarritem.GetObject()["iconPath"].GetString()),VideoPath=new Uri(resultarritem.GetObject()["videoPath"].GetString()) };
+                NHKNews res = new NHKNews() {Title=resultarritem.GetObject()["title"].GetString(),Link= new Uri(resultarritem.GetObject()["link"].GetString()), OriginalLink = new Uri(resultarritem.GetObject()["link"].GetString()), IconPath=new Uri(resultarritem.GetObject()["iconPath"].GetString()),VideoPath=new Uri(resultarritem.GetObject()["videoPath"].GetString()) };
                 return res;
             }
             catch (Exception)
@@ -156,7 +142,7 @@ namespace JapaneseDict.OnlineService.Helpers
                 List<NHKNews> res = new List<NHKNews>();
                 foreach(var i in resultarritem)
                 {
-                    res.Add(new NHKNews() { Title = i.GetObject()["title"].GetString(), Link = new Uri(i.GetObject()["link"].GetString()), IconPath = new Uri(i.GetObject()["iconPath"].GetString()), VideoPath = new Uri(i.GetObject()["videoPath"].GetString()) });
+                    res.Add(new NHKNews() { Title = i.GetObject()["title"].GetString(), Link = new Uri(i.GetObject()["link"].GetString()), OriginalLink = new Uri(i.GetObject()["link"].GetString()), IconPath = new Uri(i.GetObject()["iconPath"].GetString()), VideoPath = new Uri(i.GetObject()["videoPath"].GetString()) });
                 }
                 return res;
             }
@@ -165,7 +151,32 @@ namespace JapaneseDict.OnlineService.Helpers
                 var err = new List<NHKNews>();
                 for(int i=0;i<10;i++)
                 {
-                    err.Add(new NHKNews() { Title = "出现错误", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
+                    err.Add(new NHKNews() { Title = "エラー", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
+                }
+                return err;
+            }
+        }
+        public static async Task<List<NHKNews>> GetNHKEasyNews()
+        {
+            try
+            {
+                string jsonStr = await GetJsonString("https://slwspfunc.azurewebsites.net/api/GetNHKEasyNews?code=85lAgvwtrq9DfbDWpH6krQtNL8UkRtTsIjFuE7uyXVGfZLCrFt6VTw==");
+                var jsonobj = JsonArray.Parse(jsonStr);
+                List<NHKNews> res = new List<NHKNews>();
+                foreach (var i in jsonobj)
+                {
+                    string id = i.GetObject()["newsId"].GetString();
+                    string img = i.GetObject()["imageUri"].GetString();
+                    res.Add(new NHKNews() { Title = i.GetObject()["title"].GetString(), Link= new Uri($"https://slwspfunc.azurewebsites.net/api/GetNewsWithRuby?code=Pwa68S3jYwHC80/aLHqDGLqFSEBfULUvNQEjzEymaipZwZxZTGg8zQ==&id={id}&img={img}"), OriginalLink= new Uri($"https://www3.nhk.or.jp/news/easy/{id}/{id}.html"), IconPath = new Uri(i.GetObject()["imageUri"].GetString()), IsEasy = true });
+                }
+                return res;
+            }
+            catch
+            {
+                var err = new List<NHKNews>();
+                for (int i = 0; i < 10; i++)
+                {
+                    err.Add(new NHKNews() { Title = "エラー", IconPath = new Uri("ms-appx:///Assets/connectionerr.png", UriKind.RelativeOrAbsolute) });
                 }
                 return err;
             }
@@ -181,7 +192,7 @@ namespace JapaneseDict.OnlineService.Helpers
             }
             catch
             {
-                return new NHKRadios() { Title = "出现连接错误", StartDate = "请确认您是否已连接到互联网" };
+                return new NHKRadios() { Title = "出现连接错误", StartDate = "请检查网络连接" };
             }
         }
         public static async Task<int> GetNHKRadiosItemsCount()

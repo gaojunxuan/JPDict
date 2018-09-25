@@ -24,6 +24,9 @@ using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.ApplicationModel;
 using JapaneseDict.OnlineService;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
+using JapaneseDict.GUI.Helpers;
+using Windows.ApplicationModel.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -112,6 +115,27 @@ namespace JapaneseDict.GUI
         private void Download_Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             pageRoot.Focus(FocusState.Pointer);
+        }
+
+        private async void nhkEasy_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ApplicationViewHelper.Contains("newsViewerWithRuby"))
+            {
+                int newViewId = await ApplicationViewHelper.CreateNewViewAsync(typeof(NewsReaderWithRubyPage));
+                CoreApplicationView newView = ApplicationViewHelper.GetViewFromId(newViewId);
+                bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId, ViewSizePreference.UseMore);
+            }
+            else
+            {
+                int newViewId = ApplicationViewHelper.GetId("newsViewerWithRuby");
+                if (newViewId != -1)
+                    await ApplicationViewSwitcher.SwitchAsync(newViewId);
+            }
+        }
+
+        private async void survey_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://goo.gl/forms/8ee1bvMz83zrpMmF2"));
         }
     }
 }

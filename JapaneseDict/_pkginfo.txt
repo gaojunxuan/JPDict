@@ -1,1 +1,1 @@
-C:\Users\gaoju\source\repos\JPDict\JapaneseDict\bin\x64\Release\Upload\JapaneseDict.GUI_3.0.0.0\JapaneseDict.GUI_3.0.0.0_x86_x64.appxbundle
+C:\Users\gaoju\source\repos\JPDict\JapaneseDict\bin\x64\Release\Upload\JapaneseDict.GUI_3.3.0.0\JapaneseDict.GUI_3.3.0.0_x86_x64.appxbundle

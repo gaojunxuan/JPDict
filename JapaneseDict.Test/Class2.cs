@@ -51,28 +51,30 @@ namespace JapaneseDict.Test
             {
                 if(!string.IsNullOrEmpty(i.Kanji))
                 {
-                    var kanjires = mainDict_connection.Query<MainDict>($"select * from MainDict where JpChar = '{i.Kanji}'");
-                    var kanares = mainDict_connection.Query<MainDict>($"select * from MainDict where Kana = '{i.Hiragana}'");
-                    if(kanares.Count!=0&&kanjires.Count==0)
+                    var kanjires = mainDict_connection.Query<Dict>($"select * from Dict where Keyword = '{i.Kanji}'");
+                    var kanares = mainDict_connection.Query<Dict>($"select * from Dict where Keyword = '{i.Hiragana}'");
+                    if(kanares.Count==0&&kanjires.Count==0)
                     {
-                        if(kanares.Count==1)
-                        {
-                            string exp = kanares.First().Explanation;
-                            string[] lines = exp.Split('\n');
-                            if(lines[1].StartsWith("["))
-                            {
-                                string newExp = i.Hiragana + "\n\n" + i.Kanji +"\n"+ lines.Skip(1);
-                                System.Diagnostics.Debug.WriteLine(newExp);
-                                //mainDict_connection.Insert(new MainDict() { JpChar = i.Kanji, Kana = i.Hiragana, Explanation = newExp });
-                            }
-                            else
-                            {
-                                string newExp = i.Hiragana + "\n\n" + lines[1] + "；" + i.Kanji + "\n" + lines.Skip(2);
-                                System.Diagnostics.Debug.WriteLine(newExp);
-                                //mainDict_connection.Insert(new MainDict() { JpChar = i.Kanji, Kana = i.Hiragana, Explanation = newExp });
-                            }
-                        }
-                        Console.WriteLine(i.Kanji);
+                        //if(kanares.Count==1)
+                        //{
+                        //    string exp = kanares.First().Explanation;
+                        //    string[] lines = exp.Split('\n');
+                        //    if(lines[1].StartsWith("["))
+                        //    {
+                        //        string newExp = i.Hiragana + "\n\n" + i.Kanji +"\n"+ lines.Skip(1);
+                        //        System.Diagnostics.Debug.WriteLine(newExp);
+                        //        //mainDict_connection.Insert(new MainDict() { JpChar = i.Kanji, Kana = i.Hiragana, Explanation = newExp });
+                        //    }
+                        //    else
+                        //    {
+                        //        string newExp = i.Hiragana + "\n\n" + lines[1] + "；" + i.Kanji + "\n" + lines.Skip(2);
+                        //        System.Diagnostics.Debug.WriteLine(newExp);
+                        //        //mainDict_connection.Insert(new MainDict() { JpChar = i.Kanji, Kana = i.Hiragana, Explanation = newExp });
+                        //    }
+                        //}
+                        System.Diagnostics.Debug.WriteLine(i.Kanji);
+                        System.Diagnostics.Debug.WriteLine(i.Hiragana);
+                        System.Diagnostics.Debug.WriteLine("");
                     }
                 }
             }
@@ -81,13 +83,12 @@ namespace JapaneseDict.Test
         {
             var connection = new SQLiteConnection(Console.ReadLine());
             connection.Execute("update MainDict set Explanation = replace(Explanation,'\r','\n')");
-            var table = connection.Table<MainDict>();
-            string a = table.First().Explanation;
+            var table = connection.Table<Dict>();
+            string a = table.First().Definition;
         }
     }
     public class Jlpt
     {
-        [PrimaryKey][AutoIncrement]
         public int ID { get; set; }
         public string Kanji { get; set; }
         public string Hiragana { get; set; }

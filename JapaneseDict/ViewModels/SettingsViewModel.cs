@@ -72,12 +72,12 @@ namespace JapaneseDict.GUI.ViewModels
                             });
                             await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() => 
                             {
-                                await new MessageDialog("已经成功更新了您的词库", "成功").ShowAsync();
+                                await new MessageDialog("已经成功更新了你的词库", "成功").ShowAsync();
                             });
                         }
                         catch
                         {
-                            await new MessageDialog("更新失败，请检查您的网络连接", "失败").ShowAsync();
+                            await new MessageDialog("更新失败，请检查网络连接", "失败").ShowAsync();
                         }
                         IsBusy = false;
                     }));
@@ -108,14 +108,14 @@ namespace JapaneseDict.GUI.ViewModels
                             });
                             await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                             {
-                                await new MessageDialog("已经成功备份了您的生词本", "成功").ShowAsync();
+                                await new MessageDialog("已经成功备份了你的生词本", "成功").ShowAsync();
                                 IsBusy = false;
                             });
                         }
                         catch (MsalServiceException msalEx)
                         {
                             if (msalEx.ErrorCode == "authentication_canceled")
-                                await new MessageDialog("您取消了备份操作", "出现错误").ShowAsync();
+                                await new MessageDialog("备份操作被取消", "出现错误").ShowAsync();
                             else
                                 await new MessageDialog($"其他错误\n{msalEx.ErrorCode}", "出现错误").ShowAsync();
                         }
@@ -124,7 +124,7 @@ namespace JapaneseDict.GUI.ViewModels
                             if (clientEx.ErrorCode == "network_not_available")
                                 await new MessageDialog("请检查网络连接", "出现错误").ShowAsync();
                             if (clientEx.ErrorCode == "access_denied")
-                                await new MessageDialog("权限不足，可能是由于您拒绝了 Skylark JPDict 访问 OneDrive 文件的请求。", "出现错误").ShowAsync();
+                                await new MessageDialog("权限不足，可能是由于你拒绝了 Skylark JPDict 访问 OneDrive 文件的请求。", "出现错误").ShowAsync();
                             else
                                 await new MessageDialog($"其他错误\n{clientEx.ErrorCode}", "出现错误").ShowAsync();
 
@@ -176,7 +176,7 @@ namespace JapaneseDict.GUI.ViewModels
                         catch(MsalServiceException msalEx)
                         {
                             if(msalEx.ErrorCode== "authentication_canceled")
-                                await new MessageDialog("您取消了恢复操作", "出现错误").ShowAsync();
+                                await new MessageDialog("备份操作被取消", "出现错误").ShowAsync();
                             else
                                 await new MessageDialog($"其他错误\n{msalEx.ErrorCode}", "出现错误").ShowAsync();
                         }
@@ -185,7 +185,7 @@ namespace JapaneseDict.GUI.ViewModels
                             if(clientEx.ErrorCode=="network_not_available")
                                 await new MessageDialog("请检查网络连接", "出现错误").ShowAsync();
                             if (clientEx.ErrorCode== "access_denied")
-                                await new MessageDialog("权限不足，可能是由于您拒绝了 Skylark JPDict 访问 OneDrive 文件的请求。", "出现错误").ShowAsync();
+                                await new MessageDialog("权限不足，可能是由于你拒绝了 Skylark JPDict 访问 OneDrive 文件的请求。", "出现错误").ShowAsync();
                             else
                                 await new MessageDialog($"其他错误\n{clientEx.ErrorCode}", "出现错误").ShowAsync();
 
@@ -214,6 +214,19 @@ namespace JapaneseDict.GUI.ViewModels
             }
         }
 
+        public bool UseNHKEasyNews
+        {
+            get
+            {
+                return StorageHelper.GetSetting<bool>("UseNHKEasyNews");
+            }
+            set
+            {
+                StorageHelper.StoreSetting("UseNHKEasyNews", value, true);
+                StorageHelper.FlushToStorage();
+                RaisePropertyChanged();
+            }
+        }
     }
 }
 

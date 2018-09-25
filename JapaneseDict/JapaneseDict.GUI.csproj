@@ -112,6 +112,7 @@
     <Content Include="Assets\EverydaySentenceBackground\0.JPG" />
     <Content Include="Assets\EverydaySentenceBackground\1.JPG" />
     <Content Include="Assets\EverydaySentenceBackground\2.JPG" />
+    <Content Include="Assets\imgnotfound.png" />
     <Content Include="Assets\logo.png" />
     <Content Include="Assets\NewStoreLogo.scale-150.png" />
     <Content Include="Assets\NewStoreLogo.scale-200.png" />
@@ -203,6 +204,9 @@
     <Compile Include="Views\NewsReaderPage.xaml.cs">
       <DependentUpon>NewsReaderPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NewsReaderWithRubyPage.xaml.cs">
+      <DependentUpon>NewsReaderWithRubyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NotebookPage.xaml.cs">
       <DependentUpon>NotebookPage.xaml</DependentUpon>
     </Compile>
@@ -276,6 +280,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\NewsReaderPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NewsReaderWithRubyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

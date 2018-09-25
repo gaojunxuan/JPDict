@@ -11,9 +11,11 @@ namespace JapaneseDict.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public Uri Link { get; set; }
+        public Uri OriginalLink { get; set; }
         public Uri ImgPath { get; set; }
         public Uri IconPath { get; set; }
         public Uri VideoPath { get; set; }
         public DateTime PubDate { get; set; }
+        public bool IsEasy { get; set; }
     }
 }

@@ -47,13 +47,15 @@ namespace JapaneseDict.GUI.ViewModels
         {
             var res = await JsonHelper.GetNHKNews();
             NHKNews = new ObservableCollection<NHKNews>(res.Take(4));
+            var easyres = await JsonHelper.GetNHKEasyNews();
+            NHKEasyNews = new ObservableCollection<NHKNews>(easyres.Take(4));
         }
         async Task GetListening()
         {
             NHKListeningSlow = new ObservableCollection<NHKRadios>();
             NHKListeningNormal = new ObservableCollection<NHKRadios>();
             NHKListeningFast = new ObservableCollection<NHKRadios>();
-            for (int i = 0; i < await JsonHelper.GetNHKRadiosItemsCount()-1; i++)
+            for (int i = 0; i < await JsonHelper.GetNHKRadiosItemsCount() - 1; i++)
             {
                 NHKListeningSlow.Add(await JsonHelper.GetNHKRadios(i, "slow"));
                 NHKListeningNormal.Add(await JsonHelper.GetNHKRadios(i, "normal"));
@@ -105,7 +107,7 @@ namespace JapaneseDict.GUI.ViewModels
         /// <summary>
         /// Gets the NavToKanjiFlashcardPage.
         /// </summary>
-        public RelayCommand<(Type,object)> NavToFlashcardPageCommand
+        public RelayCommand<(Type, object)> NavToFlashcardPageCommand
         {
             get
             {
@@ -113,11 +115,11 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_navToFlashcardPageCommand = new RelayCommand<(Type, object)>(
                     (x) =>
                     {
-                        if(x.Item1==typeof(KanjiFlashcardPage))
+                        if (x.Item1 == typeof(KanjiFlashcardPage))
                         {
                             (Window.Current.Content as Frame).Navigate(typeof(KanjiFlashcardPage), x.Item2);
                         }
-                        else if(x.Item1==typeof(KanaFlashcardPage))
+                        else if (x.Item1 == typeof(KanaFlashcardPage))
                         {
                             (Window.Current.Content as Frame).Navigate(typeof(KanaFlashcardPage), x.Item2);
                         }
@@ -147,6 +149,19 @@ namespace JapaneseDict.GUI.ViewModels
             }
         }
 
+        private ObservableCollection<NHKNews> nHKEasyNews;
+
+        public ObservableCollection<NHKNews> NHKEasyNews
+        {
+            get { return nHKEasyNews; }
+            set
+            {
+                nHKEasyNews = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
         private ObservableCollection<NHKRadios> nhkListeningSlow;
         public ObservableCollection<NHKRadios> NHKListeningSlow
         {
@@ -170,6 +185,8 @@ namespace JapaneseDict.GUI.ViewModels
         }
 
         private ObservableCollection<NHKRadios> nhkListeningFast;
+        
+
         public ObservableCollection<NHKRadios> NHKListeningFast
         {
             get { return nhkListeningFast; }
@@ -178,7 +195,17 @@ namespace JapaneseDict.GUI.ViewModels
                 nhkListeningFast = value;
                 RaisePropertyChanged();
             }
-        }      
+        }
+        public bool UseNHKEasyNews
+        {
+            get { return StorageHelper.GetSetting<bool>("UseNHKEasyNews"); }
+            set
+            {
+                StorageHelper.StoreSetting("UseNHKEasyNews", value, true);
+                StorageHelper.FlushToStorage();
+                RaisePropertyChanged();
+            }
+        }
     }
 }
 

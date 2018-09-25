@@ -35,15 +35,18 @@ namespace JapaneseDict.GUI
         {
             this.InitializeComponent();
         }
+        string url;
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             SetTitleBar();
             if(string.IsNullOrEmpty(e.Parameter.ToString()))
             {
-                this.DataContext = new NewsReaderViewModel(new FormattedNews() { Title = "エラーが発生しました" });
+                ErrorGrid.Visibility = Visibility.Visible;
+                retryBtn.Visibility = Visibility.Collapsed;
             }
             else
             {
+                url = e.Parameter.ToString();
                 await GetNews(e.Parameter.ToString());
             }
             base.OnNavigatedTo(e);
@@ -60,7 +63,7 @@ namespace JapaneseDict.GUI
                 }
                 catch
                 {
-                    this.DataContext = new NewsReaderViewModel(new FormattedNews() { Title = "エラーが発生しました" });
+                    ErrorGrid.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -73,6 +76,15 @@ namespace JapaneseDict.GUI
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
+        }
+
+        private async void retryBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ErrorGrid.Visibility = Visibility.Collapsed;
+            if(!string.IsNullOrEmpty(url))
+            {
+                await GetNews(url);
+            }
         }
     }
 }

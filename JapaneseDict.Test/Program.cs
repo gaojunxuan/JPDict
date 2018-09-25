@@ -14,7 +14,8 @@ namespace JapaneseDict.Test
             //Debug.WriteLine(VerbConjugationHelper.PrepNegative("くる"));
             //Debug.WriteLine(VerbConjugationHelper.PrepNegative("たべる"));
             //Debug.WriteLine(VerbConjugationHelper.PrepNegative("会う"));
-            Class2.ReplaceAll();
+            //Class2.ReplaceAll();
+            Class2.Do2();
             Console.ReadLine();
         }
     }

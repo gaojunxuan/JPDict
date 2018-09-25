@@ -29,6 +29,7 @@ using Windows.UI;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using System.Text.RegularExpressions;
+using Windows.UI.Xaml.Media.Imaging;
 
 
 
@@ -113,7 +114,7 @@ namespace JapaneseDict.GUI
             catch
             {
                 ((Button)sender).IsEnabled = true;
-                await new MessageDialog("请检查您的网络连接", "播放失败").ShowAsync();
+                await new MessageDialog("请检查网络连接", "播放失败").ShowAsync();
             }
 
 
@@ -213,7 +214,7 @@ namespace JapaneseDict.GUI
             }
             catch (Exception ex)
             {
-                await new MessageDialog("详细信息:\n\n" + ex.ToString() + "\n\n您可以在联系作者时提供以上的错误信息", "出现错误").ShowAsync();
+                await new MessageDialog("详细信息:\n\n" + ex.ToString() + "\n\n你可以在联系作者时提供以上的错误信息", "出现错误").ShowAsync();
             }
 
         }
@@ -266,13 +267,21 @@ namespace JapaneseDict.GUI
             //        settings_frame.Navigate(typeof(SettingsPage));
             //        break;
             //}
-            if((sender as Pivot).SelectedIndex==1)
+            if ((sender as Pivot).SelectedIndex == 1)
             {
-                if(NotebookPage.NeedRefresh)
+                if (NotebookPage.NeedRefresh)
                 {
                     if (noteBook_frame.Content != null)
                         ((noteBook_frame.Content as NotebookPage).DataContext as NotebookViewModel).LoadData();
                     NotebookPage.NeedRefresh = false;
+                }
+            }
+            if ((sender as Pivot).SelectedIndex == 0)
+            {
+                MainViewModel mainViewModel = this.DataContext as MainViewModel;
+                if(mainViewModel!=null)
+                {
+                    mainViewModel.RaisePropertyChanged("UseNHKEasyNews");
                 }
             }
         }
@@ -391,6 +400,33 @@ namespace JapaneseDict.GUI
             }
         }
 
+        private async void ReadEasyNews_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            string x = ((HyperlinkButton)sender).Tag?.ToString();
+            if (!string.IsNullOrWhiteSpace(x))
+            {
+                if (!ApplicationViewHelper.Contains(x))
+                {
+                    int newViewId = await ApplicationViewHelper.CreateNewViewAsync(x, typeof(NewsReaderWithRubyPage), navParameter: x);
+                    CoreApplicationView newView = ApplicationViewHelper.GetViewFromId(newViewId);
+                    bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId, ViewSizePreference.UseMore);
+                }
+                else
+                {
+                    int newViewId = ApplicationViewHelper.GetId(x);
+                    if (newViewId != -1)
+                        await ApplicationViewSwitcher.SwitchAsync(newViewId);
+                }
+            }
+        }
+
+        private void easyNews_img_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            var img = (sender as Image);
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.UriSource = new Uri("ms-appx:///Assets/imgnotfound.png");
+            img.Source = bitmapImage;
+        }
     }
 }
 

@@ -114,8 +114,8 @@
         </VisualStateManager.VisualStateGroups>
         <ScrollViewer Loaded="ScrollViewer_Loaded">
             <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
-                    <RadioButton x:Name="Jp2CnTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=jp}" Content="日→汉" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black" Checked="Jp2CnTransRdBtn_Checked"></RadioButton>
+                <StackPanel Orientation="Horizontal" Margin="10,12,0,0">
+                    <RadioButton x:Name="Jp2CnTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=jp}" Content="日→汉" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black" Checked="Jp2CnTransRdBtn_Checked" FontFamily="Segoe UI"></RadioButton>
                     <RadioButton x:Name="Cn2JpTransRdBtn" IsChecked="{Binding SourceLang,Mode=TwoWay,Converter={StaticResource strEquationConverter},ConverterParameter=zh}" Content="汉→日" GroupName="OriginLang" Style="{StaticResource RadioButtonStyle1}" Foreground="Black" Checked="Cn2JpTransRdBtn_Checked"></RadioButton>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
