@@ -42,11 +42,9 @@ namespace JapaneseDict.GUI.ViewModels
 
         public ResultViewModel(string keyword)
         {
-            
             Keyword = keyword;
             QueryWord();
-            
-            if(IsInDesignMode)
+            if (IsInDesignMode)
             {
                 Keyword = "あ";
             }
@@ -54,7 +52,6 @@ namespace JapaneseDict.GUI.ViewModels
         }
         public ResultViewModel(int id)
         {
-            
             QueryWord(id);
             if (IsInDesignMode)
             {
@@ -73,15 +70,24 @@ namespace JapaneseDict.GUI.ViewModels
         
         private async void QueryWord()
         {
+            IsLocalQueryBusy = true;
             var queryResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(Keyword);
-            
             if (queryResult.Count != 0 && queryResult.FirstOrDefault().Definition == "没有本地释义")
             {
-                string word = StringHelper.PrepareVerbs(Keyword);
-                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.FuzzyQueryForUIAsync(word);                
+                
+                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(await OnlineService.Helpers.JsonHelper.GetLemmatized(keyword));
                 if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Definition != "没有本地释义")
                 {
-                    queryResult.First().Suggestion = seealsoresults.First().Keyword;
+                    queryResult = seealsoresults;
+                }
+                else
+                {
+                    string word = StringHelper.PrepareVerbs(Keyword);
+                    seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(word);
+                    if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Definition != "没有本地释义")
+                    {
+                        queryResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(seealsoresults.First().Keyword);
+                    }
                 }
                 var pv = Windows.ApplicationModel.Package.Current.Id.Version;
                 Microsoft.AppCenter.Analytics.Analytics.TrackEvent("Word not found", new Dictionary<string, string>
@@ -92,12 +98,14 @@ namespace JapaneseDict.GUI.ViewModels
             }
             var grouped = queryResult.GroupBy(x => x.ItemId).Select(g=>new GroupedDictItem(g));
             Result = new ObservableCollection<GroupedDictItem>(grouped);
+            IsLocalQueryBusy = false;
             QueryVerb();
             await QueryKanji();
             await QueryOnline();      
         }
         private async void QueryWord(int id)
         {
+            IsLocalQueryBusy = true;
             var queryResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(id);
             if(queryResult != null && queryResult.Count!=0)
             {
@@ -105,6 +113,7 @@ namespace JapaneseDict.GUI.ViewModels
             }
             var grouped = queryResult.GroupBy(x => x.ItemId).Select(g => new GroupedDictItem(g));
             Result = new ObservableCollection<GroupedDictItem>(grouped);
+            IsLocalQueryBusy = false;
             QueryVerb();
             await QueryKanji();
             await QueryOnline();
@@ -118,9 +127,9 @@ namespace JapaneseDict.GUI.ViewModels
                 {
                     if (!string.IsNullOrEmpty(x.Pos))
                     {
-                        if (x.Pos.Contains("五 ]") | x.Pos.Contains("一 ]") | x.Pos.Contains("サ ]") | x.Pos.Contains("カ ]") | x.Pos.Contains("動詞"))
+                        if (x.Pos.Contains("五") | x.Pos.Contains("一") | x.Pos.Contains("サ") | x.Pos.Contains("カ") | x.Pos.Contains("動詞"))
                         {
-                            if (vbres == null | vbres.Count == 0)
+                            if (vbres != null)
                             {
                                 string keyword = x.Keyword;
                                 if (x.Pos.Contains("サ") && !x.Keyword.EndsWith("する"))

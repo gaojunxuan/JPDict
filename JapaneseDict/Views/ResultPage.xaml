@@ -52,6 +52,10 @@
                         <TextBlock Text="外来语" Style="{StaticResource CaptionTextBlockStyle}" Foreground="DarkGray" Margin="16,4,0,4"></TextBlock>
                         <TextBlock Text="{Binding LoanWord}" FontSize="20" FontFamily="Yu Gothic UI" Margin="16,4,0,4"></TextBlock>
                     </StackPanel>
+                    <StackPanel x:Name="SeeAlsoPanel" Margin="4,12,4,4" Visibility="{Binding ShowSeeAlsoPanel,Converter={StaticResource boolToVisibility}}">
+                        <TextBlock Text="另见" Style="{StaticResource CaptionTextBlockStyle}" Foreground="DarkGray" Margin="16,4,0,4"></TextBlock>
+                        <TextBlock Text="{Binding SeeAlso}" FontSize="20" FontFamily="Yu Gothic UI" Margin="16,4,0,4"></TextBlock>
+                    </StackPanel>
                     <StackPanel x:Name="DefinitionPanel" Margin="4,12,4,4">
                         <TextBlock Text="释义" Style="{StaticResource CaptionTextBlockStyle}" Foreground="DarkGray" Margin="16,4,0,4"></TextBlock>
                         <ListView x:Name="DefinitionListView" ItemsSource="{Binding Definitions}" SelectionMode="None" Loaded="DefinitionListView_Loaded">
@@ -129,8 +133,12 @@
                             </StackPanel>
                         </StackPanel>
                     </PivotItem.Header>
-                    <FlipView ItemsSource="{Binding Result}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3" Loaded="resultFlipView_Loaded">
-                    </FlipView>
+                    <Grid>
+                        <FlipView ItemsSource="{Binding Result}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3" Loaded="resultFlipView_Loaded">
+                        </FlipView>
+                        <ProgressRing IsActive="{Binding IsLocalQueryBusy}" Foreground="#FF00B294"/>
+                    </Grid>
+                   
 
                 </PivotItem>
                 <PivotItem Margin="12,-8,0,0">
@@ -144,9 +152,9 @@
                         </StackPanel>
                     </PivotItem.Header>
                     <Grid>
-                        <ProgressRing x:Name="onlineRes_ProgressRing" Foreground="#FF00B294" IsActive="{Binding IsOnlineQueryBusy}"></ProgressRing>
                         <FlipView ItemsSource="{Binding OnlineResult}"  x:Name="onlineeresultFlipView" ItemTemplate="{StaticResource DataTemplate3}">
                         </FlipView>
+                        <ProgressRing x:Name="onlineRes_ProgressRing" Foreground="#FF00B294" IsActive="{Binding IsOnlineQueryBusy}"></ProgressRing>
                     </Grid>
                 </PivotItem>
                 <PivotItem>

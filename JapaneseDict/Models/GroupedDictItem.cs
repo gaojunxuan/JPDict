@@ -36,9 +36,11 @@ namespace JapaneseDict.GUI.Models
         public string Keyword => elements.First().Keyword;
         public string Kanji => elements.First().Kanji;
         public string LoanWord => elements.First().LoanWord;
+        public string SeeAlso => elements.First().SeeAlso;
         public bool IsInNotebook => elements.First().IsInNotebook;
         public bool IsControlBtnVisible => elements.First().IsControlBtnVisible;
         public bool ShowKanjiPanel => !string.IsNullOrEmpty(Kanji);
         public bool ShowLoanWordPanel => !string.IsNullOrEmpty(LoanWord);
+        public bool ShowSeeAlsoPanel => !string.IsNullOrEmpty(SeeAlso);
     }
 }

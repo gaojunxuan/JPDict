@@ -73,6 +73,47 @@ namespace JapaneseDict.QueryEngine
 
             }
             /// <summary>
+            /// Query MainDict database using the given keyword and return the result in ObservableCollection type
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public static async Task<ObservableCollection<Dict>> QueryForUIAsync(List<string> keys)
+            {
+                return await Task.Run(() =>
+                {
+                    if (keys!=null)
+                    {
+                        var result = new ObservableCollection<Dict>();
+                        foreach(var i in keys)
+                        {
+                            var queryResult= _conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword = ?", i.Replace(" ", "").Replace("　", ""));
+                            foreach(var r in queryResult)
+                            {
+                                result.Add(r);
+                            }
+                        }
+                        if (result.Count != 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            var err = new ObservableCollection<Dict>();
+                            foreach(var i in keys)
+                            {
+                                err.Add(new Dict() { Keyword = i, Definition = "没有本地释义" });
+                            }
+                            return err;
+                        }
+                    }
+                    else
+                    {
+                        return new ObservableCollection<Dict>();
+                    }
+                });
+
+            }
+            /// <summary>
             /// Query MainDict database using given index and return the result in ObservableCollection type
             /// </summary>
             /// <param name="id"></param>

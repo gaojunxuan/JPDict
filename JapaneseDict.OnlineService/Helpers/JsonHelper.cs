@@ -229,5 +229,26 @@ namespace JapaneseDict.OnlineService.Helpers
                 return DateTime.Now;
             }
         }
+
+        public static async Task<List<string>> GetLemmatized(string sentence)
+        {
+            try
+            {
+                string jsonStr = await GetJsonString($"https://jpdict-lemmatizer.azurewebsites.net/api/lemmatized?sentence={sentence}");
+                JsonArray jsonArr = JsonArray.Parse(jsonStr);
+                List<string> result = new List<string>();
+                foreach(var i in jsonArr)
+                {
+                    result.Add(i.GetString());
+                }
+                return result;
+            }
+            catch
+            {
+                List<string> result = new List<string>();
+                result.Add(sentence);
+                return result;
+            }
+        }
     }
 }
