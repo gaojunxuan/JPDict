@@ -77,7 +77,7 @@ namespace JapaneseDict.QueryEngine
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            public static async Task<ObservableCollection<Dict>> QueryForUIAsync(List<string> keys)
+            public static async Task<ObservableCollection<Dict>> QueryForUIAsync(List<(string, string, string)> keys)
             {
                 return await Task.Run(() =>
                 {
@@ -86,8 +86,20 @@ namespace JapaneseDict.QueryEngine
                         var result = new ObservableCollection<Dict>();
                         foreach(var i in keys)
                         {
-                            var queryResult= _conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword = ?", i.Replace(" ", "").Replace("　", ""));
-                            foreach(var r in queryResult)
+                            string kword = i.Item1;
+                            string reading = i.Item2;
+                            string pos = i.Item3;
+                            List<Dict> queryResult;
+                            if (!string.IsNullOrWhiteSpace(reading) && !string.IsNullOrWhiteSpace(pos))
+                            {
+                                if (pos == "名詞")
+                                    queryResult = _conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword = ? AND (Reading = ? OR Reading = ?)", kword.Replace(" ", "").Replace("　", ""), reading.Replace(" ", "").Replace("　", "").ToHiragana(), reading.Replace(" ", "").Replace("　", ""));
+                                else
+                                    queryResult = _conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword = ?", kword.Replace(" ", "").Replace("　", ""));
+                            }
+                            else
+                                queryResult = _conn.Query<Dict>("SELECT * FROM Dict WHERE Keyword = ?", kword.Replace(" ", "").Replace("　", ""));
+                            foreach (var r in queryResult)
                             {
                                 result.Add(r);
                             }
@@ -101,7 +113,7 @@ namespace JapaneseDict.QueryEngine
                             var err = new ObservableCollection<Dict>();
                             foreach(var i in keys)
                             {
-                                err.Add(new Dict() { Keyword = i, Definition = "没有本地释义" });
+                                err.Add(new Dict() { Keyword = i.Item1, Definition = "没有本地释义" });
                             }
                             return err;
                         }
@@ -155,7 +167,7 @@ namespace JapaneseDict.QueryEngine
                         {
                             var err = new ObservableCollection<Dict>
                             {
-                                new Dict() { Keyword = key, Definition = "没有本地释义" }
+                                new Dict() { Keyword = key, Definition = "" }
                             };
                             return err;
                         }
@@ -451,7 +463,7 @@ namespace JapaneseDict.QueryEngine
                     _conn.Update(item);
                 }
                 //remove duplicate rows
-                _noteconn.Query<Note>("DELETE FROM Note WHERE ItemId NOT IN (SELECT MAX(ItemId) ItemId FROM Note GROUP BY ItemId)");
+                _noteconn.Query<Note>("DELETE FROM Note WHERE Id NOT IN (SELECT MAX(Id) FROM Note GROUP BY ItemId)");
                 _mergeConn.Close();
 #pragma warning restore CS0612 // Type or member is obsolete
             }

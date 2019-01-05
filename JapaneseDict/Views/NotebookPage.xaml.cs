@@ -181,5 +181,29 @@ namespace JapaneseDict.GUI
         {
             this.pageRoot.Focus(FocusState.Pointer);
         }
+
+        private void NoteItem_Grid_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(600) };
+            animation.StartAnimation(sender as UIElement);
+            DropShadowPanel shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            Button delBtn = (sender as UIElement).GetFirstDescendantOfType<Button>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(600) };
+            OpacityAnimation buttonOpacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+            opacityAnimation.StartAnimation(shadowPanel);
+            buttonOpacityAnimation.StartAnimation(delBtn);
+        }
+
+        private void NoteItem_Grid_PointerCanceled(object sender, PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(600) };
+            animation.StartAnimation(sender as UIElement);
+            DropShadowPanel shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            Button delBtn = (sender as UIElement).GetFirstDescendantOfType<Button>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(600) };
+            OpacityAnimation buttonOpacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+            opacityAnimation.StartAnimation(shadowPanel);
+            buttonOpacityAnimation.StartAnimation(delBtn);
+        }
     }
 }

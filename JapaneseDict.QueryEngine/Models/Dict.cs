@@ -29,7 +29,7 @@ namespace JapaneseDict.Models
         {
             get
             {
-                return Pos+" "+Definition.Replace("\n", " ").Substring(0, ((Definition.Length >= 31) ? (30) : (Definition.Length))).Trim() + " ...";
+                return string.IsNullOrEmpty(Definition) ? "..." :  Pos + " " + Definition.Replace("\n", " ").Substring(0, ((Definition.Length >= 31) ? (30) : (Definition.Length))).Trim() + " ...";
             }
         }
         [Ignore]

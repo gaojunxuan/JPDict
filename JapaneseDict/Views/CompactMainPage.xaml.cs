@@ -108,7 +108,7 @@ namespace JapaneseDict.GUI
         }
         async Task PushToast(string keyword)
         {
-            var result = (await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(keyword)).GroupBy(x => x.ItemId).Select(g => new GroupedDictItem(g)).First();
+            var result = (await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(StringHelper.ResolveReplicator(keyword))).GroupBy(x => x.ItemId).Select(g => new GroupedDictItem(g)).First();
             string parameters = new QueryString()
                 {
                     {"action","detailResult" },

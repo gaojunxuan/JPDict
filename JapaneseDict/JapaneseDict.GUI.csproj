@@ -141,6 +141,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Connected Services\HockeyApp\ConnectedService.json" />
+    <Content Include="dic\ipadic\char.bin" />
+    <Content Include="dic\ipadic\dicrc" />
+    <Content Include="dic\ipadic\matrix.bin" />
+    <Content Include="dic\ipadic\sys.dic" />
+    <Content Include="dic\ipadic\unk.dic" />
     <None Include="JapaneseDict.GUI_StoreKey.pfx" />
     <None Include="JapaneseDict.GUI_TemporaryKey.pfx" />
     <None Include="JapaneseDict_StoreKey.pfx" />
@@ -173,6 +178,7 @@
     <Compile Include="Helpers\ColorConverter.cs" />
     <Compile Include="Helpers\KanaFlashcardHelper.cs" />
     <Compile Include="Helpers\MediaPositionConverter.cs" />
+    <Compile Include="Helpers\RadioConverter.cs" />
     <Compile Include="Helpers\SharingHelper.cs" />
     <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />

@@ -76,7 +76,7 @@ namespace JapaneseDict.GUI.Helpers
         }
         public static bool IsNegative(string word)
         {
-            return word.Length>2&&word.EndsWith("ない");
+            return word.Length > 2 && word.EndsWith("ない");
         }
         public static bool IsCausative(string word)
         {
@@ -89,6 +89,11 @@ namespace JapaneseDict.GUI.Helpers
         public static bool IsMasu(string word)
         {
             return word.Length > 2 && word.EndsWith("ます");
+        }
+        static char[] edan = { 'え','け','せ','て','ね','へ','め','え','れ','え' };
+        public static bool IsPotential(string word)
+        {
+            return word.Length > 2 && (word.EndsWith("られる") || (word.EndsWith("る") && edan.Contains(word[word.Length - 2])));
         }
         #endregion
         #region phonetic changes
@@ -144,7 +149,7 @@ namespace JapaneseDict.GUI.Helpers
                     return "こな";
                 }
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る")
                 {
@@ -182,7 +187,7 @@ namespace JapaneseDict.GUI.Helpers
                     return "こられ";
                 }
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る")
                 {
@@ -216,7 +221,7 @@ namespace JapaneseDict.GUI.Helpers
                     return "こられ";
                 }
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る")
                 {
@@ -243,7 +248,7 @@ namespace JapaneseDict.GUI.Helpers
             {
                 return "こい";
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 return word.Substring(0, word.Length - 2) + "しろ(せよ)";
             }
@@ -274,7 +279,7 @@ namespace JapaneseDict.GUI.Helpers
                     return "こられ";
                 }
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る")
                 {
@@ -309,7 +314,7 @@ namespace JapaneseDict.GUI.Helpers
                 }
                 return "きま";
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る")
                 {
@@ -362,6 +367,12 @@ namespace JapaneseDict.GUI.Helpers
             okuri = hira[hira.IndexOf(okuri) + 1];
             return word.Substring(0, word.Length - 1) + okuri;
         }
+        static string MoveFromEToU(string word)
+        {
+            string okuri = word.Substring(word.Length - 1);
+            okuri = hira[hira.IndexOf(okuri) - 1];
+            return word.Substring(0, word.Length - 1) + okuri;
+        }
         #endregion
         #region get
         public static string GetTeForm(string word,string tag)
@@ -375,7 +386,7 @@ namespace JapaneseDict.GUI.Helpers
             {
                 return "きて";
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る")
                 {
@@ -407,7 +418,7 @@ namespace JapaneseDict.GUI.Helpers
             {
                 return "きた";
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る")
                 {
@@ -451,7 +462,7 @@ namespace JapaneseDict.GUI.Helpers
             {
                 return "くれば";
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 return word.Substring(0, word.Length - 1) + "れば";
             }
@@ -511,7 +522,7 @@ namespace JapaneseDict.GUI.Helpers
             {
                 return "こよう";
             }
-            else if (IsSuruVerb(word))
+            else if (IsSuruVerb(word) && tag.Contains("サ"))
             {
                 if (word == "為る" || word == "する")
                 {
@@ -611,6 +622,16 @@ namespace JapaneseDict.GUI.Helpers
             else
             {
                 return MoveFromIToU(wordroot);
+            }
+        }
+        public static string FromPotentialToOrigianl(string word)
+        {
+            if (word.EndsWith("られる") && word.Length > 3)
+                return word.TrimEnd("られる".ToCharArray()) + "る";
+            else
+            {
+                string stem = word.TrimEnd('る');
+                return MoveFromEToU(stem);
             }
         }
         #endregion

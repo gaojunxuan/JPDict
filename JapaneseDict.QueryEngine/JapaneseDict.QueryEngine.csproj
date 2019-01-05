@@ -114,6 +114,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="HiraKataHelper.cs" />
+    <Compile Include="Lemmatizer.cs" />
     <Compile Include="Models\IDictItem.cs" />
     <Compile Include="Models\IKanji.cs" />
     <Compile Include="Models\Kanjidict.cs" />
@@ -131,6 +133,9 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
+    <SDKReference Include="WindowsDesktop, Version=10.0.16299.0">
+      <Name>Windows Desktop Extensions for the UWP</Name>
+    </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
@@ -145,6 +150,11 @@
     <PackageReference Include="SQLite.Net-PCL">
       <Version>3.1.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="LibNMeCab.UWP">
+      <HintPath>.\LibNMeCab.UWP.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -127,7 +127,7 @@
                 <RelativePanel Margin="10,20,20,20" Width="1418" HorizontalAlignment="Left">
 
                     <TextBox FontFamily="Yu Gothic UI" x:Name="originTbx"  Height="400"  Header="原文"  PlaceholderText="请键入原文" TextWrapping="Wrap" AcceptsReturn="True" Margin="0" Style="{StaticResource TranslateTextBoxStyle}" SelectionHighlightColor="#FF00B294"></TextBox>
-                    <TextBox x:Name="resultTbx" Height="400" Width="300" Header="结果" PlaceholderText="结果啊 QAQ" TextWrapping="Wrap" Text="{Binding TranslationResult,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TranslateTextBoxStyle}" IsReadOnly="True" SelectionHighlightColor="#FF00B294" FontFamily="Microsoft YaHei UI"></TextBox>
+                    <TextBox x:Name="resultTbx" Height="400" Width="300" Header="结果" PlaceholderText="翻译结果" TextWrapping="Wrap" Text="{Binding TranslationResult,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TranslateTextBoxStyle}" IsReadOnly="True" SelectionHighlightColor="#FF00B294" FontFamily="Microsoft YaHei UI"></TextBox>
 
                 </RelativePanel>
             </StackPanel>

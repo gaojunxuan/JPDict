@@ -23,23 +23,28 @@ namespace JapaneseDict.GUI.Helpers
         }
         public static string PrepareVerbs(string input)
         {
-            if(VerbConjugationHelper.IsNegative(input))
+            //if(VerbConjugationHelper.IsNegative(input))
+            //{
+            //    return VerbConjugationHelper.FromNegativeToOriginal(input);
+            //}
+            //else if(VerbConjugationHelper.IsCausative(input))
+            //{
+            //    return VerbConjugationHelper.FromCausativeToOriginal(input);
+            //}
+            //else if(VerbConjugationHelper.IsPassive(input))
+            //{
+            //    return VerbConjugationHelper.FromPassiveToOriginal(input);
+            //}
+            //else if (VerbConjugationHelper.IsMasu(input))
+            //{
+            //    return VerbConjugationHelper.FromMasuToOriginal(input);
+            //}
+            //return input.Length>=4?input.Substring(0,2):input;
+            if(VerbConjugationHelper.IsPotential(input))
             {
-                return VerbConjugationHelper.FromNegativeToOriginal(input);
+                return VerbConjugationHelper.FromPotentialToOrigianl(input);
             }
-            else if(VerbConjugationHelper.IsCausative(input))
-            {
-                return VerbConjugationHelper.FromCausativeToOriginal(input);
-            }
-            else if(VerbConjugationHelper.IsPassive(input))
-            {
-                return VerbConjugationHelper.FromPassiveToOriginal(input);
-            }
-            else if (VerbConjugationHelper.IsMasu(input))
-            {
-                return VerbConjugationHelper.FromMasuToOriginal(input);
-            }
-            return input.Length>=4?input.Substring(0,2):input;
+            return input;
         }
     }
 }

@@ -28,13 +28,13 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <ProgressRing IsActive="{Binding IsBusy}" Foreground="#00b294" Loaded="ProgressRing_Loaded"/>
-        <TextBlock Name="emptynotebook_Tbx" Style="{StaticResource HeaderTextBlockStyle}" Visibility="{Binding IsNotebookEmpty,Converter={StaticResource boolToVisibility}}" Text="生词本中没有单词 _(:3」∠)_" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray"/>
+        <TextBlock Name="emptynotebook_Tbx" Style="{StaticResource HeaderTextBlockStyle}" Visibility="{Binding IsNotebookEmpty,Converter={StaticResource boolToVisibility}}" Text="生词本中没有单词" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray"/>
         <SemanticZoom Margin="-8,0,-8,0" ViewChangeStarted="SemanticZoom_ViewChangeStarted" RequestedTheme="Dark">
             <SemanticZoom.ZoomedInView>
                 <GridView Name="NotebookGridView" Padding="0,8,0,0" ItemsSource="{Binding Source={StaticResource noteItems}}" SelectionMode="None" IsSwipeEnabled="False" IsItemClickEnabled="True" ContainerContentChanging="NotebookGridView_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Grid x:Name="NoteItem_Grid" PointerEntered="NoteItem_Grid_PointerEntered" PointerExited="NoteItem_Grid_PointerExited">
+                            <Grid x:Name="NoteItem_Grid" PointerEntered="NoteItem_Grid_PointerEntered" PointerExited="NoteItem_Grid_PointerExited" PointerCaptureLost="NoteItem_Grid_PointerCaptureLost" PointerCanceled="NoteItem_Grid_PointerCanceled">
                                 <controls:DropShadowPanel HorizontalContentAlignment="Stretch"
                                                      VerticalContentAlignment="Stretch"
                                                      Margin="16"

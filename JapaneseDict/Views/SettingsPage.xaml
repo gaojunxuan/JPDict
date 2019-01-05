@@ -16,6 +16,7 @@
         <converter:BoolToVisibilityConverter x:Key="boolToVisibility"/>
         <converter:BooleanToVisibilityNegateConverter x:Key="negateConverter"/>
         <converter:BoolNegativeConverter x:Key="boolnegConverter"/>
+        <converter:RadioConverter x:Key="radioConverter"/>
     </Page.Resources>
 
     <Grid Background="#FFF3F3F3" RequestedTheme="Light">
@@ -31,7 +32,7 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="通用" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                              TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,12,0,20" FontSize="24" FontFamily="Segoe UI"/>
-                            <ProgressRing IsActive="{Binding IsBusy}" Foreground="#00b294" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,0,0,20"></ProgressRing>
+                            <ProgressRing IsActive="{Binding IsBusy}" Foreground="#00b294" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,12,0,20"></ProgressRing>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="生词本备份" Margin="0,0,0,12" Foreground="Black" FontFamily="Segoe UI"></TextBlock>
@@ -43,7 +44,25 @@
                             <RadioButton Style="{StaticResource RadioButtonStyle1}" IsChecked="{Binding UseNHKEasyNews, Mode=TwoWay, Converter={StaticResource boolnegConverter}}" GroupName="NewsMode" Foreground="Black" Content="普通" Margin="0,12,0,0"></RadioButton>
                             <RadioButton Style="{StaticResource RadioButtonStyle1}" IsChecked="{Binding UseNHKEasyNews, Mode=TwoWay}" GroupName="NewsMode" Foreground="Black" Content="假名注音"></RadioButton>
                         </StackPanel>
-                        
+                        <StackPanel>
+                            <TextBlock Text="智能分词" Margin="0,24,0,0" Foreground="Black" FontFamily="Segoe UI"></TextBlock>
+                            <TextBlock Text="智能分词会提取句子中的关键词进行查询，只需把整个句子粘贴至查词框即可" Margin="0,12,0,0" Foreground="Gray" FontFamily="Segoe UI"></TextBlock>
+                            <Grid Background="White" BorderBrush="LightGray" BorderThickness="1" HorizontalAlignment="Left" Padding="12" Margin="0,12,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Yu Gothic UI" FontSize="24" Margin="0,0,4,0" Foreground="#FF00B294">月</TextBlock>
+                                    <TextBlock Name="lemSample1" FontFamily="Yu Gothic UI" FontSize="24" Margin="0,0,4,0">が</TextBlock>
+                                    <TextBlock FontFamily="Yu Gothic UI" FontSize="24" Margin="0,0,4,0" Foreground="#FF00B294">綺麗</TextBlock>
+                                    <TextBlock Name="lemSample2" FontFamily="Yu Gothic UI" FontSize="24" Margin="0,0,4,0">です</TextBlock>
+                                    <TextBlock Name="lemSample3" FontFamily="Yu Gothic UI" FontSize="24" Margin="0,0,0,0">ね</TextBlock>
+                                </StackPanel>
+                            </Grid>
+                            <RadioButton Name="lemMode1" Style="{StaticResource RadioButtonStyle1}" IsChecked="{Binding LemmatizerMode, Mode=TwoWay, Converter={StaticResource radioConverter}, ConverterParameter=0}" GroupName="LemmatizerMode" Foreground="Black" Content="仅提取关键词" Margin="0,12,0,0" Checked="lemMode1_Checked"></RadioButton>
+                            <TextBlock Text="提取名词、动词、形容词等实词" Margin="0,2,0,0" Foreground="Gray" FontFamily="Segoe UI"></TextBlock>
+                            <RadioButton Name="lemMode2" Style="{StaticResource RadioButtonStyle1}" Margin="0,4,0,0" IsChecked="{Binding LemmatizerMode, Mode=TwoWay, Converter={StaticResource radioConverter}, ConverterParameter=1}" GroupName="LemmatizerMode" Foreground="Black" Content="提取关键词和助词" Checked="lemMode2_Checked"></RadioButton>
+                            <TextBlock Text="提取名词、动词、形容词等实词和助动词等重要的助词" Margin="0,2,0,0" Foreground="Gray" FontFamily="Segoe UI"></TextBlock>
+                            <RadioButton Name="lemMode3" Style="{StaticResource RadioButtonStyle1}" Margin="0,4,0,0" IsChecked="{Binding LemmatizerMode, Mode=TwoWay, Converter={StaticResource radioConverter}, ConverterParameter=2}" GroupName="LemmatizerMode" Foreground="Black" Content="全部提取" Checked="lemMode3_Checked"></RadioButton>
+                            <TextBlock Text="提取全部词语" Margin="0,2,0,0" Foreground="Gray" FontFamily="Segoe UI"></TextBlock>
+                        </StackPanel>
                         <!--<TextBlock Margin="0,12,0,0" Text="此功能将在下个版本提供，敬请期待" Foreground="Gray"></TextBlock>-->
                     </StackPanel>
                     <StackPanel Name="aboutPanel" Margin="8">

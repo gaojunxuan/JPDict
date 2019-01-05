@@ -75,18 +75,17 @@ namespace JapaneseDict.GUI.ViewModels
             if (queryResult.Count != 0 && queryResult.FirstOrDefault().Definition == "没有本地释义")
             {
                 
-                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(await OnlineService.Helpers.JsonHelper.GetLemmatized(keyword));
+                var seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(QueryEngine.Lemmatizer.GetLemmatized(keyword));
                 if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Definition != "没有本地释义")
                 {
                     queryResult = seealsoresults;
                 }
                 else
                 {
-                    string word = StringHelper.PrepareVerbs(Keyword);
-                    seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(word);
+                    seealsoresults = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(StringHelper.PrepareVerbs(keyword));
                     if (seealsoresults.Count != 0 && seealsoresults.FirstOrDefault().Definition != "没有本地释义")
                     {
-                        queryResult = await QueryEngine.QueryEngine.MainDictQueryEngine.QueryForUIAsync(seealsoresults.First().Keyword);
+                        queryResult = seealsoresults;
                     }
                 }
                 var pv = Windows.ApplicationModel.Package.Current.Id.Version;
@@ -96,7 +95,7 @@ namespace JapaneseDict.GUI.ViewModels
                     { "Version", $"{pv.Major}.{pv.Minor}.{pv.Build}.{pv.Revision}" }
                 });
             }
-            var grouped = queryResult.GroupBy(x => x.ItemId).Select(g=>new GroupedDictItem(g));
+            var grouped = queryResult.Where(w=>!string.IsNullOrEmpty(w.Definition)).GroupBy(x => x.ItemId).Select(g=>new GroupedDictItem(g));
             Result = new ObservableCollection<GroupedDictItem>(grouped);
             IsLocalQueryBusy = false;
             QueryVerb();

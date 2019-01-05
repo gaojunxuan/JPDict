@@ -122,8 +122,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="1">
             <Rectangle Grid.Row="1" Fill="{StaticResource HostBackdropBrush}" Margin="0" Height="70" VerticalAlignment="Top"/>
-            <Pivot Grid.Row="1" Name="mainPivot" RequestedTheme="Dark" Margin="0,-1,0,71">
-                <PivotItem Margin="12,-8,0,0">
+            <Pivot Grid.Row="1" Name="mainPivot" RequestedTheme="Dark" Margin="0,-1,0,65">
+                <PivotItem Margin="12,-9,0,0">
                     <PivotItem.Header>
                         <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                             <FontIcon Glyph="&#xE90A;" Width="25" Margin="0,0,5,0"></FontIcon>
@@ -134,14 +134,14 @@
                         </StackPanel>
                     </PivotItem.Header>
                     <Grid>
-                        <FlipView ItemsSource="{Binding Result}"  x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3" Loaded="resultFlipView_Loaded">
+                        <FlipView ItemsSource="{Binding Result}" x:Name="resultFlipView" ItemTemplate="{StaticResource DataTemplate2}" Margin="0" Background="#FFF3F3F3" Loaded="resultFlipView_Loaded">
                         </FlipView>
                         <ProgressRing IsActive="{Binding IsLocalQueryBusy}" Foreground="#FF00B294"/>
                     </Grid>
                    
 
                 </PivotItem>
-                <PivotItem Margin="12,-8,0,0">
+                <PivotItem Margin="12,-9,0,0">
                     <PivotItem.Header>
                         <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                             <FontIcon Glyph="&#xE12B;" Width="25" Margin="0,0,5,0"></FontIcon>
@@ -157,7 +157,7 @@
                         <ProgressRing x:Name="onlineRes_ProgressRing" Foreground="#FF00B294" IsActive="{Binding IsOnlineQueryBusy}"></ProgressRing>
                     </Grid>
                 </PivotItem>
-                <PivotItem>
+                <PivotItem Margin="12,-9,0,0">
                     <PivotItem.Header>
                         <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                             <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
@@ -168,11 +168,11 @@
                         </StackPanel>
                     </PivotItem.Header>
                     <Grid>
-                        <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="没有结果的说" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray" Name="kanjinores_Tbx"  Visibility="Visible"></TextBlock>
+                        <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="没有结果" Margin="8,24,0,0" FontSize="18.667" Foreground="Gray" Name="kanjinores_Tbx"  Visibility="Visible"></TextBlock>
                         <GridView Name="Kanji_GridView" ItemsSource="{Binding KanjiResult}" SelectionMode="None" IsSwipeEnabled="False" Margin="-8,0,0,0" IsItemClickEnabled="True" ContainerContentChanging="Kanji_GridView_ContainerContentChanging">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid x:Name="KanjiItem_Grid" PointerEntered="KanjiItem_Grid_PointerEntered" PointerExited="KanjiItem_Grid_PointerExited">
+                                    <Grid x:Name="KanjiItem_Grid" PointerEntered="KanjiItem_Grid_PointerEntered" PointerExited="KanjiItem_Grid_PointerExited" PointerCanceled="KanjiItem_Grid_PointerCanceled" PointerCaptureLost="KanjiItem_Grid_PointerCaptureLost">
                                         <controls:DropShadowPanel HorizontalContentAlignment="Stretch"
                                                      VerticalContentAlignment="Stretch"
                                                      Margin="16"
@@ -240,7 +240,7 @@
                         </GridView>
                     </Grid>
                 </PivotItem>
-                <PivotItem>
+                <PivotItem Margin="0,-9,0,0">
                     <PivotItem.Header>
                         <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                             <FontIcon Glyph="" Width="25" Margin="0,0,5,0"></FontIcon>
@@ -256,14 +256,14 @@
                                 <DataTemplate>
                                     <Grid>
                                         <ScrollViewer>
-                                            <StackPanel Margin="8,0,0,0">
-                                                <TextBlock Text="简体形（肯定）" Foreground="#FF00B294" FontSize="24" Margin="0,8,0,0"></TextBlock>
+                                            <StackPanel Margin="16,12,0,0">
+                                                <TextBlock Text="简体形（肯定）" Foreground="#FF00B294" FontSize="24" Margin="0,8,0,0" Style="{StaticResource HeaderTextBlockStyle}"></TextBlock>
                                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                                                     <TextBlock Text="辞书形: " Foreground="Black" FontSize="18"></TextBlock>
                                                     <TextBlock Text="{Binding OriginalForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                    <TextBlock Text="て形: " FontSize="18" Foreground="Black" FontFamily="m"></TextBlock>
+                                                    <TextBlock Text="て形: " FontSize="18" Foreground="Black"></TextBlock>
                                                     <TextBlock Text="{Binding TeForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
@@ -294,7 +294,7 @@
                                                     <TextBlock Text="意志形: " FontSize="18" Foreground="Black"></TextBlock>
                                                     <TextBlock Text="{Binding Volitional}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
                                                 </StackPanel>
-                                                <TextBlock Text="简体形（否定）" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0"></TextBlock>
+                                                <TextBlock Text="简体形（否定）" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0" Style="{StaticResource HeaderTextBlockStyle}"></TextBlock>
                                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                                                     <TextBlock Text="ない形: " FontSize="18" Foreground="Black"></TextBlock>
                                                     <TextBlock Text="{Binding NegativeForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
@@ -315,7 +315,7 @@
                                                     <TextBlock Text="命令形: " FontSize="18" Foreground="Black"></TextBlock>
                                                     <TextBlock Text="{Binding NegativeImperative}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>
                                                 </StackPanel>
-                                                <TextBlock Text="ます形" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0"></TextBlock>
+                                                <TextBlock Text="ます形" Foreground="#FF00B294" FontSize="24" Margin="0,20,0,0" Style="{StaticResource HeaderTextBlockStyle}"></TextBlock>
                                                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                                                     <TextBlock Text="肯定: " FontSize="18" Foreground="Black"></TextBlock>
                                                     <TextBlock Text="{Binding MasuForm}" Margin="4,0,0,0"  FontFamily="Yu Gothic UI" FontSize="18" Foreground="Black"></TextBlock>

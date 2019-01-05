@@ -427,6 +427,24 @@ namespace JapaneseDict.GUI
             bitmapImage.UriSource = new Uri("ms-appx:///Assets/imgnotfound.png");
             img.Source = bitmapImage;
         }
+
+        private void FlashcardItem_Grid_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(600) };
+            animation.StartAnimation(sender as UIElement);
+            var shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(600) };
+            opacityAnimation.StartAnimation(shadowPanel);
+        }
+
+        private void FlashcardItem_Grid_PointerCanceled(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            ScaleAnimation animation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(600) };
+            animation.StartAnimation(sender as UIElement);
+            var shadowPanel = (sender as UIElement).GetFirstDescendantOfType<DropShadowPanel>();
+            OpacityAnimation opacityAnimation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(600) };
+            opacityAnimation.StartAnimation(shadowPanel);
+        }
     }
 }
 

@@ -118,6 +118,7 @@ namespace JapaneseDict.GUI.Helpers
                 if (!view.CoreWindow.Visible)
                 {
                     RemoveView(sender.Id);
+                    Window.Current.Content = null;
                 }
             }
         }

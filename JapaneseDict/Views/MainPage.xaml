@@ -506,7 +506,7 @@
                     <GridView x:Name="FlashcardGridView" Margin="0" Padding="0,8,0,0" ItemsSource="{Binding FlashcardPageInfo}" SelectionMode="None" IsItemClickEnabled="True" ContainerContentChanging="FlashcardGridView_ContainerContentChanging">
                         <GridView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Name="FlashcardItem_Grid" PointerEntered="FlashcardItem_Grid_PointerEntered" PointerExited="FlashcardItem_Grid_PointerExited">
+                                <Grid Name="FlashcardItem_Grid" PointerEntered="FlashcardItem_Grid_PointerEntered" PointerExited="FlashcardItem_Grid_PointerExited" PointerCaptureLost="FlashcardItem_Grid_PointerCaptureLost" PointerCanceled="FlashcardItem_Grid_PointerCanceled">
                                     <Interactivity:Interaction.Behaviors>
                                         <Core:EventTriggerBehavior EventName="Tapped">
                                             <Core:InvokeCommandAction Command="{Binding ElementName=pageRoot,Path=DataContext.NavToFlashcardPageCommand}" CommandParameter="{Binding NavigationInfo}"/>

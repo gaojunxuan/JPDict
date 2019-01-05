@@ -27,6 +27,7 @@ using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using JapaneseDict.GUI.Helpers;
 using Windows.ApplicationModel.Core;
+using Windows.UI;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -136,6 +137,27 @@ namespace JapaneseDict.GUI
         private async void survey_Btn_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("https://goo.gl/forms/8ee1bvMz83zrpMmF2"));
+        }
+
+        private void lemMode1_Checked(object sender, RoutedEventArgs e)
+        {
+            lemSample1.Foreground = new SolidColorBrush(Colors.Black);
+            lemSample2.Foreground = new SolidColorBrush(Colors.Black);
+            lemSample3.Foreground = new SolidColorBrush(Colors.Black);
+        }
+
+        private void lemMode2_Checked(object sender, RoutedEventArgs e)
+        {
+            lemSample2.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 178, 148));
+            lemSample1.Foreground = new SolidColorBrush(Colors.Black);
+            lemSample3.Foreground = new SolidColorBrush(Colors.Black);
+        }
+
+        private void lemMode3_Checked(object sender, RoutedEventArgs e)
+        {
+            lemSample1.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 178, 148));
+            lemSample2.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 178, 148));
+            lemSample3.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 178, 148));
         }
     }
 }

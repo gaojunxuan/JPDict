@@ -227,6 +227,20 @@ namespace JapaneseDict.GUI.ViewModels
                 RaisePropertyChanged();
             }
         }
+        
+        public int LemmatizerMode
+        {
+            get
+            {
+                return StorageHelper.GetSetting<int>("LemmatizerMode");
+            }
+            set
+            {
+                StorageHelper.StoreSetting("LemmatizerMode", value, true);
+                StorageHelper.FlushToStorage();
+                RaisePropertyChanged();
+            }
+        }
     }
 }
 
