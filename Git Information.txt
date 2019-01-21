@@ -1,4 +1,0 @@
-TFS Git Info:
-Clone URI: https://skylark-wsp.visualstudio.com/DefaultCollection/Skylark%20JPDict/_git/JPDict
-Username: gaojunxuanbox
-Password: uptjjrnedrmaio6vdr2ke7pzwmp7knkdo4leaquxdjwd6krg4ypa
