@@ -2,7 +2,9 @@
 JPDict is a Japanese dictionary for beginner on UWP (Universal Windows Platform).
 
 ## Build Status
-[![Build Status](https://dev.azure.com/kevin0497/JPDict/_apis/build/status/gaojunxuan.JPDict?branchName=master)](https://dev.azure.com/kevin0497/JPDict/_build/latest?definitionId=1&branchName=master)
+Release: [![Build Status](https://dev.azure.com/kevin0497/JPDict/_apis/build/status/gaojunxuan.JPDict?branchName=master)](https://dev.azure.com/kevin0497/JPDict/_build/latest?definitionId=1&branchName=master)
+
+Debug: [![Build status](https://build.appcenter.ms/v0.1/apps/023cfc39-35cd-4beb-8ded-0a889e3aad9f/branches/master/badge)](https://appcenter.ms)
 
 ## Project files
 This repository contains 4 projects.
