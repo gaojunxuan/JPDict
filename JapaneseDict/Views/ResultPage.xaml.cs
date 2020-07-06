@@ -92,23 +92,25 @@ namespace JapaneseDict.GUI
                 DataContext = new ResultViewModel(Convert.ToInt32(e.Parameter.ToString()));
             }
         }
-        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            e.Handled = true;
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame.CanGoBack)
-            {
-                rootFrame.GoBack();
-            }
-        }
+        #region Legacy Code for Handling Hardware Button on Windows Phone
+        //private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        //{
+        //    e.Handled = true;
+        //    Frame rootFrame = Window.Current.Content as Frame;
+        //    if (rootFrame.CanGoBack)
+        //    {
+        //        rootFrame.GoBack();
+        //    }
+        //}
+        #endregion
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+            //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            //{
+            //    HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
 
-            }
+            //}
         }
         private void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {

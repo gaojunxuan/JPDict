@@ -7,6 +7,7 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using System.Net.Http.Headers;
 using System.Diagnostics;
+using PublicClientApplication = Microsoft.Identity.Client.PublicClientApplication;
 
 namespace JapaneseDict.OnlineService
 {
@@ -16,7 +17,7 @@ namespace JapaneseDict.OnlineService
         static string clientId = "bb8b9926-4413-4426-b0d3-6f9df57e4b20";
         public static string[] Scopes = { "Files.ReadWrite" };
 
-        public static PublicClientApplication IdentityClientApp = new PublicClientApplication(clientId);
+        public static IPublicClientApplication IdentityClientApp;
 
         public static string TokenForUser = null;
         public static DateTimeOffset Expiration;
@@ -27,6 +28,8 @@ namespace JapaneseDict.OnlineService
         // acquire the token silently. If that fails, then we try to acquire the token by prompting the user.
         public static GraphServiceClient GetAuthenticatedClient()
         {
+            var builder = PublicClientApplicationBuilder.Create(clientId);
+            IdentityClientApp = builder.Build();
             if (graphClient == null)
             {
                 // Create Microsoft Graph client.
@@ -65,7 +68,7 @@ namespace JapaneseDict.OnlineService
             AuthenticationResult authResult;
             try
             {
-                authResult = await IdentityClientApp.AcquireTokenSilentAsync(Scopes, IdentityClientApp.Users.First());
+                authResult = await IdentityClientApp.AcquireTokenSilent(Scopes, (await IdentityClientApp.GetAccountsAsync()).First()).ExecuteAsync();
                 TokenForUser = authResult.AccessToken;
             }
 
@@ -73,7 +76,7 @@ namespace JapaneseDict.OnlineService
             {
                 if (TokenForUser == null || Expiration <= DateTimeOffset.UtcNow.AddMinutes(5))
                 {
-                    authResult = await IdentityClientApp.AcquireTokenAsync(Scopes);
+                    authResult = await IdentityClientApp.AcquireTokenInteractive(Scopes).ExecuteAsync();
 
                     TokenForUser = authResult.AccessToken;
                     Expiration = authResult.ExpiresOn;
@@ -86,11 +89,11 @@ namespace JapaneseDict.OnlineService
         /// <summary>
         /// Signs the user out of the service.
         /// </summary>
-        public static void SignOut()
+        public static async void SignOut()
         {
-            foreach (var user in IdentityClientApp.Users)
+            foreach (var user in await IdentityClientApp.GetAccountsAsync())
             {
-                IdentityClientApp.Remove(user);
+                await IdentityClientApp.RemoveAsync(user);
             }
             graphClient = null;
             TokenForUser = null;

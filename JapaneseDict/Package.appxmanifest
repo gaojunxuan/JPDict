@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
-  <Identity Name="45240.SkylarkJPDict" Publisher="CN=47610EF9-B72C-4C0E-B513-511D56E63511" Version="3.5.0.0" />
+  <Identity Name="45240.SkylarkJPDict" Publisher="CN=47610EF9-B72C-4C0E-B513-511D56E63511" Version="3.6.1.0" />
   <mp:PhoneIdentity PhoneProductId="aa8a9445-370e-4806-a286-1b79bca4e105" PhonePublisherId="47610EF9-B72C-4C0E-B513-511D56E63511" />
   <Properties>
-    <DisplayName>Skylark JPDict</DisplayName>
+    <DisplayName>JPDict</DisplayName>
     <PublisherDisplayName>Kevin Gao</PublisherDisplayName>
     <Logo>Assets\NewStoreLogo.png</Logo>
   </Properties>
@@ -15,14 +15,15 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="JapaneseDict.App">
-      <uap:VisualElements DisplayName="Skylark JPDict" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="JapaneseDict" BackgroundColor="transparent">
-        <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
-        <uap:DefaultTile Square71x71Logo="Assets\Square71x71Logo.png">
+      <uap:VisualElements DisplayName="JPDict" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="JapaneseDict" BackgroundColor="transparent">
+        <uap:LockScreen Notification="badge"  BadgeLogo="Assets\BadgeLogo.png"/>
+        <uap:DefaultTile Square71x71Logo="Assets\Square71x71Logo.png" ShortName="JPDict" Wide310x150Logo="Assets\WideTile.png" Square310x310Logo="Assets\LargeTile.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="wide310x150Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#00b294" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#eeeeee" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
           <uap:Rotation Preference="landscape" />
@@ -31,7 +32,7 @@
       <Extensions>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="jpdict">
-            <uap:DisplayName>Skylark JPDict</uap:DisplayName>
+            <uap:DisplayName>JPDict</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
       </Extensions>

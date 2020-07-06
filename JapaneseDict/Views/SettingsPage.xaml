@@ -70,10 +70,10 @@
                          TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,12,0,20" FontSize="24"/>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="ms-appx:///Assets/logo.png" Width="80" Height="80" Stretch="Uniform" VerticalAlignment="Top"></Image>
+                                <Image Source="ms-appx:///Assets/JPDict-New.png" Width="80" Height="80" Stretch="Uniform" VerticalAlignment="Top"></Image>
                                 <StackPanel Margin="16,-8,0,0">
-                                    <TextBlock Text="Skylark JPDict" Style="{StaticResource HeaderTextBlockStyle}" FontSize="36"></TextBlock>
-                                    <TextBlock Text="by Skylark Workshop" Foreground="Gray"></TextBlock>
+                                    <TextBlock Text="JPDict" Style="{StaticResource HeaderTextBlockStyle}" FontSize="36"></TextBlock>
+                                    <TextBlock Text="by Kevin Gao &amp; Skylark Workshop" Foreground="Gray"></TextBlock>
                                     <TextBlock Text="{Binding ApplicationVersion}" Foreground="Gray"></TextBlock>
                                 </StackPanel>
                             </StackPanel>

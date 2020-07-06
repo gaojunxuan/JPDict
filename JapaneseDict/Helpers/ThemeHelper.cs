@@ -13,7 +13,7 @@ namespace JapaneseDict.GUI.Helpers
         public static void SetThemeForJPDict()
         {
             SetTitleBar(Color.FromArgb(100, 0, 178, 148), Colors.White, Color.FromArgb(100, 0, 200, 166), Color.FromArgb(100, 0, 219, 182));
-            SetStatusBar(Color.FromArgb(100, 0, 178, 148), Colors.White);
+            //SetStatusBar(Color.FromArgb(100, 0, 178, 148), Colors.White);
         }
         private static void SetTitleBar(Color bc, Color fc, Color btnHoverColor, Color btnPressedColor)
         {
@@ -29,16 +29,18 @@ namespace JapaneseDict.GUI.Helpers
             titleBar.ButtonPressedBackgroundColor = btnPressedColor;
             titleBar.ForegroundColor = fc;
         }
-        private static async void SetStatusBar(Color bc, Color fc)
-        {
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            {
-                var statusBar = StatusBar.GetForCurrentView();
-                statusBar.BackgroundColor = bc;
-                statusBar.ForegroundColor = fc;
-                statusBar.BackgroundOpacity = 1;
-                await statusBar.ShowAsync();
-            }
-        }
+        #region Legacy Code for Handling the Status Bar Theme on Windows Phone
+        //private static async void SetStatusBar(Color bc, Color fc)
+        //{
+        //    if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+        //    {
+        //        var statusBar = StatusBar.GetForCurrentView();
+        //        statusBar.BackgroundColor = bc;
+        //        statusBar.ForegroundColor = fc;
+        //        statusBar.BackgroundOpacity = 1;
+        //        await statusBar.ShowAsync();
+        //    }
+        //}
+        #endregion
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.HockeyApp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,8 +51,6 @@ namespace JapaneseDict.GUI
         /// </summary>
         public App()
         {
-            Microsoft.HockeyApp.HockeyClient.Current.Configure("4d0ddb67a4144b2ca638f5adf7a09801");
-            WindowsAppInitializer.InitializeAsync();
             InitializeComponent();
             _activationService = new Lazy<ActivationService>(CreateActivationService);
             Suspending += OnSuspending;
@@ -73,6 +69,7 @@ namespace JapaneseDict.GUI
                 var kanjifile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///kanjirad.db"));
                 await kanjifile.CopyAsync(storageFolder, "kanjirad.db", NameCollisionOption.ReplaceExisting);
             }
+            Debug.WriteLine(Windows.Storage.ApplicationData.Current.LocalFolder.Path);
         }
 
         private async void InitOnlineServiceAsync()
@@ -285,29 +282,31 @@ namespace JapaneseDict.GUI
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = ((Frame)sender).CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
             SystemNavigationManager.GetForCurrentView().BackRequested += BackRequested;
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-            }
+            //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            //{
+            //    HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            //}
         }
 
-        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            Frame rootFrame = Window.Current.Content as Frame;
-            if (rootFrame.CanGoBack)
-            {
-                e.Handled = true;
-                rootFrame.GoBack();
-            }
-            else
-            {
-                //e.Handled = false;
-                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-                {
-                    HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-                }
-            }
-        }
+        #region Legacy Code for Handling Hardware Button on Windows Phone
+        //private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        //{
+        //    Frame rootFrame = Window.Current.Content as Frame;
+        //    if (rootFrame.CanGoBack)
+        //    {
+        //        e.Handled = true;
+        //        rootFrame.GoBack();
+        //    }
+        //    else
+        //    {
+        //        //e.Handled = false;
+        //        if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+        //        {
+        //            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+        //        }
+        //    }
+        //}
+        #endregion
 
         private void BackRequested(object sender, BackRequestedEventArgs e)
         {
