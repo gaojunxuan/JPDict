@@ -17,13 +17,10 @@
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>JapaneseDict.GUI_StoreKey.pfx</PackageCertificateKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <PackageCertificateThumbprint>
-    </PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <AppxBundle>Always</AppxBundle>
@@ -35,6 +32,7 @@
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -186,20 +184,15 @@
     <Content Include="dic\ipadic\matrix.bin" />
     <Content Include="dic\ipadic\sys.dic" />
     <Content Include="dic\ipadic\unk.dic" />
-    <None Include="JapaneseDict.GUI_StoreKey.pfx" />
-    <None Include="JapaneseDict.GUI_TemporaryKey.pfx" />
-    <None Include="JapaneseDict_StoreKey.pfx" />
     <Content Include="kanji.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kanjirad.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Package.StoreAssociation.xml">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="logo2.png" />
     <None Include="Package.xml" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Segoe Translator Symbol.ttf" />
     <Content Include="update.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -291,7 +284,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="JapaneseDict_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
