@@ -33,6 +33,8 @@
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateThumbprint>D9D969383AF06C54B0AE1C880AF2F7E5981C498E</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>JapaneseDict.GUI_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -108,6 +110,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="appsettings.production.json" />
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
@@ -178,6 +181,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="appsettings.development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Connected Services\HockeyApp\ConnectedService.json" />
     <Content Include="dic\ipadic\char.bin" />
     <Content Include="dic\ipadic\dicrc" />
@@ -191,6 +197,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="logo2.png" />
+    <None Include="JapaneseDict.GUI_TemporaryKey.pfx" />
     <None Include="Package.xml" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Segoe Translator Symbol.ttf" />
@@ -410,8 +417,11 @@
     <PackageReference Include="sqlite">
       <Version>3.13.0</Version>
     </PackageReference>
-    <PackageReference Include="SQLite.Net-PCL">
-      <Version>3.1.1</Version>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.7.335</Version>
+    </PackageReference>
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>4.7.0</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
       <Version>4.4.1</Version>

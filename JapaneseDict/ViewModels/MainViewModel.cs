@@ -36,12 +36,7 @@ namespace JapaneseDict.GUI.ViewModels
         }
         async Task GetEverydaySentence()
         {
-            DailySentence = new ObservableCollection<EverydaySentence>();
-            for (int i = 0; i < 3; i++)
-            {
-                DailySentence.Add((await JsonHelper.GetEverydaySentence(i)));
-                //await Task.Delay(100);
-            }
+            DailySentence = new ObservableCollection<EverydaySentence>(await JsonHelper.GetEverydaySentences());
         }
         async Task GetNHKNews()
         {
@@ -52,15 +47,9 @@ namespace JapaneseDict.GUI.ViewModels
         }
         async Task GetListening()
         {
-            NHKListeningSlow = new ObservableCollection<NHKRadios>();
-            NHKListeningNormal = new ObservableCollection<NHKRadios>();
-            NHKListeningFast = new ObservableCollection<NHKRadios>();
-            for (int i = 0; i < await JsonHelper.GetNHKRadiosItemsCount() - 1; i++)
-            {
-                NHKListeningSlow.Add(await JsonHelper.GetNHKRadios(i, "slow"));
-                NHKListeningNormal.Add(await JsonHelper.GetNHKRadios(i, "normal"));
-                NHKListeningFast.Add(await JsonHelper.GetNHKRadios(i, "fast"));
-            }
+            NHKListeningSlow = new ObservableCollection<NHKRadio>(await JsonHelper.GetNHKRadios("slow"));
+            NHKListeningNormal = new ObservableCollection<NHKRadio>(await JsonHelper.GetNHKRadios("normal"));
+            NHKListeningFast = new ObservableCollection<NHKRadio>(await JsonHelper.GetNHKRadios("fast"));
         }
         const string CLIENT_ID = "skylark_jpdict";
         const string CLIENT_SECRET = "uzHa5qUm4+GehYnL2pMIw8XtNox8sbqGNq7S+UiM6bk=";
@@ -149,21 +138,21 @@ namespace JapaneseDict.GUI.ViewModels
             }
         }
 
-        private ObservableCollection<NHKNews> nHKEasyNews;
+        private ObservableCollection<NHKNews> nhkEasyNews;
 
         public ObservableCollection<NHKNews> NHKEasyNews
         {
-            get { return nHKEasyNews; }
+            get { return nhkEasyNews; }
             set
             {
-                nHKEasyNews = value;
+                nhkEasyNews = value;
                 RaisePropertyChanged();
             }
         }
 
 
-        private ObservableCollection<NHKRadios> nhkListeningSlow;
-        public ObservableCollection<NHKRadios> NHKListeningSlow
+        private ObservableCollection<NHKRadio> nhkListeningSlow;
+        public ObservableCollection<NHKRadio> NHKListeningSlow
         {
             get { return nhkListeningSlow; }
             set
@@ -173,8 +162,8 @@ namespace JapaneseDict.GUI.ViewModels
             }
         }
 
-        private ObservableCollection<NHKRadios> nhkListeningNormal;
-        public ObservableCollection<NHKRadios> NHKListeningNormal
+        private ObservableCollection<NHKRadio> nhkListeningNormal;
+        public ObservableCollection<NHKRadio> NHKListeningNormal
         {
             get { return nhkListeningNormal; }
             set
@@ -184,10 +173,10 @@ namespace JapaneseDict.GUI.ViewModels
             }
         }
 
-        private ObservableCollection<NHKRadios> nhkListeningFast;
+        private ObservableCollection<NHKRadio> nhkListeningFast;
         
 
-        public ObservableCollection<NHKRadios> NHKListeningFast
+        public ObservableCollection<NHKRadio> NHKListeningFast
         {
             get { return nhkListeningFast; }
             set

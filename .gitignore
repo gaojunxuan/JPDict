@@ -244,3 +244,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /JapaneseDict/UpdateDict.sql
+/JapaneseDict/appsettings.json
+/JapaneseDict/appsettings.production.json

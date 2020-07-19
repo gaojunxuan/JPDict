@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SQLite.Net;
+using SQLite;
 
 namespace JapaneseDict.QueryEngine
 {
@@ -19,7 +19,7 @@ namespace JapaneseDict.QueryEngine
 
         public static class MainDictQueryEngine
         {
-            public static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
+            public static SQLiteConnection _conn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
             /// <summary>
             /// Query MainDict database using the given keyword
             /// </summary>
@@ -184,7 +184,7 @@ namespace JapaneseDict.QueryEngine
             }
             private static void Reconnect()
             {
-                _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(),Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
+                _conn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
             }
             /// <summary>
             /// Insert an item into Maindict db
@@ -208,8 +208,8 @@ namespace JapaneseDict.QueryEngine
         }
         public static class KanjiDictQueryEngine
         {
-            private static SQLiteConnection _kanjiconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "kanji.db"));
-            private static SQLiteConnection _radconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "kanjirad.db"));
+            private static SQLiteConnection _kanjiconn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "kanji.db"));
+            private static SQLiteConnection _radconn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "kanjirad.db"));
             /// <summary>
             /// Query the database with the specifed kanji
             /// </summary>
@@ -361,9 +361,9 @@ namespace JapaneseDict.QueryEngine
         }
         public static class NotebookQueryEngine
         {
-            private static SQLiteConnection _noteconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
+            private static SQLiteConnection _noteconn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
 
-            private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
+            private static SQLiteConnection _conn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
             /// <summary>
             /// Insert an item into Note db
             /// </summary>
@@ -441,7 +441,7 @@ namespace JapaneseDict.QueryEngine
             /// <param name="path"></param>
             public static void MergeDb(string path)
             {
-                SQLiteConnection _mergeConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, path));
+                SQLiteConnection _mergeConn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, path));
                 _mergeConn.CreateTable<Note>();
 #pragma warning disable CS0612 // Type or member is obsolete
                 _mergeConn.CreateTable<UserDefDict>();
@@ -482,7 +482,7 @@ namespace JapaneseDict.QueryEngine
             }
             private static void Reconnect()
             {
-                _noteconn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
+                _noteconn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db"));
             }
         }
 

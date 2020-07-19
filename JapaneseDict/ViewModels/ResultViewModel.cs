@@ -277,7 +277,7 @@ namespace JapaneseDict.GUI.ViewModels
                     ?? (_speakCommand = new RelayCommand<string>(
                     async(x) =>
                     {
-                        const string CLIENT_SECRET = "80d5b0ade63946efb57fd09d1d1db6fb";
+                        string CLIENT_SECRET = AppConfig.Configurations["cognitive_key"];
                         try
                         {
                             SpeechSynthesizer speech = new SpeechSynthesizer(CLIENT_SECRET);

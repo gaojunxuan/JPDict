@@ -15,12 +15,19 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Web.Http.Filters;
 using JapaneseDict.OnlineService.Helpers;
 using Windows.UI.Xaml.Media;
+using Windows.Foundation.Metadata;
+using SQLite;
 
 namespace JapaneseDict.OnlineService.Helpers
 {
     public static class JsonHelper
     {
-      
+        private static readonly string JPDICT_API_KEY = AppConfig.Configurations["jpdict_api_key"];
+        private static readonly string BAIDU_APP_ID = AppConfig.Configurations["baidu_app_id"];
+        private static readonly string BAIDU_APP_KEY = AppConfig.Configurations["baidu_app_key"];
+        private static readonly string TEXTRA_KEY = AppConfig.Configurations["textra_key"];
+        private static readonly string TEXTRA_SECRET = AppConfig.Configurations["textra_secret"];
+
         private static async Task<string> GetJsonString(string uri)
         {
             try
@@ -36,6 +43,8 @@ namespace JapaneseDict.OnlineService.Helpers
                 return "";
             }
         }
+        const string TRANS_URL_JPTOCN = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_ja_zh-CN/";
+        const string TRANS_URL_CNTOJP = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_zh-CN_ja/";
         private static async Task<string> GetJsonStringForTranslate(string uri,string text)
         {
             try
@@ -48,15 +57,15 @@ namespace JapaneseDict.OnlineService.Helpers
                 request.Method = HttpMethod.Post;
                 Dictionary<string, string> pairs = new Dictionary<string, string>();
                 pairs.Add("name", "kevingao");
-                pairs.Add("key", TRANS_KEY);
+                pairs.Add("key", TEXTRA_KEY);
                 pairs.Add("text", text);
                 pairs.Add("split", "1");
-                pairs.Add("oauth_consumer_key", TRANS_KEY);
-                pairs.Add("oauth_token", TRANS_SECRET);
+                pairs.Add("oauth_consumer_key", TEXTRA_KEY);
+                pairs.Add("oauth_token", TEXTRA_SECRET);
                 pairs.Add("oauth_timestamp", timestamp);
                 pairs.Add("oauth_nonce", nonce);
                 pairs.Add("oauth_version", "1.0");
-                pairs.Add("oauth_signature", TRANS_SECRET+"&");
+                pairs.Add("oauth_signature", TEXTRA_SECRET+"&");
                 pairs.Add("oauth_signature_method", "PLAINTEXT");
 
                 var formContent = new HttpFormUrlEncodedContent(pairs);
@@ -70,19 +79,14 @@ namespace JapaneseDict.OnlineService.Helpers
                 return "ERROR";
             }
         }
-        const string appid = "20160211000011632";
-        const string key = "NvduVsfjpNEclI03Sbei";
-        const string TRANS_KEY = "7bec186b22bcf144ae4ca04545127be205aff7765";
-        const string TRANS_SECRET = "bcf335e7f7358a2cf27ffae7a23b02d0";
-        const string TRANS_URL_JPTOCN = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_ja_zh-CN/";
-        const string TRANS_URL_CNTOJP = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_zh-CN_ja/";
+        
         public static async Task<String> GetTranslateResult(string input, string sourcelang, string targetlang)
         {
             try
             {
                 var random = new Random(1000000000).Next();
-                var sign = Md5Helper.Encode(appid + input + random + key);
-                string jsonStr = await GetJsonString("https://fanyi-api.baidu.com/api/trans/vip/translate?q=" + $"{Uri.EscapeDataString(input)}&from={sourcelang}&to={targetlang}&appid={appid}&salt={random}&sign={sign}");
+                var sign = Md5Helper.Encode(BAIDU_APP_ID + input + random + BAIDU_APP_KEY);
+                string jsonStr = await GetJsonString("https://fanyi-api.baidu.com/api/trans/vip/translate?q=" + $"{Uri.EscapeDataString(input)}&from={sourcelang}&to={targetlang}&appid={BAIDU_APP_ID}&salt={random}&sign={sign}");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 return jsonobj["trans_result"].GetArray().GetObjectAt(0).GetObject()["dst"].GetString(); 
             }
@@ -103,11 +107,11 @@ namespace JapaneseDict.OnlineService.Helpers
             JsonObject jsonobj = JsonObject.Parse(jsonStr);
             return jsonobj["resultset"].GetObject()["result"].GetObject()["text"].GetString();
         }
+        [Obsolete]
         public static async Task<EverydaySentence> GetEverydaySentence(int index)
         {
             try
             {
-                //string jsonStr = await GetJsonString("http://skylarkwsp-services.azurewebsites.net/api/EverydayJapanese?index=" +index);
                 JsonObject resultobj = JsonObject.Parse(await GetJsonString("http://api.skylark-workshop.xyz/api/GetDailySentence?code=fi6c4bz3w5LkUnl8hGT0V4n/PoKBq7KH3Ly8za8HC4b/r8QRfj/zzw==&index=" + index));
                 return new EverydaySentence() { JpText = resultobj["sentence"].GetString(), CnText = resultobj["trans"].GetString(), AudioUri = new Uri(resultobj["audio"].GetString()), NotesOnText = resultobj["sentencePoint"].GetString(), Author = resultobj["creator"].GetString(), BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
             }
@@ -117,6 +121,39 @@ namespace JapaneseDict.OnlineService.Helpers
                 return new EverydaySentence() { JpText = "出现错误", CnText = "请检查网络连接", BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{index}.jpg", UriKind.RelativeOrAbsolute)) };
             }
         }
+        public static async Task<List<EverydaySentence>> GetEverydaySentences()
+        {
+            try
+            {
+                JsonArray resultList = JsonArray.Parse(await GetJsonString($"https://jpdictapi.terra-incognita.dev/api/GetDailySentence?code={JPDICT_API_KEY}"));
+                List<EverydaySentence> result = new List<EverydaySentence>();
+                for (int i = 0; i < 3; i++)
+                {
+                    JsonObject resultObj = resultList[i].GetObject();
+                    result.Add(new EverydaySentence() 
+                    { 
+                        JpText = resultObj["sentence"].GetString(), 
+                        CnText = resultObj["trans"].GetString(), 
+                        AudioUri = new Uri(resultObj["audio"].GetString()), 
+                        NotesOnText = resultObj["sentencePoint"].GetString(), 
+                        Author = resultObj["creator"].GetString(), 
+                        BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{i}.jpg", UriKind.RelativeOrAbsolute)) 
+                    });
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                List<EverydaySentence> result = new List<EverydaySentence>();
+                for (int i = 0; i < 3; i++)
+                {
+                    result.Add(new EverydaySentence() { JpText = "出现错误", CnText = "请检查网络连接", BackgroundImage = new BitmapImage(new Uri($"ms-appx:///Assets/EverydaySentenceBackground/{i}.jpg", UriKind.RelativeOrAbsolute)) });
+                }
+                return result;
+            }
+        }
+        [Obsolete]
         public static async Task<NHKNews> GetNHKNews(int index)
         {
             try
@@ -136,7 +173,7 @@ namespace JapaneseDict.OnlineService.Helpers
         {
             try
             {
-                string jsonStr = await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKNews?code=cElmudLe2wJ8tOXumYBog85EiqHN/76341GVoB5Ogtltdxrr/xlGmQ==");
+                string jsonStr = await GetJsonString($"https://jpdictapi.terra-incognita.dev/api/GetNHKNews?code={JPDICT_API_KEY}");
                 JsonObject jsonobj = JsonObject.Parse(jsonStr);
                 var resultarritem = jsonobj["data"].GetObject()["item"].GetArray();
                 List<NHKNews> res = new List<NHKNews>();
@@ -160,14 +197,14 @@ namespace JapaneseDict.OnlineService.Helpers
         {
             try
             {
-                string jsonStr = await GetJsonString("https://slwspfunc.azurewebsites.net/api/GetNHKEasyNews?code=85lAgvwtrq9DfbDWpH6krQtNL8UkRtTsIjFuE7uyXVGfZLCrFt6VTw==");
+                string jsonStr = await GetJsonString($"https://jpdictapi.terra-incognita.dev/api/GetNHKEasyNews?code={JPDICT_API_KEY}");
                 var jsonobj = JsonArray.Parse(jsonStr);
                 List<NHKNews> res = new List<NHKNews>();
                 foreach (var i in jsonobj)
                 {
                     string id = i.GetObject()["newsId"].GetString();
                     string img = i.GetObject()["imageUri"].GetString();
-                    res.Add(new NHKNews() { Title = i.GetObject()["title"].GetString(), Link= new Uri($"https://slwspfunc.azurewebsites.net/api/GetNewsWithRuby?code=Pwa68S3jYwHC80/aLHqDGLqFSEBfULUvNQEjzEymaipZwZxZTGg8zQ==&id={id}&img={img}"), OriginalLink= new Uri($"https://www3.nhk.or.jp/news/easy/{id}/{id}.html"), IconPath = new Uri(i.GetObject()["imageUri"].GetString()), IsEasy = true });
+                    res.Add(new NHKNews() { Title = i.GetObject()["title"].GetString(), Link= new Uri($"https://jpdictapi.terra-incognita.dev/api/GetFormattedEasyNews?code={JPDICT_API_KEY}&id={id}&img={img}"), OriginalLink= new Uri($"https://www3.nhk.or.jp/news/easy/{id}/{id}.html"), IconPath = new Uri(i.GetObject()["imageUri"].GetString()), IsEasy = true });
                 }
                 return res;
             }
@@ -181,25 +218,33 @@ namespace JapaneseDict.OnlineService.Helpers
                 return err;
             }
         }
-        public static async Task<NHKRadios> GetNHKRadios(int index, string speed)
+        public static async Task<List<NHKRadio>> GetNHKRadios(string speed)
         {
             try
             {
-                string jsonStr = await GetJsonString($"http://api.skylark-workshop.xyz/api/GetNHKRadio?code=NjIR9q6QzPOo29fPMCIZhuyie35aFxAgikYYwV5oFw5QzMVaUtSo6A==&speed={speed}&index={index}");
-                JsonObject jsonobj = JsonObject.Parse(jsonStr);
-                NHKRadios res = new NHKRadios() { Title = jsonobj["title"].GetString(), StartDate = jsonobj["startdate"].GetString(), EndDate = jsonobj["enddate"].GetString(), SoundUrl = new Uri(jsonobj["soundurl"].GetString()) };
-                return res;
+                string jsonStr = await GetJsonString($"https://jpdictapi.terra-incognita.dev/api/GetNHKRadio?code={JPDICT_API_KEY}&speed={speed}");
+                JsonArray jsonArr = JsonArray.Parse(jsonStr);
+                List<NHKRadio> result = new List<NHKRadio>();
+                foreach (var i in jsonArr)
+                {
+                    JsonObject jsonobj = i.GetObject();
+                    NHKRadio res = new NHKRadio() { Title = jsonobj["title"].GetString(), StartDate = jsonobj["startdate"].GetString(), EndDate = jsonobj["enddate"].GetString(), SoundUrl = new Uri(jsonobj["soundurl"].GetString()) };
+                    result.Add(res);
+                }
+                return result;
             }
             catch
             {
-                return new NHKRadios() { Title = "出现连接错误", StartDate = "请检查网络连接" };
+                List<NHKRadio> result = new List<NHKRadio>();
+                result.Add(new NHKRadio() { Title = "出现连接错误", StartDate = "请检查网络连接" });
+                return result;
             }
         }
         public static async Task<int> GetNHKRadiosItemsCount()
         {
             try
             {
-                return Int32.Parse(await GetJsonString("http://api.skylark-workshop.xyz/api/GetNHKRadio?code=NjIR9q6QzPOo29fPMCIZhuyie35aFxAgikYYwV5oFw5QzMVaUtSo6A==&getItemsCount=true"));
+                return Int32.Parse(await GetJsonString($"https://jpdictapi.terra-incognita.dev/api/GetNHKRadio?code={JPDICT_API_KEY}&getItemsCount=true"));
 
             }
             catch
@@ -209,7 +254,7 @@ namespace JapaneseDict.OnlineService.Helpers
         }
         public static async Task<FormattedNews> GetFormattedNews(string url)
         {
-            string jsonStr = await GetJsonString($"http://api.skylark-workshop.xyz/api/GetFormattedNews?code=m3Bk0nEYpaEACAD9BHVsdtgLhJAkT3Hhr4kFPEfpfQgllIsok9rPEw==&url={url}");
+            string jsonStr = await GetJsonString($"https://jpdictapi.terra-incognita.dev/api/GetFormattedNews?code={JPDICT_API_KEY}&url={url}");
             JsonObject jsonobj = JsonObject.Parse(jsonStr);
             return new FormattedNews() { Title = jsonobj["title"].GetString(), Content = jsonobj["content"].GetString(), Image = new Uri(jsonobj["image"].GetString()) };
         }

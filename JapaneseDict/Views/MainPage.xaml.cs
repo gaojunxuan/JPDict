@@ -30,7 +30,7 @@ using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml.Media.Imaging;
-
+using System.Configuration;
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -48,6 +48,7 @@ namespace JapaneseDict.GUI
             ExtendAcrylicIntoTitleBar();
             systemControls = SystemMediaTransportControls.GetForCurrentView();
             systemControls.ButtonPressed += SystemControls_ButtonPressed;
+            System.Diagnostics.Debug.WriteLine(ConfigurationManager.AppSettings["Setting1"]);
         }
 
         private async void SystemControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JapaneseDict.Models
 {
-    public class NHKRadios
+    public class NHKRadio
     {
         public string Title { get; set; }
         public string StartDate { get; set; }

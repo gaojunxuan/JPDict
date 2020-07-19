@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using JapaneseDict.Models;
-using SQLite.Net.Attributes;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

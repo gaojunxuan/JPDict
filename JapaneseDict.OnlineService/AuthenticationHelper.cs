@@ -14,7 +14,7 @@ namespace JapaneseDict.OnlineService
     public class AuthenticationHelper
     {
         // The Client ID is used by the application to uniquely identify itself to the v2.0 authentication endpoint.
-        static string clientId = "bb8b9926-4413-4426-b0d3-6f9df57e4b20";
+        static string clientId = AppConfig.Configurations["msgraph_client_key"];
         public static string[] Scopes = { "Files.ReadWrite" };
 
         public static IPublicClientApplication IdentityClientApp;

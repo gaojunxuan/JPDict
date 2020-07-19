@@ -9,7 +9,6 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
-    xmlns:ad="using:Microsoft.Advertising.WinRT.UI"
     xmlns:converter="using:JapaneseDict.GUI.Helpers"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -574,10 +573,6 @@
                             <Core:InvokeCommandAction Command="{Binding QueryWordsCommand}"
                                                   CommandParameter ="{Binding ElementName=QueryBox,Path=Text}"/>
                         </Core:EventTriggerBehavior>
-                        <!--<Core:EventTriggerBehavior EventName="TextChanged">
-                        <Core:InvokeCommandAction Command="{Binding CommandUpdateSuggestion}"
-                                                  CommandParameter ="{Binding ElementName=QueryBox,Path=Text}"/>
-                    </Core:EventTriggerBehavior>-->
                     </Interactivity:Interaction.Behaviors>
 
 

@@ -25,7 +25,7 @@ using JapaneseDict.GUI.Helpers;
 using Windows.UI.Core;
 using JapaneseDict.Models;
 using JapaneseDict.GUI;
-using SQLite.Net;
+using SQLite;
 using Windows.ApplicationModel.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -44,7 +44,7 @@ namespace JapaneseDict.GUI
         }
 
         //private static SQLiteConnection _conn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "dict.db"));
-        private static SQLiteConnection _noteConn = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db")); 
+        private static SQLiteConnection _noteConn = new SQLiteConnection(Path.Combine(ApplicationData.Current.LocalFolder.Path, "note.db")); 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
