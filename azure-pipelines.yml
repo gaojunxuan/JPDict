@@ -16,6 +16,18 @@ variables:
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
 steps:
+- task: DownloadSecureFile@1
+  name: appConfig
+  displayName: 'Download appsettings.production.json'
+  inputs:
+    secureFile: 'appsettings.production.json'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(agent.tempDirectory)'
+    Contents: 'appsettings.production.json'
+    TargetFolder: '$(build.sourcesDirectory)\JapaneseDict'
+    OverWrite: true
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -27,18 +39,6 @@ steps:
   displayName: 'Download CA certificate'
   inputs:
     secureFile: 'JapaneseDict.GUI_TemporaryKey.pfx'
-
-- task: DownloadSecureFile@1
-  name: appConfig
-  displayName: 'Download appsettings.production.json'
-  inputs:
-    secureFile: 'appsettings.production.json'
-
-- task: CopyFiles@2
-  inputs:
-    Contents: '$(appConfig.secureFilePath)'
-    TargetFolder: '$(Build.SourcesDirectory)\JapaneseDict'
-    OverWrite: true
 
 - task: VSBuild@1
   inputs:
