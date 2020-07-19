@@ -28,6 +28,19 @@ steps:
   inputs:
     secureFile: 'JapaneseDict.GUI_TemporaryKey.pfx'
 
+- task: DownloadSecureFile@1
+  displayName: 'Download appsettings.production.json'
+  inputs:
+    secureFile: 'appsettings.production.json'
+
+- task: CopyFiles@2
+  displayName: 'Copy appsettings.production.json to project folder'
+  inputs:
+    SourceFolder: '$(agent.tempDirectory)'
+    Contents: 'appsettings.production.json'
+    TargetFolder: '$(build.sourcesDirectory)\JapaneseDict'
+    OverWrite: true
+
 - task: VSBuild@1
   inputs:
     platform: 'x86'
