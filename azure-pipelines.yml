@@ -36,8 +36,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(appConfig.secureFilePath)'
-    Contents: '**'
+    Contents: '$(appConfig.secureFilePath)'
     TargetFolder: '$(Build.SourcesDirectory)\JapaneseDict'
     OverWrite: true
 
