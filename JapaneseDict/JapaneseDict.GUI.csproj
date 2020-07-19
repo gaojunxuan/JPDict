@@ -181,9 +181,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="appsettings.development.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Connected Services\HockeyApp\ConnectedService.json" />
     <Content Include="dic\ipadic\char.bin" />
     <Content Include="dic\ipadic\dicrc" />
@@ -203,6 +200,11 @@
     <Content Include="Segoe Translator Symbol.ttf" />
     <Content Include="update.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Content Include="appsettings.production.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
